@@ -14,10 +14,10 @@ public class Request {
     private UUID id;
 
     @ManyToOne
-    private User requesterId;
+    private User requester;
 
     @ManyToOne
-    private User responsibleId;
+    private User responsible;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;

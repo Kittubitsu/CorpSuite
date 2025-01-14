@@ -59,15 +59,15 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Computer> computers;
 
-    @OneToMany(mappedBy = "requesterId")
+    @OneToMany(mappedBy = "requester")
     private List<Ticket> openedTickets;
 
-    @OneToMany(mappedBy = "responsibleId")
+    @OneToMany(mappedBy = "responsible")
     private List<Ticket> assignedTickets;
 
-    @OneToMany(mappedBy = "requesterId")
+    @OneToMany(mappedBy = "requester")
     private List<Request> openedRequests;
 
-    @OneToMany(mappedBy = "responsibleId")
+    @OneToMany(mappedBy = "responsible")
     private List<Request> assignedRequests;
 }

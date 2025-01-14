@@ -13,10 +13,10 @@ public class Ticket {
     private UUID id;
 
     @ManyToOne
-    private User requesterId;
+    private User requester;
 
     @ManyToOne
-    private User responsibleId;
+    private User responsible;
 
     @Column(nullable = false)
     private String comment;
