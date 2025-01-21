@@ -1,6 +1,8 @@
 package toshu.org.corpsuite.user.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+import toshu.org.corpsuite.card.model.Card;
 import toshu.org.corpsuite.computer.model.Computer;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.ticket.model.Ticket;
@@ -10,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
 
@@ -70,4 +77,8 @@ public class User {
 
     @OneToMany(mappedBy = "responsible")
     private List<Request> assignedRequests;
+
+    @OneToOne
+    @JoinColumn(name = "card_id", referencedColumnName = "id")
+    private Card card;
 }

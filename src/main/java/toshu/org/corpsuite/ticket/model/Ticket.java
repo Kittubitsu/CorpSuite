@@ -1,10 +1,16 @@
 package toshu.org.corpsuite.ticket.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import toshu.org.corpsuite.user.model.User;
 
 import java.util.UUID;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Ticket {
 

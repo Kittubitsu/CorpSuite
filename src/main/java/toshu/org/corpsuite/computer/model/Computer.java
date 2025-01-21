@@ -1,10 +1,16 @@
 package toshu.org.corpsuite.computer.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import toshu.org.corpsuite.user.model.User;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Computer {
 
