@@ -18,6 +18,10 @@ public class Card {
 
     private CardType type;
 
+    private boolean isActive;
+
+    private String code;
+
     @OneToOne(mappedBy = "card")
     private User owner;
 

@@ -3,11 +3,13 @@ package toshu.org.corpsuite.web.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 import toshu.org.corpsuite.user.model.UserPosition;
 
 @Data
-public class UserAddRequest {
+@Builder
+public class UserAdd {
 
     @NotNull
     private String firstName;
@@ -38,3 +40,4 @@ public class UserAddRequest {
 
 
 }
+
