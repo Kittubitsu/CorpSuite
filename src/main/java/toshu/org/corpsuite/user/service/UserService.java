@@ -61,17 +61,17 @@ public class UserService {
                 .build();
     }
 
-    public User login(Login login){
+    public User login(Login login) {
 
         Optional<User> optionalUser = userRepository.findUserByCorporateEmail(login.getEmail());
 
-        if (optionalUser.isEmpty()){
+        if (optionalUser.isEmpty()) {
             throw new DomainException("Username or password are incorrect!");
         }
 
         User user = optionalUser.get();
 
-        if (!passwordEncoder.matches(login.getPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
             throw new DomainException("Username or password are incorrect!");
         }
 
@@ -82,5 +82,4 @@ public class UserService {
 
         return userRepository.findAll();
     }
-
 }
