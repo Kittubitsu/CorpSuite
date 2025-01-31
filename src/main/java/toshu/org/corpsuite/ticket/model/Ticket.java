@@ -30,4 +30,8 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TicketStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TicketType type;
 }

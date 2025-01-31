@@ -6,6 +6,8 @@ import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.ticket.repository.TicketRepository;
 import toshu.org.corpsuite.web.dto.TicketAdd;
 
+import java.util.List;
+
 @Service
 public class TicketService {
 
@@ -16,7 +18,7 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
     }
 
-    public Ticket addTicket(TicketAdd ticketAdd){
+    public Ticket addTicket(TicketAdd ticketAdd) {
 
         Ticket ticket = Ticket.builder()
                 .requester(ticketAdd.getRequester())
@@ -27,5 +29,10 @@ public class TicketService {
                 .build();
 
         return ticketRepository.save(ticket);
+    }
+
+    public List<Ticket> getAllTickets() {
+
+        return ticketRepository.findAll();
     }
 }

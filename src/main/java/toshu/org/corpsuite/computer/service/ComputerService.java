@@ -8,6 +8,7 @@ import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.web.dto.ComputerAdd;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ComputerService {
@@ -43,6 +44,11 @@ public class ComputerService {
                 .build();
 
         return computerRepository.save(computer);
+    }
+
+    public List<Computer> getAllComputers() {
+
+        return computerRepository.findAll();
     }
 
 }

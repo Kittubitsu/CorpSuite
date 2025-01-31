@@ -37,4 +37,6 @@ public class Request {
 
     private LocalDateTime toDate;
 
+    private long totalDaysOff;
+
 }

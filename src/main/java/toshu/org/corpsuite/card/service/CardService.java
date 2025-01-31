@@ -7,6 +7,8 @@ import toshu.org.corpsuite.card.repository.CardRepository;
 import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.web.dto.CardAdd;
 
+import java.util.List;
+
 @Service
 public class CardService {
 
@@ -31,5 +33,10 @@ public class CardService {
 
 
         return cardRepository.save(card);
+    }
+
+    public List<Card> getAllCards() {
+
+        return cardRepository.findAll();
     }
 }

@@ -1,6 +1,7 @@
 package toshu.org.corpsuite.card.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import toshu.org.corpsuite.user.model.User;
 
@@ -16,6 +17,8 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private CardType type;
 
     private boolean isActive;
