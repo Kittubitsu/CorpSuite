@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import toshu.org.corpsuite.user.model.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -33,9 +34,9 @@ public class Request {
 
     private String comment;
 
-    private LocalDateTime fromDate;
+    private LocalDate fromDate;
 
-    private LocalDateTime toDate;
+    private LocalDate toDate;
 
     private long totalDaysOff;
 

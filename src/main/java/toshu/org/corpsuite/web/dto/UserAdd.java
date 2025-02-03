@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
 import toshu.org.corpsuite.user.model.UserPosition;
 
 @Data
@@ -23,6 +24,8 @@ public class UserAdd {
     @NotNull
     private UserPosition position;
 
+    @NotNull
+    @URL
     private String profilePicture;
 
     @NotNull

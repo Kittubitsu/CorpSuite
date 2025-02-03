@@ -8,6 +8,7 @@ import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.model.RequestType;
 import toshu.org.corpsuite.user.model.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -30,8 +31,8 @@ public class RequestAdd {
     private String comment;
 
     @NotNull
-    private LocalDateTime fromDate;
+    private LocalDate fromDate;
 
     @NotNull
-    private LocalDateTime toDate;
+    private LocalDate toDate;
 }

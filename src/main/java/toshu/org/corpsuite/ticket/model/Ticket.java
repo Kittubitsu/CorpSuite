@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import toshu.org.corpsuite.user.model.User;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -34,4 +35,10 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TicketType type;
+
+    @Column(nullable = false)
+    private LocalDateTime opened;
+
+    @Column(nullable = false)
+    private LocalDateTime closed;
 }

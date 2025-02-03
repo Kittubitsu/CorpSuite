@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Request</title>
+</head>
+<body>
+<div class="add-request-layout">
+    <div class="request-add-form">
+        <form action="" class="form-main">
+            <div class="form-group">
+                <label for="requester">Requester</label>
+                <input type="text" class="form-control" id="requester" disabled>
+            </div>
+            <div class="form-group">
+                <label for="responsible">Responsible</label>
+                <input type="text" class="form-control" id="responsible">
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment</label>
+                <input type="text" class="form-control" id="comment">
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status">
+                    <option value="PENDING">Pending</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select name="type" id="type">
+                    <option value="PAID_LEAVE">Paid Leave</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="from">From</label>
+                <input type="date" class="form-control" id="from">
+            </div>
+            <div class="form-group">
+                <label for="to">To</label>
+                <input type="date" class="form-control" id="to">
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    const pickerFrom = document.getElementById('from');
+    pickerFrom.addEventListener('input', function (e) {
+        var day = new Date(this.value).getUTCDay();
+        if ([6, 0].includes(day)) {
+            e.preventDefault();
+            this.value = '';
+            alert('You can not select Weekends!');
+        }
+    });
+    const pickerTo = document.getElementById('to');
+    pickerTo.addEventListener('input', function (e) {
+        var day = new Date(this.value).getUTCDay();
+        if ([6, 0].includes(day)) {
+            e.preventDefault();
+            this.value = '';
+            alert('You can not select Weekends!');
+        }
+    });
+</script>
+</body>
+</html>
