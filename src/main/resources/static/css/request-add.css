@@ -1,0 +1,91 @@
+/* ====== Global Styles ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font: 14px/1.5 Lato, sans-serif;
+    background: radial-gradient(circle, #ffffff 40%, #dcdcdc 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+/* ====== Form Layout ====== */
+.add-request-layout {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+/* ====== Form Styling ====== */
+.form-main {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-control, select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-control:focus, select:focus {
+    outline: none;
+    border-color: blue;
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
+}
+
+input:disabled {
+    background: #f0f0f0;
+    cursor: not-allowed;
+}
+
+/* ====== Submit Button ====== */
+.submit-button {
+    margin-top: 1em;
+    background: #2c3e50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-button:hover {
+    background: #47748f;
+}
+
+/* ====== Responsive Design ====== */
+/*@media (max-width: 480px) {*/
+/*    .add-request-layout {*/
+/*        width: 100%;*/
+/*        padding: 20px;*/
+/*    }*/
+/*}*/

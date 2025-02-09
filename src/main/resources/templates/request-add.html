@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Request</title>
+    <link rel="stylesheet" href="/static/css/request-add.css">
 </head>
 <body>
 <div class="add-request-layout">
     <div class="request-add-form">
+        <h1>New Request</h1>
         <form action="" class="form-main">
             <div class="form-group">
                 <label for="requester">Requester</label>
@@ -40,28 +42,10 @@
                 <label for="to">To</label>
                 <input type="date" class="form-control" id="to">
             </div>
+            <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
 </div>
-<script>
-    const pickerFrom = document.getElementById('from');
-    pickerFrom.addEventListener('input', function (e) {
-        var day = new Date(this.value).getUTCDay();
-        if ([6, 0].includes(day)) {
-            e.preventDefault();
-            this.value = '';
-            alert('You can not select Weekends!');
-        }
-    });
-    const pickerTo = document.getElementById('to');
-    pickerTo.addEventListener('input', function (e) {
-        var day = new Date(this.value).getUTCDay();
-        if ([6, 0].includes(day)) {
-            e.preventDefault();
-            this.value = '';
-            alert('You can not select Weekends!');
-        }
-    });
-</script>
+<script type="application/javascript" src="/js/date.js"></script>
 </body>
 </html>

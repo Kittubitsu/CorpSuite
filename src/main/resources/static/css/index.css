@@ -6,7 +6,7 @@
 
 body {
     font: 14px/1.5 Lato, sans-serif;
-    background-color: #f4f7fc;
+    background: radial-gradient(circle, #ffffff 40%, #dcdcdc 100%);
     display: flex;
     justify-content: center;
     align-items: center;

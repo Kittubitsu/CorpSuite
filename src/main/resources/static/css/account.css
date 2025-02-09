@@ -3,11 +3,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
 }
 
 body {
-    background-color: #f4f4f4;
+    font: 14px/1.5 Lato, sans-serif;
+    background: radial-gradient(circle, #ffffff 40%, #dcdcdc 100%);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Requests</title>
+    <link rel="stylesheet" href="/static/css/request.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
-<body>
 <body>
 <div class="request-page-layout">
     <div class="nav-bar-left">
         <nav class="menu">
+            <img src="/static/test.png" alt="" width="200">
             <ul class="main-nav">
                 <li><a href="">Home</a></li>
                 <li><a href="">Tickets</a></li>
@@ -16,15 +18,21 @@
                 <li><a href="">Account</a></li>
             </ul>
             <ul class="hr-nav">
+                <h6>HR Panel</h6>
                 <li><a href="">Users</a></li>
                 <li><a href="">Cards</a></li>
             </ul>
             <ul class="it-nav">
+                <h6>IT Panel</h6>
                 <li><a href="">Computers</a></li>
             </ul>
         </nav>
     </div>
     <div class="request-overview">
+        <div class="table-nav">
+            <a href="">Open Request</a>
+            <a href="">History</a>
+        </div>
         <table>
             <thead>
             <tr>
@@ -32,7 +40,8 @@
                 <th>To Date</th>
                 <th>Type</th>
                 <th>Approval</th>
-                <th>Status</th>
+                <th><a href="">Status</a></th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -42,11 +51,27 @@
                 <td>Paid Leave</td>
                 <td>Gosho</td>
                 <td>Approved</td>
+                <td><a href="">Edit</a></td>
+            </tr>
+            <tr>
+                <td>1 jan 2025</td>
+                <td>5 jan 2025</td>
+                <td>Paid Leave</td>
+                <td>Gosho</td>
+                <td>Approved</td>
+                <td><a href="">Edit</a></td>
+            </tr>
+            <tr>
+                <td>1 jan 2025</td>
+                <td>5 jan 2025</td>
+                <td>Paid Leave</td>
+                <td>Gosho</td>
+                <td>Approved</td>
+                <td><a href="">Edit</a></td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-</body>
 </body>
 </html>

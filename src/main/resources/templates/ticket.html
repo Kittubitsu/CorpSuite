@@ -3,28 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Tickets</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/css/ticket.css">
 </head>
 <body>
 <div class="ticket-page-layout">
     <div class="nav-bar-left">
         <nav class="menu">
+            <img src="/static/test.png" alt="" width="200">
             <ul class="main-nav">
                 <li><a href="">Home</a></li>
                 <li><a href="">Tickets</a></li>
                 <li><a href="">Requests</a></li>
                 <li><a href="">Account</a></li>
             </ul>
+
             <ul class="hr-nav">
+                <h6>HR Panel</h6>
                 <li><a href="">Users</a></li>
                 <li><a href="">Cards</a></li>
             </ul>
             <ul class="it-nav">
+                <h6>IT Panel</h6>
                 <li><a href="">Computers</a></li>
             </ul>
         </nav>
     </div>
-
     <div class="ticket-overview">
+        <div class="table-nav">
+            <a href="">Open Ticket</a>
+            <a href="">History</a>
+        </div>
         <table>
             <thead>
             <tr>
@@ -32,6 +41,7 @@
                 <th>Responsible</th>
                 <th>Type</th>
                 <th>Status</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -40,6 +50,21 @@
                 <td>Pesho</td>
                 <td>Device</td>
                 <td>Pending</td>
+                <td><a href="">Edit</a></td>
+            </tr>
+            <tr>
+                <td>computer no workey</td>
+                <td>Pesho</td>
+                <td>Device</td>
+                <td>Pending</td>
+                <td><a href="">Edit</a></td>
+            </tr>
+            <tr>
+                <td>computer no workey</td>
+                <td>Pesho</td>
+                <td>Device</td>
+                <td>Pending</td>
+                <td><a href="">Edit</a></td>
             </tr>
             </tbody>
         </table>
