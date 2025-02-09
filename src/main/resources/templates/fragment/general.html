@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<div class="nav-bar-left" th:fragment="nav-bar">
+    <nav class="menu">
+        <img src="/static/test.png" alt="" width="200">
+        <ul class="main-nav">
+            <li><a href="">Home</a></li>
+            <li><a href="">Tickets</a></li>
+            <li><a href="">Requests</a></li>
+            <li><a href="">Account</a></li>
+        </ul>
+
+        <ul class="hr-nav">
+            <h6>HR Panel</h6>
+            <li><a href="">Users</a></li>
+            <li><a href="">Cards</a></li>
+        </ul>
+        <ul class="it-nav">
+            <h6>IT Panel</h6>
+            <li><a href="">Computers</a></li>
+        </ul>
+    </nav>
+</div>
+
+<footer th:fragment="footer">
+    <p>&#169; 2025 CorpSuite Ltd.</p>
+</footer>
+</body>
+</html>

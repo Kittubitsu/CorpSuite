@@ -12,54 +12,6 @@ body {
     height: 100vh;
 }
 
-.nav-bar-left {
-    font-size: 16px;
-    background: white;
-    height: 100%;
-    padding: 30px;
-    color: black;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.main-nav {
-    margin-top: 2em;
-}
-
-.nav-bar-left nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.nav-bar-left nav ul li {
-    padding: 12px 0;
-}
-
-.nav-bar-left nav ul li a {
-    text-decoration: none;
-    text-align: center;
-    color: black;
-    font-weight: bold;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.nav-bar-left nav ul li a:hover {
-    background: #ddd;
-}
-
-.hr-nav h6, .it-nav h6 {
-    opacity: 80%;
-    margin-top: 2em;
-    margin-bottom: 1em;
-    font-size: 12px;
-    font-style: italic;
-    border-bottom: 1px solid black;
-    width: 50%;
-}
-
 .home-page-layout {
     display: flex;
     flex-direction: row;
@@ -67,7 +19,7 @@ body {
     padding: 20px;
     gap: 20px;
     height: 80vh;
-
+    min-height: 800px;
 }
 
 h1 {
@@ -104,6 +56,8 @@ h1 {
     flex-direction: column;
     gap: 20px;
     height: 100%;
+    min-width: 50vw;
+    min-height: 800px;
 }
 
 .user-details-main {
@@ -159,7 +113,7 @@ h1 {
     justify-content: space-between;
 }
 
-.request-ticket-button{
+.request-ticket-button {
     text-decoration: none;
     text-align: center;
     color: black;
@@ -198,7 +152,7 @@ td {
     height: 63px;
 }
 
-tr:nth-child(even){
+tr:nth-child(even) {
     background-color: #f3f3f3;
 }
 
