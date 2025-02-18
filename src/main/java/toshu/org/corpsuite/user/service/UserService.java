@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -68,6 +69,10 @@ public class UserService implements UserDetailsService {
     public List<User> getAllUsers() {
 
         return userRepository.findAll();
+    }
+
+    public User findById(UUID id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User could not be found!"));
     }
 
     @Override

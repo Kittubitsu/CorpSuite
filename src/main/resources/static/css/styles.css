@@ -17,6 +17,9 @@ footer {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     min-height: 800px;
     max-height: 1000px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .main-nav {
@@ -38,7 +41,7 @@ footer {
     color: black;
     font-weight: bold;
     display: block;
-    padding: 10px;
+    padding: 1em;
     border-radius: 5px;
     transition: background 0.3s;
 }
@@ -55,4 +58,12 @@ footer {
     font-style: italic;
     border-bottom: 1px solid black;
     width: 50%;
+}
+
+.logout-button {
+    margin-top: auto;
+}
+
+.logout-button li a {
+    background-color: #ff3838;
 }

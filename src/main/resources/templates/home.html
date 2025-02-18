@@ -14,20 +14,20 @@
     <div class="user-main">
         <div class="user-info">
             <div class="user-greeting">
-                <h1>Good Morning, Todor!</h1>
-                <img class="user-img" src="/images/user-profile-icon.svg" alt="" width="100">
+                <h1 th:text="${'Good Morning, ' + user.firstName}"></h1>
+                <img class="user-img" th:src="${#strings.isEmpty(user.profilePicture) ? '/images/user-profile-icon.svg' : user.profilePicture}" alt="" width="100">
                 <a class="edit-account-button" href="">Edit Account</a>
             </div>
             <div class="user-details-main">
                 <div class="user-details">
                     <h3>Account Details</h3>
-                    <p>Name: <span>User</span></p>
-                    <p>Email: <span>todor.dimitrov@corpsuite.com</span></p>
-                    <p>Department: <span>Dpt</span></p>
-                    <p>Manager: <span>Gosho</span></p>
-                    <p>Position: <span>Pos</span></p>
-                    <p>Paid Leave Days Left: <span>15</span></p>
-                    <p>Access Card Number: <span>5</span></p>
+                    <p>Name: <span th:text="${user.firstName + ' ' + user.lastName}"></span></p>
+                    <p>Email: <span th:text="${user.corporateEmail}"></span></p>
+                    <p>Department: <span th:text="${user.department}"></span></p>
+                    <p>Manager: <span th:text="${#strings.isEmpty(user.manager) ? 'none' : user.manager}"></span></p>
+                    <p>Position: <span th:text="${user.position}"></span></p>
+                    <p>Paid Leave Days Left: <span th:text="${user.paidLeaveCount}"></span></p>
+                    <p>Access Card Number: <span th:text="${user.card.id == null ? 'none' : user.card.id}"></span></p>
                 </div>
                 <div class="computer-details">
                     <h3>Computer Details</h3>
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-
 </div>
+<footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>
