@@ -2,12 +2,15 @@ package toshu.org.corpsuite.user.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import toshu.org.corpsuite.exception.DomainException;
+import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.repository.UserRepository;
-import toshu.org.corpsuite.web.dto.Login;
 import toshu.org.corpsuite.web.dto.UserAdd;
 
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -61,25 +64,17 @@ public class UserService {
                 .build();
     }
 
-    public User login(Login login) {
-
-        Optional<User> optionalUser = userRepository.findUserByCorporateEmail(login.getEmail());
-
-        if (optionalUser.isEmpty()) {
-            throw new DomainException("Username or password are incorrect!");
-        }
-
-        User user = optionalUser.get();
-
-        if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
-            throw new DomainException("Username or password are incorrect!");
-        }
-
-        return user;
-    }
 
     public List<User> getAllUsers() {
 
         return userRepository.findAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findUserByCorporateEmail(username).orElseThrow(() -> new RuntimeException("User does not exist!"));
+
+        return new AuthenticationMetadata(user.getId(), user.getCorporateEmail(), user.getFirstName() + "." + user.getLastName(), user.getPassword(), user.getPosition(), user.isActive());
     }
 }

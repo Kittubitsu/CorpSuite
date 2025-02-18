@@ -63,19 +63,19 @@ public class User {
 
     private int paidLeaveCount;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Computer> computers;
 
-    @OneToMany(mappedBy = "requester")
+    @OneToMany(mappedBy = "requester", fetch = FetchType.EAGER)
     private List<Ticket> openedTickets;
 
-    @OneToMany(mappedBy = "responsible")
+    @OneToMany(mappedBy = "responsible", fetch = FetchType.EAGER)
     private List<Ticket> assignedTickets;
 
-    @OneToMany(mappedBy = "requester")
+    @OneToMany(mappedBy = "requester", fetch = FetchType.EAGER)
     private List<Request> openedRequests;
 
-    @OneToMany(mappedBy = "responsible")
+    @OneToMany(mappedBy = "responsible", fetch = FetchType.EAGER)
     private List<Request> assignedRequests;
 
     @OneToOne
