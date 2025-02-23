@@ -3,40 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Ticket</title>
-    <link rel="stylesheet" href="/static/css/ticket-add.css">
+    <link rel="stylesheet" href="/css/ticket-add.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="add-ticket-layout">
     <div class="ticket-add-form">
         <h1>New Ticket</h1>
-        <form action="" class="form-main">
+        <form th:action="@{/tickets/add}" th:method="POST" th:object="${ticketRequest}" class="form-main">
             <div class="form-group">
-                <label for="requester">Requester</label>
-                <input type="text" class="form-control" id="requester" disabled>
+                <label for="requester">Requester Email</label>
+                <input type="email" class="form-control" id="requester" readonly th:field="*{requester}">
             </div>
             <div class="form-group">
-                <label for="responsible">Responsible</label>
-                <input type="text" class="form-control" id="responsible">
+                <label for="responsible">Responsible Email</label>
+                <input type="email" class="form-control" id="responsible" th:field="*{responsible}">
             </div>
             <div class="form-group">
                 <label for="comment">Comment</label>
-                <input type="text" class="form-control" id="comment">
+                <input type="text" class="form-control" id="comment" th:field="*{comment}">
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
-                <select name="status" id="status">
-                    <option value="PENDING">Pending</option>
+                <select name="status" id="status" th:field="*{status}">
+                    <option th:each="status : ${T(toshu.org.corpsuite.ticket.model.TicketStatus).values()}" th:value="${status}" th:text="${status}"></option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="type">Type</label>
-                <select name="type" id="type">
-                    <option value="DEVICE">Device</option>
+                <select name="type" id="type" th:field="*{type}">
+                    <option th:each="type : ${T(toshu.org.corpsuite.ticket.model.TicketType).values()}" th:value="${type}" th:text="${type}" ></option>
                 </select>
             </div>
             <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
 </div>
+<footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>

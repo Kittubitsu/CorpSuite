@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.ticket.repository.TicketRepository;
+import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.web.dto.TicketAdd;
 
 import java.util.List;
@@ -18,11 +19,11 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
     }
 
-    public Ticket addTicket(TicketAdd ticketAdd) {
+    public Ticket addTicket(TicketAdd ticketAdd, User requester, User responsible) {
 
         Ticket ticket = Ticket.builder()
-                .requester(ticketAdd.getRequester())
-                .responsible(ticketAdd.getResponsible())
+                .requester(requester)
+                .responsible(responsible)
                 .comment(ticketAdd.getComment())
                 .comment(ticketAdd.getComment())
                 .status(ticketAdd.getStatus())
@@ -34,5 +35,10 @@ public class TicketService {
     public List<Ticket> getAllTickets() {
 
         return ticketRepository.findAll();
+    }
+
+    public List<Ticket> getAllByUser(User user) {
+
+        return ticketRepository.findAllByRequesterOrResponsible(user, user);
     }
 }

@@ -9,8 +9,7 @@
 <body>
 
 <div class="home-page-layout">
-    <div th:replace="~{fragment/general :: nav-bar}">
-    </div>
+    <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
     <div class="user-main">
         <div class="user-info">
             <div class="user-greeting">
@@ -27,7 +26,7 @@
                     <p>Manager: <span th:text="${#strings.isEmpty(user.manager) ? 'none' : user.manager}"></span></p>
                     <p>Position: <span th:text="${user.position}"></span></p>
                     <p>Paid Leave Days Left: <span th:text="${user.paidLeaveCount}"></span></p>
-                    <p>Access Card Number: <span th:text="${user.card.id == null ? 'none' : user.card.id}"></span></p>
+                    <p>Access Card Number: <span>5</span></p>
                 </div>
                 <div class="computer-details">
                     <h3>Computer Details</h3>

@@ -3,32 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Account</title>
-    <link rel="stylesheet" href="/static/css/account.css">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/css/account.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="account-page-layout">
-    <div class="nav-bar-left">
-        <nav class="menu">
-            <img src="/images/test.png" alt="" width="200">
-            <ul class="main-nav">
-                <li><a href="">Home</a></li>
-                <li><a href="">Tickets</a></li>
-                <li><a href="">Requests</a></li>
-                <li><a href="">Account</a></li>
-            </ul>
-
-            <ul class="hr-nav">
-                <h6>HR Panel</h6>
-                <li><a href="">Users</a></li>
-                <li><a href="">Cards</a></li>
-            </ul>
-            <ul class="it-nav">
-                <h6>IT Panel</h6>
-                <li><a href="">Computers</a></li>
-            </ul>
-        </nav>
-    </div>
+    <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
     <div class="account-page-edit-form">
         <img class="user-img" src="/images/user-profile-icon.svg" alt="" width="100">
         <form action="" id="acc-details" class="form-main">
@@ -87,5 +67,6 @@
         <button class="submit-button" type="submit" form="acc-details">Save Changes</button>
     </div>
 </div>
+<footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>

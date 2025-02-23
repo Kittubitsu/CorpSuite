@@ -10,20 +10,20 @@
     <nav class="menu">
         <img src="/images/test.png" alt="" width="200">
         <ul class="main-nav">
-            <li><a href="">Home</a></li>
-            <li><a href="">Tickets</a></li>
-            <li><a href="">Requests</a></li>
-            <li><a href="">Account</a></li>
+            <li><a th:href="@{/home}">Home</a></li>
+            <li><a th:href="@{/tickets}">Tickets</a></li>
+            <li><a th:href="@{/requests}">Requests</a></li>
+            <li><a th:href="@{/account}">Account</a></li>
         </ul>
 
-        <ul class="hr-nav">
+        <ul class="hr-nav" th:if="${user.position.name() == 'HR' || user.position.name() == 'ADMIN'}">
             <h6>HR Panel</h6>
-            <li><a href="">Users</a></li>
-            <li><a href="">Cards</a></li>
+            <li><a th:href="@{/users}">Users</a></li>
+            <li><a th:href="@{/cards}">Cards</a></li>
         </ul>
-        <ul class="it-nav">
+        <ul class="it-nav" th:if="${user.position.name() == 'IT' || user.position.name() == 'ADMIN'}">
             <h6>IT Panel</h6>
-            <li><a href="">Computers</a></li>
+            <li><a th:href="@{computers}">Computers</a></li>
         </ul>
         <ul class="logout-button">
             <li><a th:href="@{/logout}">Logout</a></li>

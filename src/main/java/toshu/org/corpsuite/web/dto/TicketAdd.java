@@ -14,10 +14,10 @@ import toshu.org.corpsuite.user.model.User;
 public class TicketAdd {
 
     @NotNull
-    private User requester;
+    private String requester;
 
     @NotNull
-    private User responsible;
+    private String responsible;
 
     @NotNull
     @Size(min = 20, message = "Please write a longer comment")

@@ -1,5 +1,6 @@
 package toshu.org.corpsuite.user.service;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -73,6 +74,10 @@ public class UserService implements UserDetailsService {
 
     public User findById(UUID id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User could not be found!"));
+    }
+
+    public User findByEmail(String responsible) {
+        return userRepository.findUserByCorporateEmail(responsible).orElseThrow(() -> new DomainException("No such user exists!"));
     }
 
     @Override
