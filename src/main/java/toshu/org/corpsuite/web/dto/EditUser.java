@@ -1,6 +1,7 @@
 package toshu.org.corpsuite.web.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
@@ -27,9 +28,10 @@ public class EditUser {
     private String corporateEmail;
 
     @NotNull
-    private boolean isActive;
+    private Boolean isActive;
 
     @NotNull
+    @Size(min = 8, message = "Password must be atleast 8 characters")
     private String password;
 
     @NotNull
@@ -37,7 +39,7 @@ public class EditUser {
 
     @NotNull
     @URL
-    private String profile_picture;
+    private String profilePicture;
 
     @NotNull
     private Card cardId;

@@ -39,4 +39,9 @@ public class CardService {
 
         return cardRepository.findAll();
     }
+
+    public List<Card> getAllFreeCards() {
+
+        return cardRepository.findAllByOwnerIsNullAndActive();
+    }
 }

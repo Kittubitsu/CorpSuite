@@ -12,6 +12,7 @@ import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.repository.UserRepository;
+import toshu.org.corpsuite.web.dto.EditUser;
 import toshu.org.corpsuite.web.dto.UserAdd;
 
 import java.time.LocalDateTime;
@@ -33,18 +34,18 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User addUser(UserAdd userAdd) {
+    public void addUser(EditUser editUser) {
 
-        Optional<User> optionalUser = userRepository.findUserByCorporateEmail(userAdd.getCorporateEmail());
+        Optional<User> optionalUser = userRepository.findUserByCorporateEmail(editUser.getCorporateEmail());
 
         if (optionalUser.isPresent()) {
             throw new DomainException("This email exists already!");
         }
 
-        return userRepository.save(initializeUser(userAdd));
+        userRepository.save(initializeUser(editUser));
     }
 
-    private User initializeUser(UserAdd userAdd) {
+    private User initializeUser(EditUser userAdd) {
         return User.builder()
                 .firstName(userAdd.getFirstName())
                 .lastName(userAdd.getLastName())
@@ -53,7 +54,7 @@ public class UserService implements UserDetailsService {
                 .country(userAdd.getCountry())
                 .department(userAdd.getDepartment())
                 .password(passwordEncoder.encode(userAdd.getPassword()))
-                .isActive(userAdd.isActive())
+                .isActive(userAdd.getIsActive())
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .paidLeaveCount(0)
