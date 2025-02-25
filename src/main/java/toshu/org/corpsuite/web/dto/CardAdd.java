@@ -12,5 +12,5 @@ public class CardAdd {
 
     private CardType type;
 
-    private boolean isActive;
+    private Boolean isActive;
 }

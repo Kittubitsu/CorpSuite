@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import toshu.org.corpsuite.user.model.UserPosition;
+import toshu.org.corpsuite.user.model.UserDepartment;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +19,7 @@ public class AuthenticationMetadata implements UserDetails {
     private String email;
     private String username;
     private String password;
-    private UserPosition role;
+    private UserDepartment role;
     private boolean isActive;
 
     @Override

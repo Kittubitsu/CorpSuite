@@ -37,7 +37,8 @@ public class User {
 
     private String country;
 
-    private String department;
+    @Enumerated(EnumType.STRING)
+    private UserDepartment department;
 
     private String password;
 

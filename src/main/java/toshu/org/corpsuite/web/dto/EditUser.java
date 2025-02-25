@@ -1,47 +1,52 @@
 package toshu.org.corpsuite.web.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 import toshu.org.corpsuite.card.model.Card;
+import toshu.org.corpsuite.user.model.UserDepartment;
 import toshu.org.corpsuite.user.model.UserPosition;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EditUser {
-
-    @NotNull
+    @NotEmpty(message = "First name cannot be empty!")
     private String firstName;
 
-    @NotNull
+    @NotEmpty(message = "Last name cannot be empty!")
     private String lastName;
 
-    @NotNull
-    private String department;
+    @NotNull(message = "Department cannot be empty!")
+    private UserDepartment department;
 
-    @NotNull
+    @NotEmpty(message = "Country cannot be empty!")
     private String country;
 
-    @NotNull
+    @NotEmpty(message = "Email cannot be empty!")
+    @Email(message = "Must be an email!")
     private String corporateEmail;
 
-    @NotNull
     private Boolean isActive;
 
-    @NotNull
-    @Size(min = 8, message = "Password must be atleast 8 characters")
+    @NotEmpty(message = "Password cannot be empty!")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-    @NotNull
+    @NotNull(message = "Position cannot be empty!")
     private UserPosition position;
 
-    @NotNull
-    @URL
+    @NotEmpty(message = "Profile picture cannot be empty!")
+    @URL(message = "Must be a URL!")
     private String profilePicture;
 
-    @NotNull
-    private Card cardId;
+    private Card card;
 
 }

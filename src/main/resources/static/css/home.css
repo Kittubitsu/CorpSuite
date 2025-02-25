@@ -97,7 +97,7 @@ h1 {
     flex-grow: 3;
 }
 
-.request-overview, .account-overview {
+.request-overview, .ticket-overview {
     flex: 1;
     background: white;
     padding: 20px;

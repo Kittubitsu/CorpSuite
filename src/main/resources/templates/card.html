@@ -11,8 +11,8 @@
   <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
   <div class="cards-overview">
     <div class="table-nav">
-      <a href="">Add Card</a>
-      <a href="">History</a>
+      <a th:href="@{/cards/add}">Add Card</a>
+      <a th:href="@{/cards/history}">History</a>
     </div>
     <table>
       <thead>
@@ -26,29 +26,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>5</td>
-        <td>Toshu Gaikata</td>
-        <td>1566</td>
-        <td>IT</td>
-        <td>Active</td>
-        <td><a href="">Edit</a></td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>Toshu Gaikata</td>
-        <td>1566</td>
-        <td>IT</td>
-        <td>Active</td>
-        <td><a href="">Edit</a></td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>Toshu Gaikata</td>
-        <td>1566</td>
-        <td>IT</td>
-        <td>Active</td>
-        <td><a href="">Edit</a></td>
+      <tr th:each="card : ${cards}">
+        <td th:text="${card.id}"></td>
+        <td th:text="${#strings.isEmpty(card.owner) ? 'None' : card.owner.firstName + ' ' + card.owner.lastName}"></td>
+        <td th:text="${card.code}"></td>
+        <td th:text="${card.type.name()}"></td>
+        <td th:text="${card.isActive() ? 'Active' : 'Inactive'}"></td>
+        <td><a th:href="@{'/cards/edit/' + ${card.id}}">Edit</a></td>
       </tr>
       </tbody>
     </table>

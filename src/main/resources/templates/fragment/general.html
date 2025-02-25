@@ -13,7 +13,7 @@
             <li><a th:href="@{/home}">Home</a></li>
             <li><a th:href="@{/tickets}">Tickets</a></li>
             <li><a th:href="@{/requests}">Requests</a></li>
-            <li><a th:href="@{/account}">Account</a></li>
+            <li><a th:href="@{'/users/edit/' + ${user.id}}">Account</a></li>
         </ul>
 
         <ul class="hr-nav" th:if="${user.position.name() == 'HR' || user.position.name() == 'ADMIN'}">

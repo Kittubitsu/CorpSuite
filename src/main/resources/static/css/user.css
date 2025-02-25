@@ -1,40 +1,65 @@
+/* ====== Global Styles ====== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
+h1 {
+    text-align: center;
+}
 body {
     font: 14px/1.5 Lato, sans-serif;
-    background: radial-gradient(circle, #ffffff 40%, #dcdcdc 100%);
+    background: linear-gradient(to right, #f0f0f0, #e8e8e8);
     display: flex;
     justify-content: center;
     height: 100vh;
     padding: 20px;
 }
 
-
-.users-page-layout {
+/* ====== Main Layout ====== */
+.account-page-layout {
     display: flex;
-    width: 90%;
-    max-width: 1300px;
+    /*max-width: 1300px;*/
     height: 80vh;
-    gap: 20px;
     min-height: 800px;
-    max-height: 1000px;
+    gap: 20px;
 }
 
-
-.users-overview {
+/* ====== Tickets Table ====== */
+.account-overview {
     flex: 1;
     background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 900px;
+    /*max-width: 800px;*/
+    min-height: 800px;
+    max-height: 1000px;
 }
 
+.account-overview table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.account-overview td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.account-overview th {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+}
+
+.account-overview tr:nth-child(even) {
+    background: #f9f9f9;
+}
 
 .table-nav {
     display: flex;
@@ -45,7 +70,7 @@ body {
 .table-nav a {
     text-decoration: none;
     text-align: center;
-    width: 5vw;
+    width: 8em;
     padding: 5px;
     border: none;
     background: #2c3e50;
@@ -58,30 +83,7 @@ body {
 
 .table-nav a:hover {
     background: #47748f;
-}
 
-
-.users-overview table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.users-overview td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-}
-
-.users-overview th {
-    background: #007bff;
-    color: white;
-    font-weight: bold;
-    padding: 12px;
-    text-align: left;
-}
-
-.users-overview tr:nth-child(even) {
-    background: #f9f9f9;
 }
 
 td:last-of-type{
@@ -99,13 +101,13 @@ td a {
     transition: 0.3s;
 }
 
-td a:hover {
+td a:hover{
     background: #47748f;
 }
 
-/*!* ====== Responsive Design ====== *!*/
+/* ====== Responsive Design ====== */
 /*@media (max-width: 1024px) {*/
-/*    .users-page-layout {*/
+/*    .ticket-page-layout {*/
 /*        flex-direction: column;*/
 /*        align-items: center;*/
 /*    }*/
@@ -113,13 +115,5 @@ td a:hover {
 /*    .nav-bar-left {*/
 /*        width: 100%;*/
 /*        margin-bottom: 20px;*/
-/*    }*/
-
-/*    .table-nav {*/
-/*        text-align: center;*/
-/*    }*/
-
-/*    .users-overview table {*/
-/*        font-size: 14px;*/
 /*    }*/
 /*}*/

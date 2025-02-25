@@ -1,6 +1,7 @@
 package toshu.org.corpsuite.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import toshu.org.corpsuite.user.model.User;
 
@@ -13,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findUserByCorporateEmail(String corporateEmail);
 
+    @Query(value = "SELECT u FROM User u WHERE u.isActive = true")
+    List<User> findAllByActive();
 }

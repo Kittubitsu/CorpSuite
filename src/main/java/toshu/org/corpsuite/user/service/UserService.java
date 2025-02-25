@@ -34,15 +34,15 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void addUser(EditUser editUser) {
+    public void addUser(EditUser addUser) {
 
-        Optional<User> optionalUser = userRepository.findUserByCorporateEmail(editUser.getCorporateEmail());
+        Optional<User> optionalUser = userRepository.findUserByCorporateEmail(addUser.getCorporateEmail());
 
         if (optionalUser.isPresent()) {
             throw new DomainException("This email exists already!");
         }
 
-        userRepository.save(initializeUser(editUser));
+        userRepository.save(initializeUser(addUser));
     }
 
     private User initializeUser(EditUser userAdd) {
@@ -57,13 +57,15 @@ public class UserService implements UserDetailsService {
                 .isActive(userAdd.getIsActive())
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
-                .paidLeaveCount(0)
+                .paidLeaveCount(20)
                 .subordinates(new ArrayList<>())
                 .computers(new ArrayList<>())
                 .openedTickets(new ArrayList<>())
                 .assignedTickets(new ArrayList<>())
                 .openedRequests(new ArrayList<>())
                 .assignedRequests(new ArrayList<>())
+                .card(userAdd.getCard())
+                .profilePicture(userAdd.getProfilePicture())
                 .build();
     }
 
@@ -74,7 +76,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User findById(UUID id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User could not be found!"));
+        return userRepository.findById(id).orElseThrow(() -> new DomainException("User could not be found!"));
     }
 
     public User findByEmail(String responsible) {
@@ -84,8 +86,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findUserByCorporateEmail(username).orElseThrow(() -> new RuntimeException("User does not exist!"));
+        User user = userRepository.findUserByCorporateEmail(username).orElseThrow(() -> new DomainException("User does not exist!"));
 
-        return new AuthenticationMetadata(user.getId(), user.getCorporateEmail(), user.getFirstName() + "." + user.getLastName(), user.getPassword(), user.getPosition(), user.isActive());
+        return new AuthenticationMetadata(user.getId(), user.getCorporateEmail(), user.getFirstName() + "." + user.getLastName(), user.getPassword(), user.getDepartment(), user.isActive());
+    }
+
+    public List<User> getAllActiveUsers() {
+
+        return userRepository.findAllByActive();
     }
 }

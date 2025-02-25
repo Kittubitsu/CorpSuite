@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:if="${endpoint == 'add'}">Add User</title>
+    <title th:if="${endpoint != 'add'}">Edit User</title>
+    <link rel="stylesheet" href="/css/user-edit.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<div class="account-page-layout">
+    <div class="account-page-edit-form">
+        <h1 th:if="${endpoint == 'add'}">Add User</h1>
+        <h1 th:if="${endpoint != 'add'}">Edit User</h1>
+        <form id="acc-details" class="form-main" th:action="@{'/users/' + ${endpoint}}" th:method="${method}"
+              th:object="${userRequest}">
+            <div class="account-details">
+                <p>Account Panel</p>
+                <div class="form-group">
+                    <label for="first-name">First Name</label>
+                    <input type="text" class="form-control" id="first-name" placeholder="Enter first name"
+                           th:field="*{firstName}">
+                    <p class="error-field" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" class="form-control" id="last-name" placeholder="Enter last name"
+                           th:field="*{lastName}">
+                    <p class="error-field" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="profilePic">Profile Picture</label>
+                    <input type="url" class="form-control" id="profilePic" placeholder="Enter profile picture link"
+                           th:field="*{profilePicture}">
+                    <p class="error-field" th:if="${#fields.hasErrors('profilePicture')}" th:errors="*{profilePicture}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <input type="text" class="form-control" id="country" placeholder="Enter country"
+                           th:field="*{country}">
+                    <p class="error-field" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password"
+                           th:field="*{password}">
+                    <p class="error-field" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                </div>
+            </div>
+            <div class="admin-details" th:if="${user.department.name() == 'ADMIN' || user.department.name() == 'HR'}">
+                <p>Admin Panel</p>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email"
+                           th:field="*{corporateEmail}">
+                    <p class="error-field" th:if="${#fields.hasErrors('corporateEmail')}" th:errors="*{corporateEmail}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="department-select">Department</label>
+                    <select name="department" id="department-select" th:field="*{department}">
+                        <option value="" selected hidden>Please select a department!</option>
+                        <option th:each="department : ${T(toshu.org.corpsuite.user.model.UserDepartment).values()}"
+                                th:value="${department}" th:text="${department}"></option>
+                    </select>
+                    <p class="error-field" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="position-select">Position</label>
+                    <select name="position" id="position-select" th:field="*{position}">
+                        <option value="" selected hidden>Please select a position!</option>
+                        <option th:each="position : ${T(toshu.org.corpsuite.user.model.UserPosition).values()}"
+                                th:value="${position}" th:text="${position}"></option>
+                    </select>
+                    <p class="error-field" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="card-select">Card</label>
+                    <select name="position" id="card-select" th:field="*{card}">
+                        <option value="" selected hidden>Please select a card!</option>
+                        <option th:each="card : ${cards}" th:value="${card.id}" th:text="${card.id + ' - ' + card.type.name()}"></option>
+                    </select>
+                    <p class="error-field" th:if="${#fields.hasErrors('card')}" th:errors="*{card}"></p>
+                </div>
+                <div class="form-check form-switch form-group btn-check-container">
+                    <label>Status</label>
+                    <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off"
+                           th:field="*{isActive}">
+                    <label class="btn btn-outline-primary" for="btn-check-outlined"></label><br>
+                </div>
+            </div>
+        </form>
+        <button class="submit-button" type="submit" form="acc-details">Save Changes</button>
+    </div>
+</div>
+<script src="/js/button.js"></script>
+<script src="/js/email.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<footer th:replace="~{fragment/general :: footer}"></footer>
+</body>
+</html>
