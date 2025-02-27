@@ -1,6 +1,5 @@
 package toshu.org.corpsuite.user.service;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +10,11 @@ import org.springframework.stereotype.Service;
 import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
+import toshu.org.corpsuite.user.model.UserDepartment;
+import toshu.org.corpsuite.user.model.UserPosition;
 import toshu.org.corpsuite.user.repository.UserRepository;
+import toshu.org.corpsuite.web.dto.AddUser;
 import toshu.org.corpsuite.web.dto.EditUser;
-import toshu.org.corpsuite.web.dto.UserAdd;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void addUser(EditUser addUser) {
+    public void addUser(AddUser addUser) {
 
         Optional<User> optionalUser = userRepository.findUserByCorporateEmail(addUser.getCorporateEmail());
 
@@ -42,11 +43,74 @@ public class UserService implements UserDetailsService {
             throw new DomainException("This email exists already!");
         }
 
-        userRepository.save(initializeUser(addUser));
+        initializeUser(addUser);
     }
 
-    private User initializeUser(EditUser userAdd) {
-        return User.builder()
+    public void initializeUser(AddUser userAdd) {
+        if (userAdd.getPosition().equals(UserPosition.ADMIN) && userAdd.getDepartment().equals(UserDepartment.ADMIN)) {
+            User user = User.builder()
+                    .firstName(userAdd.getFirstName())
+                    .lastName(userAdd.getLastName())
+                    .corporateEmail(userAdd.getCorporateEmail())
+                    .position(userAdd.getPosition())
+                    .country(userAdd.getCountry())
+                    .department(userAdd.getDepartment())
+                    .password(passwordEncoder.encode(userAdd.getPassword()))
+                    .isActive(userAdd.getIsActive())
+                    .createdOn(LocalDateTime.now())
+                    .updatedOn(LocalDateTime.now())
+                    .paidLeaveCount(0)
+                    .computers(new ArrayList<>())
+                    .openedTickets(new ArrayList<>())
+                    .assignedTickets(new ArrayList<>())
+                    .openedRequests(new ArrayList<>())
+                    .assignedRequests(new ArrayList<>())
+                    .card(userAdd.getCard())
+                    .profilePicture(userAdd.getProfilePicture())
+                    .build();
+
+            userRepository.save(user);
+            return;
+        }
+        if (userAdd.getPosition().equals(UserPosition.MANAGER)) {
+            User newManager = User.builder()
+                    .firstName(userAdd.getFirstName())
+                    .lastName(userAdd.getLastName())
+                    .corporateEmail(userAdd.getCorporateEmail())
+                    .position(userAdd.getPosition())
+                    .country(userAdd.getCountry())
+                    .department(userAdd.getDepartment())
+                    .password(passwordEncoder.encode(userAdd.getPassword()))
+                    .isActive(userAdd.getIsActive())
+                    .createdOn(LocalDateTime.now())
+                    .updatedOn(LocalDateTime.now())
+                    .paidLeaveCount(20)
+                    .subordinates(new ArrayList<>())
+                    .computers(new ArrayList<>())
+                    .openedTickets(new ArrayList<>())
+                    .assignedTickets(new ArrayList<>())
+                    .openedRequests(new ArrayList<>())
+                    .assignedRequests(new ArrayList<>())
+                    .card(userAdd.getCard())
+                    .profilePicture(userAdd.getProfilePicture())
+                    .build();
+
+            userRepository.save(newManager);
+
+            List<User> departmentUsers = getDepartmentUsersExclPosition(userAdd.getDepartment(), userAdd.getPosition());
+            departmentUsers.forEach(user -> {
+                newManager.getSubordinates().add(user);
+                user.setManager(newManager);
+                userRepository.save(user);
+            });
+
+            userRepository.save(newManager);
+
+            return;
+        }
+
+        User departmentManager = getDepartmentManager(userAdd.getDepartment());
+        User user = User.builder()
                 .firstName(userAdd.getFirstName())
                 .lastName(userAdd.getLastName())
                 .corporateEmail(userAdd.getCorporateEmail())
@@ -58,7 +122,7 @@ public class UserService implements UserDetailsService {
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .paidLeaveCount(20)
-                .subordinates(new ArrayList<>())
+                .manager(departmentManager)
                 .computers(new ArrayList<>())
                 .openedTickets(new ArrayList<>())
                 .assignedTickets(new ArrayList<>())
@@ -67,11 +131,15 @@ public class UserService implements UserDetailsService {
                 .card(userAdd.getCard())
                 .profilePicture(userAdd.getProfilePicture())
                 .build();
+
+        departmentManager.getSubordinates().add(user);
+
+        userRepository.save(departmentManager);
+        userRepository.save(user);
     }
 
 
     public List<User> getAllUsers() {
-
         return userRepository.findAll();
     }
 
@@ -92,7 +160,48 @@ public class UserService implements UserDetailsService {
     }
 
     public List<User> getAllActiveUsers() {
-
         return userRepository.findAllByActive();
+    }
+
+    public User getDepartmentManager(UserDepartment department) {
+        return userRepository.findUserByDepartmentAndPosition_Manager(department).orElseThrow(() -> new DomainException("Manager does not exist!"));
+    }
+
+    public List<User> getDepartmentUsersExclPosition(UserDepartment department, UserPosition position) {
+        return userRepository.findAllByDepartmentAndPositionNot(department, position);
+    }
+
+    public void editUser(UUID id, EditUser userRequest) {
+        User userToEdit = findById(id);
+
+        if (!userRequest.getPassword().isEmpty()) {
+            if (passwordEncoder.matches(userRequest.getPassword(), userToEdit.getPassword())) {
+                throw new DomainException("Cannot use the same password, please try again!");
+            }
+
+            userToEdit.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        }
+
+        if (userRequest.getDepartment() == null && userRequest.getIsActive() == null && userRequest.getCorporateEmail() == null && userRequest.getPosition() == null && userRequest.getCard() == null) {
+            userRequest.setDepartment(userToEdit.getDepartment());
+            userRequest.setIsActive(userToEdit.isActive());
+            userRequest.setCorporateEmail(userToEdit.getCorporateEmail());
+            userRequest.setPosition(userToEdit.getPosition());
+            userRequest.setCard(userToEdit.getCard());
+        }
+
+        userToEdit.setFirstName(userRequest.getFirstName());
+        userToEdit.setLastName(userRequest.getLastName());
+        userToEdit.setDepartment(userRequest.getDepartment());
+        userToEdit.setActive(userRequest.getIsActive());
+        userToEdit.setCountry(userRequest.getCountry());
+        userToEdit.setCorporateEmail(userRequest.getCorporateEmail());
+        userToEdit.setPosition(userRequest.getPosition());
+        userToEdit.setProfilePicture(userRequest.getProfilePicture());
+        userToEdit.setCard(userRequest.getCard());
+        userToEdit.setUpdatedOn(LocalDateTime.now());
+
+        userRepository.save(userToEdit);
     }
 }

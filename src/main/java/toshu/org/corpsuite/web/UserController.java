@@ -1,6 +1,7 @@
 package toshu.org.corpsuite.web;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,11 +12,13 @@ import toshu.org.corpsuite.card.service.CardService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
+import toshu.org.corpsuite.web.dto.AddUser;
 import toshu.org.corpsuite.web.dto.EditUser;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -66,27 +69,51 @@ public class UserController {
         return mav;
     }
 
+    @PutMapping("/edit/{id}")
+    public ModelAndView handleAccountEditPage(@Valid @ModelAttribute("userRequest") EditUser userRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        if (result.hasErrors()) {
+            User user = userService.findById(authenticationMetadata.getUserId());
+            List<Card> allCards = cardService.getAllFreeCards();
+
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("user-edit");
+            mav.addObject("userRequest", userRequest);
+            mav.addObject("method", "PUT");
+            mav.addObject("user", user);
+            mav.addObject("cards", allCards);
+            mav.addObject("endpoint", "edit/" + id);
+
+            return mav;
+        }
+        userService.editUser(id, userRequest);
+
+        return new ModelAndView("redirect:/home");
+    }
+
     @GetMapping("/add")
     public ModelAndView getAddAccountPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.findById(authenticationMetadata.getUserId());
         List<Card> allCards = cardService.getAllFreeCards();
+
         ModelAndView mav = new ModelAndView("user-edit");
-        mav.addObject("userRequest", EditUser.builder().build());
+        mav.addObject("userRequest", AddUser.builder().build());
         mav.addObject("cards", allCards);
         mav.addObject("method", "POST");
         mav.addObject("endpoint", "add");
         mav.addObject("user", user);
+
         return mav;
     }
 
     @PostMapping("/add")
-    public ModelAndView handleAddPage(@Valid @ModelAttribute("userRequest") EditUser userRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleAddPage(@Valid @ModelAttribute("userRequest") AddUser userRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        System.out.println(result.getAllErrors());
         if (result.hasErrors()) {
             List<Card> allCards = cardService.getAllCards();
             User user = userService.findById(authenticationMetadata.getUserId());
+
             ModelAndView mav = new ModelAndView("user-edit");
             mav.addObject("userRequest", userRequest);
             mav.addObject("cards", allCards);
@@ -101,6 +128,5 @@ public class UserController {
         return new ModelAndView("redirect:/users");
     }
 
-    //TODO PUT METHOD
 
 }

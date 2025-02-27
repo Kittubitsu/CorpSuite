@@ -29,10 +29,11 @@ public class CardController {
     public ModelAndView getCards(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.findById(authenticationMetadata.getUserId());
-        List<Card> freeCards = cardService.getAllFreeCards();
+        List<Card> activeCards = cardService.getAllActiveCards();
+
         ModelAndView mav = new ModelAndView("card");
         mav.addObject("user", user);
-        mav.addObject("cards", freeCards);
+        mav.addObject("cards", activeCards);
 
         return mav;
     }
@@ -46,6 +47,14 @@ public class CardController {
         mav.addObject("endpoint", "add");
 
         return mav;
+    }
+
+    @PostMapping("/add")
+    public ModelAndView handleAddCardPage(CardAdd cardRequest) {
+
+        cardService.addCard(cardRequest);
+
+        return new ModelAndView("redirect:/cards");
     }
 
     @GetMapping("/edit/{id}")
@@ -63,14 +72,6 @@ public class CardController {
         mav.addObject("method", "PUT");
         mav.addObject("endpoint", "edit/" + card.getId());
         return mav;
-    }
-
-    @PostMapping("/add")
-    public ModelAndView handleAddCardPage(CardAdd cardRequest) {
-
-        cardService.addCard(cardRequest);
-
-        return new ModelAndView("redirect:/cards");
     }
 
     @PutMapping("/edit/{id}")

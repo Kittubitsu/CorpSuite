@@ -51,6 +51,10 @@ public class CardService {
         return cardRepository.findAllByOwnerIsNullAndActive();
     }
 
+    public List<Card> getAllActiveCards(){
+        return cardRepository.findAllActiveCards();
+    }
+
     public void editCard(CardAdd cardRequest, Long id) {
 
         Card card = getCardById(id);

@@ -1,7 +1,9 @@
 package toshu.org.corpsuite.web.dto;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,37 +17,35 @@ import toshu.org.corpsuite.user.model.UserPosition;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditUser {
-
+public class AddUser {
     @NotEmpty(message = "First name cannot be empty!")
     private String firstName;
 
     @NotEmpty(message = "Last name cannot be empty!")
     private String lastName;
 
-    @Nullable
+    @NotNull(message = "Department cannot be empty!")
     private UserDepartment department;
 
     @NotEmpty(message = "Country cannot be empty!")
     private String country;
 
-    @Nullable
+    @NotEmpty(message = "Email cannot be empty!")
     @Email(message = "Must be an email!")
     private String corporateEmail;
 
-    @Nullable
     private Boolean isActive;
 
-    @Pattern(regexp = "^$|.{8,}", message = "Password must be at least 8 characters!")
+    @NotEmpty(message = "Password cannot be empty!")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-    @Nullable
+    @NotNull(message = "Position cannot be empty!")
     private UserPosition position;
 
     @URL(message = "Must be a URL!")
     private String profilePicture;
 
-    @Nullable
     private Card card;
 
 }

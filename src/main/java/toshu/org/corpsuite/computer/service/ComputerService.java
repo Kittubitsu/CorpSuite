@@ -51,4 +51,8 @@ public class ComputerService {
         return computerRepository.findAll();
     }
 
+    public List<Computer> getAllActiveComputers() {
+        return computerRepository.findAllComputersByActiveTrue();
+    }
+
 }
