@@ -204,4 +204,8 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(userToEdit);
     }
+
+    public List<User> getUsersWithoutComputer() {
+        return userRepository.findAllByComputersEmpty();
+    }
 }

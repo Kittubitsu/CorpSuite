@@ -3,6 +3,7 @@ package toshu.org.corpsuite.web.dto;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
+import toshu.org.corpsuite.user.model.User;
 
 @Data
 @Builder
@@ -32,6 +33,8 @@ public class ComputerAdd {
 
     private int age;
 
-    private boolean isActive;
+    private Boolean isActive;
+
+    private User owner;
 
 }

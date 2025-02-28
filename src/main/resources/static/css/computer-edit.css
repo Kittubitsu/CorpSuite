@@ -1,0 +1,146 @@
+/* ====== Global Styles ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 1em;
+}
+
+body {
+    font: 14px/1.5 Lato, sans-serif;
+    background: radial-gradient(circle, #ffffff 40%, #dcdcdc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* ====== Main Layout ====== */
+.computer-page-layout {
+    display: flex;
+    gap: 20px;
+    width: 800px;
+}
+
+.computer-details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2em;
+    justify-content: center;
+}
+
+.error-field {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
+
+.computer-details p {
+    font-style: italic;
+    opacity: 50%;
+}
+
+/* ====== Account Form Section ====== */
+.computer-page-edit-form {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.form-main {
+    display: flex;
+    flex-direction: row;
+    gap: 9em;
+}
+
+.bottom-side {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.left-side {
+    width: 276px;
+}
+
+/* ====== Form Elements ====== */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group:first-of-type {
+    margin-top: 1.5em;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+/* Dropdown Styling */
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* ====== Submit Button ====== */
+.submit-button {
+    width: 8em;
+    height: 3em;
+    padding: 10px;
+    border: none;
+    background: #2c3e50;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 2em;
+}
+
+.submit-button:hover {
+    background: #34495e;
+}
+
+.btn-check-container {
+    padding-right: 2.5em;
+}
+
+/* ====== Responsive Design ====== */
+/*@media (max-width: 768px) {*/
+/*    .account-page-layout {*/
+/*        flex-direction: column;*/
+/*        height: auto;*/
+/*    }*/
+
+/*    .nav-bar-left {*/
+/*        width: 100%;*/
+/*        height: auto;*/
+/*    }*/
+
+/*    .account-page-edit-form {*/
+/*        padding: 20px;*/
+/*    }*/
+/*}*/
