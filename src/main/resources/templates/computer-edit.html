@@ -78,7 +78,7 @@
                         <label for="user">User</label>
                         <select name="user" id="user" th:field="*{owner}">
                             <option value="" selected hidden>Please select a user!</option>
-                            <option th:each="user : ${freeUsers}" th:value="${user}"
+                            <option th:each="user : ${freeUsers}" th:value="${user.id}"
                                     th:if="${user.department.name() != 'ADMIN'}"
                                     th:text="${user.corporateEmail}"></option>
                         </select>

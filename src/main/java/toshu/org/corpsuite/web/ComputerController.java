@@ -4,10 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.computer.model.Computer;
 import toshu.org.corpsuite.computer.service.ComputerService;
@@ -15,6 +12,7 @@ import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
 import toshu.org.corpsuite.web.dto.ComputerAdd;
+import toshu.org.corpsuite.web.mapper.dtoMapper;
 
 import java.util.List;
 
@@ -68,10 +66,54 @@ public class ComputerController {
             return mav;
         }
 
+
         computerService.addComputer(computerRequest);
 
         return new ModelAndView("redirect:/computers");
     }
 
-    //TODO Edit Function
+    @GetMapping("/edit/{id}")
+    public ModelAndView getComputerEditPage(@PathVariable long id) {
+
+        List<User> usersWithoutComputer = userService.getUsersWithoutComputer();
+        Computer computer = computerService.findById(id);
+
+        if (computer.getOwner() != null) {
+            usersWithoutComputer.add(computer.getOwner());
+        }
+
+        ModelAndView mav = new ModelAndView("computer-edit");
+        mav.addObject("method", "PUT");
+        mav.addObject("endpoint", "edit/" + id);
+        mav.addObject("computerRequest", dtoMapper.toComputerDto(computer));
+        mav.addObject("freeUsers", usersWithoutComputer);
+
+        return mav;
+    }
+
+    @PutMapping("/edit/{id}")
+    public ModelAndView handleEditPage(@PathVariable long id, @Valid @ModelAttribute("computerRequest") ComputerAdd computerRequest, BindingResult result) {
+
+        if (result.hasErrors()) {
+            Computer computer = computerService.findById(id);
+            List<User> usersWithoutComputer = userService.getUsersWithoutComputer();
+
+            if (computer.getOwner() != null) {
+                usersWithoutComputer.add(computer.getOwner());
+            }
+
+            ModelAndView mav = new ModelAndView("computer-edit");
+            mav.addObject("method", "PUT");
+            mav.addObject("endpoint", "edit/" + id);
+            mav.addObject("computerRequest", computerRequest);
+            mav.addObject("freeUsers", usersWithoutComputer);
+
+            return mav;
+        }
+
+        computerService.editComputer(id, computerRequest);
+
+        return new ModelAndView("redirect:/computers");
+    }
+
 }

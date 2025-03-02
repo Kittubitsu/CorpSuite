@@ -47,6 +47,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void initializeUser(AddUser userAdd) {
+
         if (userAdd.getPosition().equals(UserPosition.ADMIN) && userAdd.getDepartment().equals(UserDepartment.ADMIN)) {
             User user = User.builder()
                     .firstName(userAdd.getFirstName())
@@ -72,6 +73,7 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
             return;
         }
+
         if (userAdd.getPosition().equals(UserPosition.MANAGER)) {
             User newManager = User.builder()
                     .firstName(userAdd.getFirstName())
@@ -109,7 +111,41 @@ public class UserService implements UserDetailsService {
             return;
         }
 
-        User departmentManager = getDepartmentManager(userAdd.getDepartment());
+        Optional<User> departmentManagerOptional = getDepartmentManager(userAdd.getDepartment());
+
+        if (departmentManagerOptional.isPresent()) {
+            User departmentManager = departmentManagerOptional.get();
+
+            User user = User.builder()
+                    .firstName(userAdd.getFirstName())
+                    .lastName(userAdd.getLastName())
+                    .corporateEmail(userAdd.getCorporateEmail())
+                    .position(userAdd.getPosition())
+                    .country(userAdd.getCountry())
+                    .department(userAdd.getDepartment())
+                    .password(passwordEncoder.encode(userAdd.getPassword()))
+                    .isActive(userAdd.getIsActive())
+                    .createdOn(LocalDateTime.now())
+                    .updatedOn(LocalDateTime.now())
+                    .paidLeaveCount(20)
+                    .manager(departmentManager)
+                    .computers(new ArrayList<>())
+                    .openedTickets(new ArrayList<>())
+                    .assignedTickets(new ArrayList<>())
+                    .openedRequests(new ArrayList<>())
+                    .assignedRequests(new ArrayList<>())
+                    .card(userAdd.getCard())
+                    .profilePicture(userAdd.getProfilePicture())
+                    .build();
+
+            departmentManager.getSubordinates().add(user);
+
+            userRepository.save(departmentManager);
+            userRepository.save(user);
+
+            return;
+        }
+
         User user = User.builder()
                 .firstName(userAdd.getFirstName())
                 .lastName(userAdd.getLastName())
@@ -122,7 +158,6 @@ public class UserService implements UserDetailsService {
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .paidLeaveCount(20)
-                .manager(departmentManager)
                 .computers(new ArrayList<>())
                 .openedTickets(new ArrayList<>())
                 .assignedTickets(new ArrayList<>())
@@ -132,10 +167,8 @@ public class UserService implements UserDetailsService {
                 .profilePicture(userAdd.getProfilePicture())
                 .build();
 
-        departmentManager.getSubordinates().add(user);
-
-        userRepository.save(departmentManager);
         userRepository.save(user);
+
     }
 
 
@@ -163,8 +196,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAllByActive();
     }
 
-    public User getDepartmentManager(UserDepartment department) {
-        return userRepository.findUserByDepartmentAndPosition_Manager(department).orElseThrow(() -> new DomainException("Manager does not exist!"));
+    public Optional<User> getDepartmentManager(UserDepartment department) {
+        return userRepository.findUserByDepartmentAndPosition_Manager(department);
     }
 
     public List<User> getDepartmentUsersExclPosition(UserDepartment department, UserPosition position) {
