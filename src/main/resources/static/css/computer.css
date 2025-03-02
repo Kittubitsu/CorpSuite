@@ -14,6 +14,10 @@ body {
     padding: 20px;
 }
 
+h1 {
+    text-align: center;
+}
+
 /* ====== Main Layout ====== */
 .computers-page-layout {
     display: flex;

@@ -1,10 +1,10 @@
 package toshu.org.corpsuite.web;
 
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.ticket.model.Ticket;
@@ -12,8 +12,10 @@ import toshu.org.corpsuite.ticket.service.TicketService;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
 import toshu.org.corpsuite.web.dto.TicketAdd;
+import toshu.org.corpsuite.web.mapper.dtoMapper;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/tickets")
@@ -49,17 +51,53 @@ public class TicketController {
         ModelAndView mav = new ModelAndView("ticket-add");
         mav.addObject("user", user);
         mav.addObject("ticketRequest", TicketAdd.builder().requester(user.getCorporateEmail()).build());
+        mav.addObject("endpoint", "add");
+        mav.addObject("method", "POST");
 
         return mav;
     }
 
     @PostMapping("/add")
-    public ModelAndView handleTicketAddPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, TicketAdd ticketAddRequest) {
+    public ModelAndView handleTicketAddPage(@Valid @ModelAttribute("ticketRequest") TicketAdd ticketRequest, BindingResult result) {
 
-        User responsibleUser = userService.findByEmail(ticketAddRequest.getResponsible());
-        User requesterUser = userService.findById(authenticationMetadata.getUserId());
+        User requesterUser = userService.findByEmail(ticketRequest.getRequester());
 
-        ticketService.addTicket(ticketAddRequest, requesterUser, responsibleUser);
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("ticket-add");
+            mav.addObject("user", requesterUser);
+            mav.addObject("ticketRequest", ticketRequest);
+            return mav;
+        }
+        User responsibleUser = userService.getRandomUserFromDepartment(ticketRequest.getDepartment());
+        ticketService.addTicket(ticketRequest, requesterUser, responsibleUser);
+
+        return new ModelAndView("redirect:/tickets");
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView getTicketEditPage(@PathVariable UUID id) {
+        Ticket ticket = ticketService.findById(id);
+
+        ModelAndView mav = new ModelAndView("ticket-add");
+        mav.addObject("ticketRequest", dtoMapper.toTicketDto(ticket));
+        mav.addObject("endpoint", "edit/" + id);
+        mav.addObject("method", "PUT");
+
+        return mav;
+    }
+
+    @PutMapping("/edit/{id}")
+    public ModelAndView handleTicketEditPage(@PathVariable UUID id, @Valid @ModelAttribute("ticketRequest") TicketAdd ticketRequest, BindingResult result) {
+
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("ticket-add");
+            mav.addObject("ticketRequest", ticketRequest);
+            mav.addObject("endpoint", "edit/" + id);
+            mav.addObject("method", "PUT");
+
+            return mav;
+        }
+        ticketService.editTicket(id,ticketRequest);
 
         return new ModelAndView("redirect:/tickets");
     }

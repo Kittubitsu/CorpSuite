@@ -30,11 +30,11 @@
                 </div>
                 <div class="computer-details">
                     <h3>Computer Details</h3>
-                    <p>Name: <span>SOF-WKS-0001</span></p>
-                    <p>CPU: <span>Intel</span></p>
-                    <p>GPU: <span>nVidia</span></p>
-                    <p>RAM: <span>16GB</span></p>
-                    <p>Storage: <span>1TB</span></p>
+                    <p>Name: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).computerName}"></span></p>
+                    <p>CPU: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).cpu}"></span></p>
+                    <p>GPU: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).gpu}"></span></p>
+                    <p>RAM: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).ram}"></span></p>
+                    <p>Storage: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).storage}"></span></p>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
             <div class="request-overview">
                 <div class="ticket-request-container-head">
                     <h3>Absence Requests</h3>
-                    <a class="request-ticket-button" href="">Open All Requests</a>
+                    <a class="request-ticket-button" th:href="@{/requests}">Open All Requests</a>
                 </div>
                 <table>
                     <thead>
@@ -75,7 +75,7 @@
             <div class="ticket-overview">
                 <div class="ticket-request-container-head">
                     <h3>Tickets</h3>
-                    <a class="request-ticket-button" href="">Open All Tickets</a>
+                    <a class="request-ticket-button" th:href="@{/tickets}">Open All Tickets</a>
                 </div>
                 <table>
                     <thead>
@@ -87,17 +87,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>computer no workey</td>
-                        <td>Pesho</td>
-                        <td>Device</td>
-                        <td>Pending</td>
-                    </tr>
-                    <tr>
-                        <td>computer no workey</td>
-                        <td>Pesho</td>
-                        <td>Device</td>
-                        <td>Pending</td>
+                    <tr th:each="ticket : ${user.openedTickets}" th:if="${ticket.status.name() != 'COMPLETED'}">
+                        <td th:text="${ticket.comment.substring(0,5)}"></td>
+                        <td th:text="${ticket.responsible.corporateEmail}"></td>
+                        <td th:text="${ticket.type.name()}"></td>
+                        <td th:text="${ticket.status.name()}"></td>
                     </tr>
                     </tbody>
                 </table>

@@ -11,19 +11,18 @@ footer {
     font-size: 16px;
     background: white;
     height: 100%;
-    padding: 30px;
+    padding: 2em;
     color: black;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    min-height: 800px;
-    max-height: 1000px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .main-nav {
-    margin-top: 2em;
+    margin-top: 0.2em;
 }
 
 .nav-bar-left nav ul {
@@ -32,7 +31,7 @@ footer {
 }
 
 .nav-bar-left nav ul li {
-    padding: 12px 0;
+    padding: 4px 0;
 }
 
 .nav-bar-left nav ul li a {

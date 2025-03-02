@@ -9,6 +9,7 @@ import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
 
+
 @Controller()
 @RequestMapping("/home")
 public class HomeController {

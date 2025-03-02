@@ -17,10 +17,7 @@ import toshu.org.corpsuite.web.dto.AddUser;
 import toshu.org.corpsuite.web.dto.EditUser;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -180,8 +177,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new DomainException("User could not be found!"));
     }
 
-    public User findByEmail(String responsible) {
-        return userRepository.findUserByCorporateEmail(responsible).orElseThrow(() -> new DomainException("No such user exists!"));
+    public User findByEmail(String email) {
+        return userRepository.findUserByCorporateEmail(email).orElseThrow(() -> new DomainException("No such user exists!"));
     }
 
     @Override
@@ -240,5 +237,14 @@ public class UserService implements UserDetailsService {
 
     public List<User> getUsersWithoutComputer() {
         return userRepository.findAllByComputersEmpty();
+    }
+
+    public User getRandomUserFromDepartment(UserDepartment department) {
+
+        List<User> users = userRepository.findAllByDepartment(department);
+        Random rnd = new Random();
+        int i = rnd.nextInt(users.size());
+
+        return users.get(i);
     }
 }

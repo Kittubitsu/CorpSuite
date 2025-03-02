@@ -2,38 +2,50 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Ticket</title>
+    <title th:if="${endpoint == 'add'}">Add Ticket</title>
+    <title th:if="${endpoint != 'add'}">Edit Ticket</title>
     <link rel="stylesheet" href="/css/ticket-add.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="add-ticket-layout">
     <div class="ticket-add-form">
-        <h1>New Ticket</h1>
-        <form th:action="@{/tickets/add}" th:method="POST" th:object="${ticketRequest}" class="form-main">
+        <h1 th:if="${endpoint == 'add'}">New Ticket</h1>
+        <h1 th:if="${endpoint != 'add'}">Edit Ticket</h1>
+        <form th:action="@{'/tickets/' + ${endpoint}}" th:method="${method}" th:object="${ticketRequest}"
+              class="form-main">
             <div class="form-group">
                 <label for="requester">Requester Email</label>
                 <input type="email" class="form-control" id="requester" readonly th:field="*{requester}">
             </div>
             <div class="form-group">
-                <label for="responsible">Responsible Email</label>
-                <input type="email" class="form-control" id="responsible" th:field="*{responsible}">
-            </div>
-            <div class="form-group">
-                <label for="comment">Comment</label>
-                <input type="text" class="form-control" id="comment" th:field="*{comment}">
+                <label for="responsible">Responsible Department</label>
+                <select name="status" id="responsible" th:readonly="${endpoint != 'add'}" th:field="*{department}">
+                    <option value="" selected hidden>Please select a department!</option>
+                    <option th:each="department : ${T(toshu.org.corpsuite.user.model.UserDepartment).values()}"
+                            th:if="${department.name() != 'ADMIN'}" th:value="${department}"
+                            th:text="${department}"></option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
                 <select name="status" id="status" th:field="*{status}">
-                    <option th:each="status : ${T(toshu.org.corpsuite.ticket.model.TicketStatus).values()}" th:value="${status}" th:text="${status}"></option>
+                    <option value="" selected hidden>Please select a status!</option>
+                    <option th:each="status : ${T(toshu.org.corpsuite.ticket.model.TicketStatus).values()}"
+                            th:value="${status}" th:text="${status}"></option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="type">Type</label>
                 <select name="type" id="type" th:field="*{type}">
-                    <option th:each="type : ${T(toshu.org.corpsuite.ticket.model.TicketType).values()}" th:value="${type}" th:text="${type}" ></option>
+                    <option value="" selected hidden>Please select a type!</option>
+                    <option th:each="type : ${T(toshu.org.corpsuite.ticket.model.TicketType).values()}"
+                            th:value="${type}" th:text="${type}"></option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment</label>
+                <textarea name="comment" class="form-control" id="comment" th:field="*{comment}"></textarea>
             </div>
             <button type="submit" class="submit-button">Submit</button>
         </form>

@@ -39,6 +39,5 @@ public class Ticket {
     @Column(nullable = false)
     private LocalDateTime opened;
 
-    @Column(nullable = false)
     private LocalDateTime closed;
 }

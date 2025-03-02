@@ -74,6 +74,11 @@ h1 {
     transition: background 0.3s;
 }
 
+#comment {
+    resize: none;
+    height: 10em;
+}
+
 .submit-button:hover {
     background: #47748f;
 }
