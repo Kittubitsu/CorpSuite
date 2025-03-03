@@ -11,8 +11,8 @@
     <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
     <div class="request-overview">
         <div class="table-nav">
-            <a href="">Open Request</a>
-            <a href="">History</a>
+            <a th:href="@{/requests/add}">Open Request</a>
+            <a th:href="@{/requests/history}">History</a>
         </div>
         <table>
             <thead>
@@ -26,29 +26,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>1 jan 2025</td>
-                <td>5 jan 2025</td>
-                <td>Paid Leave</td>
-                <td>Gosho</td>
-                <td>Approved</td>
-                <td><a href="">Edit</a></td>
-            </tr>
-            <tr>
-                <td>1 jan 2025</td>
-                <td>5 jan 2025</td>
-                <td>Paid Leave</td>
-                <td>Gosho</td>
-                <td>Approved</td>
-                <td><a href="">Edit</a></td>
-            </tr>
-            <tr>
-                <td>1 jan 2025</td>
-                <td>5 jan 2025</td>
-                <td>Paid Leave</td>
-                <td>Gosho</td>
-                <td>Approved</td>
-                <td><a href="">Edit</a></td>
+            <tr th:each="request : ${requestList}" th:if="${request.status.name() == 'PENDING'}">
+                <td th:text="${request.fromDate}">1 jan 2025</td>
+                <td th:text="${request.toDate}">5 jan 2025</td>
+                <td th:text="${request.type}">Paid Leave</td>
+                <td th:text="${request.responsible.corporateEmail}">Gosho</td>
+                <td th:text="${request.status.name()}">Approved</td>
+                <td><a th:href="@{'/requests/edit/' + ${request.id}}">Edit</a></td>
             </tr>
             </tbody>
         </table>

@@ -1,9 +1,11 @@
 package toshu.org.corpsuite.web.dto;
 
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.model.RequestType;
 import toshu.org.corpsuite.user.model.User;
@@ -15,11 +17,9 @@ import java.time.LocalDateTime;
 @Builder
 public class RequestAdd {
 
-    @NotNull
-    private User requester;
+    private String requester;
 
-    @NotNull
-    private User responsible;
+    private String responsible;
 
     @NotNull
     private RequestStatus status;
@@ -27,12 +27,16 @@ public class RequestAdd {
     @NotNull
     private RequestType type;
 
-    @NotNull
+    @NotEmpty
     private String comment;
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate fromDate;
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate toDate;
+
+    private Integer totalDays;
 }
