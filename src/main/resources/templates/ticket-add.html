@@ -26,6 +26,7 @@
                             th:if="${department.name() != 'ADMIN'}" th:value="${department}"
                             th:text="${department}"></option>
                 </select>
+                <p class="error-field" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
@@ -34,6 +35,7 @@
                     <option th:each="status : ${T(toshu.org.corpsuite.ticket.model.TicketStatus).values()}"
                             th:value="${status}" th:text="${status}"></option>
                 </select>
+                <p class="error-field" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></p>
             </div>
             <div class="form-group">
                 <label for="type">Type</label>
@@ -42,10 +44,12 @@
                     <option th:each="type : ${T(toshu.org.corpsuite.ticket.model.TicketType).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
+                <p class="error-field" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
             </div>
             <div class="form-group">
                 <label for="comment">Comment</label>
                 <textarea name="comment" class="form-control" id="comment" th:field="*{comment}"></textarea>
+                <p class="error-field" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></p>
             </div>
             <button type="submit" class="submit-button">Submit</button>
         </form>

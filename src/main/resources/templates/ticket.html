@@ -26,7 +26,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="ticket : ${tickets}">
+            <tr th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'PENDING'}">
                 <td><a th:href="@{'tickets/edit/' + ${ticket.id}}">Edit</a></td>
                 <td th:text="${ticket.comment.substring(0,10) + '...'}"></td>
                 <td th:text="${ticket.responsible.corporateEmail}"></td>

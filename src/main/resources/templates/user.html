@@ -26,6 +26,7 @@
                 <th>Position</th>
                 <th>Manager</th>
                 <th>Card</th>
+                <th>Computer</th>
                 <th>Status</th>
                 <th>UpdatedOn</th>
                 <th>LeftOn</th>
@@ -39,8 +40,9 @@
                 <td th:text="${user.country}"></td>
                 <td th:text="${user.department}"></td>
                 <td th:text="${user.position}"></td>
-                <td th:text="${user.manager?.id == null ? 'none' : user.manager.firstName + ' ' + user.manager.lastName}"></td>
-                <td th:text="${user.card?.id == null} ? 'none' : ${user.card.id}"></td>
+                <td th:text="${user.manager?.id == null ? 'None' : user.manager.firstName + ' ' + user.manager.lastName}"></td>
+                <td th:text="${user.card?.id == null} ? 'None' : ${user.card.id}"></td>
+                <td th:text="${user.computers.isEmpty()} ? 'None' : ${user.computers.get(0).computerName}"></td>
                 <td th:text="${user.active == true ? 'Active' : 'Deactivated'}"></td>
                 <td th:text="${user.updatedOn}"></td>
                 <td th:text="${user.leftOn}"></td>

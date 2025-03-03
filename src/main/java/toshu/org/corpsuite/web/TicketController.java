@@ -66,6 +66,8 @@ public class TicketController {
             ModelAndView mav = new ModelAndView("ticket-add");
             mav.addObject("user", requesterUser);
             mav.addObject("ticketRequest", ticketRequest);
+            mav.addObject("endpoint", "add");
+            mav.addObject("method", "POST");
             return mav;
         }
         User responsibleUser = userService.getRandomUserFromDepartment(ticketRequest.getDepartment());

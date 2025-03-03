@@ -24,6 +24,12 @@ h1 {
     margin-bottom: 1em;
 }
 
+.error-field {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
+
 .add-ticket-layout {
     background: white;
     padding: 30px;

@@ -87,8 +87,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="ticket : ${user.openedTickets}" th:if="${ticket.status.name() != 'COMPLETED'}">
-                        <td th:text="${ticket.comment.substring(0,5)}"></td>
+                    <tr th:each="ticket : ${user.openedTickets}" th:if="${ticket.status.name() == 'PENDING'}">
+                        <td th:text="${ticket.comment.substring(0,5) + '...'}"></td>
                         <td th:text="${ticket.responsible.corporateEmail}"></td>
                         <td th:text="${ticket.type.name()}"></td>
                         <td th:text="${ticket.status.name()}"></td>
