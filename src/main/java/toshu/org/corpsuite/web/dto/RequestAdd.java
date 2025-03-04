@@ -8,35 +8,33 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.model.RequestType;
-import toshu.org.corpsuite.user.model.User;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 public class RequestAdd {
 
-    private String requester;
+    private String requesterEmail;
 
-    private String responsible;
+    private String responsibleEmail;
 
-    @NotNull
+    @NotNull(message = "Status cannot be empty!")
     private RequestStatus status;
 
-    @NotNull
+    @NotNull(message = "Type cannot be empty!")
     private RequestType type;
 
-    @NotEmpty
+    @NotEmpty(message = "Comment cannot be empty!")
     private String comment;
 
-    @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @NotNull(message = "Please select the days for the duration of the absence!")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fromDate;
 
     @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate toDate;
 
-    private Integer totalDays;
+    @NotNull(message = "Please select the days for the duration of the absence!")
+    private int totalDays;
 }

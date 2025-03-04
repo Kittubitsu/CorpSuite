@@ -64,6 +64,12 @@ h1 {
     pointer-events: none;
 }
 
+.error-field {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
+
 /* ====== Submit Button ====== */
 .submit-button {
     margin-top: 1em;

@@ -38,6 +38,6 @@ public class Request {
 
     private LocalDate toDate;
 
-    private long totalDaysOff;
+    private int totalDaysOff;
 
 }

@@ -55,19 +55,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1 jan 2025</td>
-                        <td>5 jan 2025</td>
-                        <td>Paid Leave</td>
-                        <td>Gosho</td>
-                        <td>Approved</td>
-                    </tr>
-                    <tr>
-                        <td>1 jan 2025</td>
-                        <td>5 jan 2025</td>
-                        <td>Paid Leave</td>
-                        <td>Gosho</td>
-                        <td>Approved</td>
+                    <tr th:each="request : ${user.openedRequests}">
+                        <td th:text="${#temporals.format(request.fromDate,'dd/MMMM/YYYY')}">1 jan 2025</td>
+                        <td th:text="${#temporals.format(request.toDate,'dd/MMMM/YYYY')}">5 jan 2025</td>
+                        <td th:text="${request.type}">Paid Leave</td>
+                        <td th:text="${request.responsible.corporateEmail}">Gosho</td>
+                        <td th:text="${request.status.name()}">Approved</td>
                     </tr>
                     </tbody>
                 </table>

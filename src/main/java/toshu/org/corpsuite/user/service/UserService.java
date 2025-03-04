@@ -247,4 +247,20 @@ public class UserService implements UserDetailsService {
 
         return users.get(i);
     }
+
+    public void subtractUserPaidLeave(UUID id, int paidLeaveCount) {
+
+        User user = findById(id);
+        user.setPaidLeaveCount(user.getPaidLeaveCount() - paidLeaveCount);
+        userRepository.save(user);
+    }
+
+    public void addUserPaidLeave(UUID id, int paidLeaveCount) {
+
+        User user = findById(id);
+        user.setPaidLeaveCount(user.getPaidLeaveCount() + paidLeaveCount);
+        userRepository.save(user);
+    }
+
+
 }
