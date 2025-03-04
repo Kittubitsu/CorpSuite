@@ -49,6 +49,10 @@ public class UserController {
         User userToEdit = userService.findById(id);
         User user = userService.findById(authenticationMetadata.getUserId());
         List<Card> allCards = cardService.getAllFreeCards();
+
+        if (userToEdit.getId().equals(user.getId())) {
+            allCards.add(user.getCard());
+        }
         mav.setViewName("user-edit");
         mav.addObject("userRequest", EditUser.builder()
                 .firstName(userToEdit.getFirstName())
