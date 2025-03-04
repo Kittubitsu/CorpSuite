@@ -125,5 +125,4 @@ public class RequestController {
 
         return new ModelAndView("redirect:/requests");
     }
-    //TODO: finish thymeleaf logic and editing to database
 }
