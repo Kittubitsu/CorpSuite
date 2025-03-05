@@ -13,7 +13,7 @@
         <h1>Tickets</h1>
         <div class="table-nav">
             <a th:href="@{/tickets/add}">Open Ticket</a>
-            <a th:href="@{/tickets/history}">History</a>
+            <a id="history-button" th:href="@{'/tickets?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span th:unless="${bool}">Show</span> History</a>
         </div>
         <table>
             <thead>
@@ -26,7 +26,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'PENDING'}">
+            <tr th:each="ticket : ${tickets}"
+                th:style="${ticket.status.name() == 'REJECTED'} ? 'background-color: #f5a9a9' : ''"
+                th:styleappend="${ticket.status.name() == 'COMPLETED'} ? 'background-color: #a9f5a9' : ''">
                 <td><a th:href="@{'tickets/edit/' + ${ticket.id}}">Edit</a></td>
                 <td th:text="${ticket.comment.substring(0,10) + '...'}"></td>
                 <td th:text="${ticket.responsible.corporateEmail}"></td>
@@ -37,6 +39,7 @@
         </table>
     </div>
 </div>
+<script src="/js/history.js"></script>
 <footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>

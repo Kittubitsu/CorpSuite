@@ -1,6 +1,7 @@
 package toshu.org.corpsuite.ticket.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.user.model.User;

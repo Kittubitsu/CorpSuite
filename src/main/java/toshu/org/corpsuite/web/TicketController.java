@@ -1,5 +1,6 @@
 package toshu.org.corpsuite.web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -8,12 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.ticket.model.Ticket;
+import toshu.org.corpsuite.ticket.model.TicketStatus;
 import toshu.org.corpsuite.ticket.service.TicketService;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
 import toshu.org.corpsuite.web.dto.TicketAdd;
 import toshu.org.corpsuite.web.mapper.dtoMapper;
 
+import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,21 +27,30 @@ public class TicketController {
     private final UserService userService;
     private final TicketService ticketService;
 
+    private Boolean showQuery;
+
     public TicketController(UserService userService, TicketService ticketService) {
         this.userService = userService;
         this.ticketService = ticketService;
     }
 
     @GetMapping
-    public ModelAndView getTicketPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getTicketPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
 
         User user = userService.findById(authenticationMetadata.getUserId());
-
+        ModelAndView mav = new ModelAndView("ticket");
         List<Ticket> ticketList = ticketService.getAllByUser(user);
 
-        ModelAndView mav = new ModelAndView("ticket");
-        mav.addObject("user", user);
+        showQuery = show;
+
         mav.addObject("tickets", ticketList);
+        if (!show) {
+            List<Ticket> filteredList = ticketList.stream().filter(ticket -> ticket.getStatus().equals(TicketStatus.PENDING)).toList();
+            mav.addObject("tickets", filteredList);
+        }
+
+        mav.addObject("bool", show);
+        mav.addObject("user", user);
 
         return mav;
     }
@@ -73,7 +85,7 @@ public class TicketController {
         User responsibleUser = userService.getRandomUserFromDepartment(ticketRequest.getDepartment());
         ticketService.addTicket(ticketRequest, requesterUser, responsibleUser);
 
-        return new ModelAndView("redirect:/tickets");
+        return new ModelAndView("redirect:/tickets?show=" + showQuery);
     }
 
     @GetMapping("/edit/{id}")
@@ -99,8 +111,9 @@ public class TicketController {
 
             return mav;
         }
-        ticketService.editTicket(id,ticketRequest);
 
-        return new ModelAndView("redirect:/tickets");
+        ticketService.editTicket(id, ticketRequest);
+
+        return new ModelAndView("redirect:/tickets?show=" + showQuery);
     }
 }
