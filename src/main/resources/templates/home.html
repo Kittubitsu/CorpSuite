@@ -56,11 +56,11 @@
                     </thead>
                     <tbody>
                     <tr th:each="request : ${user.openedRequests}">
-                        <td th:text="${#temporals.format(request.fromDate,'dd/MMMM/YYYY')}">1 jan 2025</td>
-                        <td th:text="${#temporals.format(request.toDate,'dd/MMMM/YYYY')}">5 jan 2025</td>
-                        <td th:text="${request.type}">Paid Leave</td>
-                        <td th:text="${request.responsible.corporateEmail}">Gosho</td>
-                        <td th:text="${request.status.name()}">Approved</td>
+                        <td th:text="${#temporals.format(request.fromDate,'dd/MMMM/YYYY')}"></td>
+                        <td th:text="${#temporals.format(request.toDate,'dd/MMMM/YYYY')}"></td>
+                        <td th:text="${request.type}"></td>
+                        <td th:text="${request.responsible.corporateEmail}"></td>
+                        <td th:text="${request.status.name()}"></td>
                     </tr>
                     </tbody>
                 </table>

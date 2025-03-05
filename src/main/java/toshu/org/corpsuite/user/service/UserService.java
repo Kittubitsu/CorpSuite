@@ -221,15 +221,39 @@ public class UserService implements UserDetailsService {
             userRequest.setCard(userToEdit.getCard());
         }
 
+        if (!userRequest.getIsActive()) {
+            userRequest.setCard(null);
+            userToEdit.setLeftOn(LocalDateTime.now());
+            userRequest.setPosition(UserPosition.JUNIOR);
+        }
+
+        if (userToEdit.getPosition().equals(UserPosition.MANAGER) && !userRequest.getIsActive()) {
+            List<User> subordinates = userToEdit.getSubordinates();
+            subordinates.forEach(user -> {
+                user.setManager(null);
+                userRepository.save(user);
+            });
+            userToEdit.setSubordinates(new ArrayList<>());
+        } else if (userRequest.getPosition().equals(UserPosition.MANAGER) && !userToEdit.getPosition().equals(userRequest.getPosition())) {
+            userToEdit.setPosition(userRequest.getPosition());
+            userRepository.save(userToEdit);
+            List<User> departmentUsersExclPosition = getDepartmentUsersExclPosition(userToEdit.getDepartment(), userToEdit.getPosition());
+            userToEdit.setSubordinates(departmentUsersExclPosition);
+            departmentUsersExclPosition.forEach(user -> {
+                user.setManager(userToEdit);
+                userRepository.save(user);
+            });
+        }
+
         userToEdit.setFirstName(userRequest.getFirstName());
         userToEdit.setLastName(userRequest.getLastName());
         userToEdit.setDepartment(userRequest.getDepartment());
         userToEdit.setActive(userRequest.getIsActive());
         userToEdit.setCountry(userRequest.getCountry());
-        userToEdit.setCorporateEmail(userRequest.getCorporateEmail());
-        userToEdit.setPosition(userRequest.getPosition());
-        userToEdit.setProfilePicture(userRequest.getProfilePicture());
         userToEdit.setCard(userRequest.getCard());
+        userToEdit.setCorporateEmail(userRequest.getCorporateEmail());
+        userToEdit.setProfilePicture(userRequest.getProfilePicture());
+        userToEdit.setPosition(userRequest.getPosition());
         userToEdit.setUpdatedOn(LocalDateTime.now());
 
         userRepository.save(userToEdit);
