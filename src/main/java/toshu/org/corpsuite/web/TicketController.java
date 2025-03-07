@@ -1,6 +1,5 @@
 package toshu.org.corpsuite.web;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import toshu.org.corpsuite.user.service.UserService;
 import toshu.org.corpsuite.web.dto.TicketAdd;
 import toshu.org.corpsuite.web.mapper.dtoMapper;
 
-import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.UUID;
 

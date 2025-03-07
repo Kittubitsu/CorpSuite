@@ -22,6 +22,7 @@ public class ComputerController {
 
     private final UserService userService;
     private final ComputerService computerService;
+    private Boolean showQuery;
 
     public ComputerController(UserService userService, ComputerService computerService) {
         this.userService = userService;
@@ -29,13 +30,22 @@ public class ComputerController {
     }
 
     @GetMapping
-    public ModelAndView getComputerPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getComputerPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
 
         ModelAndView mav = new ModelAndView("computer");
+
         User user = userService.findById(authenticationMetadata.getUserId());
-        List<Computer> computers = computerService.getAllActiveComputers();
-        mav.addObject("user", user);
+        List<Computer> computers = computerService.getAllComputers();
+
+        showQuery = show;
+
         mav.addObject("computers", computers);
+        if (!show) {
+            List<Computer> filteredComputers = computers.stream().filter(Computer::isActive).toList();
+            mav.addObject("computers", filteredComputers);
+        }
+        mav.addObject("bool", show);
+        mav.addObject("user", user);
 
         return mav;
     }
@@ -69,7 +79,7 @@ public class ComputerController {
 
         computerService.addComputer(computerRequest);
 
-        return new ModelAndView("redirect:/computers");
+        return new ModelAndView("redirect:/computers?show=" + showQuery);
     }
 
     @GetMapping("/edit/{id}")
@@ -113,7 +123,7 @@ public class ComputerController {
 
         computerService.editComputer(id, computerRequest);
 
-        return new ModelAndView("redirect:/computers");
+        return new ModelAndView("redirect:/computers?show=" + showQuery);
     }
 
 }

@@ -13,7 +13,8 @@
         <h1>Requests</h1>
         <div class="table-nav">
             <a th:href="@{/requests/add}">Open Request</a>
-            <a th:href="@{/requests/history}">History</a>
+            <a id="history-button" th:href="@{'/requests?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span
+                    th:unless="${bool}">Show</span> History</a>
         </div>
         <table>
             <thead>
@@ -27,7 +28,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="request : ${requestList}" th:if="${request.status.name() == 'PENDING'}">
+            <tr th:each="request : ${requestList}"
+                th:style="${request.status.name() == 'REJECTED'} ? 'background-color: #f5a9a9' : ''"
+                th:styleappend="${request.status.name() == 'APPROVED'} ? 'background-color: #a9f5a9' : ''">
                 <td th:text="${request.fromDate}">1 jan 2025</td>
                 <td th:text="${request.toDate}">5 jan 2025</td>
                 <td th:text="${request.type}">Paid Leave</td>
@@ -39,6 +42,7 @@
         </table>
     </div>
 </div>
+<script src="/js/history.js"></script>
 <footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>

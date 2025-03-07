@@ -16,18 +16,18 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findUserByCorporateEmail(String corporateEmail);
 
-    @Query(value = "SELECT u FROM User u WHERE u.isActive = true")
+    @Query(value = "SELECT u FROM User u WHERE u.active = true")
     List<User> findAllByActive();
 
-    @Query(value = "SELECT u FROM User u WHERE u.department = ?1 and u.position = 'MANAGER' and u.isActive = true")
+    @Query(value = "SELECT u FROM User u WHERE u.department = ?1 and u.position = 'MANAGER' and u.active = true")
     Optional<User> findUserByDepartmentAndPosition_Manager(UserDepartment department);
 
-    @Query(value = "SELECT u FROM User u WHERE u.department = ?1 and u.position != ?2 and u.isActive = true")
+    @Query(value = "SELECT u FROM User u WHERE u.department = ?1 and u.position != ?2 and u.active = true")
     List<User> findAllByDepartmentAndPositionNot(UserDepartment department, UserPosition position);
 
-    @Query(value = "SELECT u FROM User u WHERE SIZE(u.computers) = 0 and u.isActive = true")
+    @Query(value = "SELECT u FROM User u WHERE SIZE(u.computers) = 0 and u.active = true")
     List<User> findAllByComputersEmpty();
 
-    @Query(value = "SELECT u FROM User u WHERE u.department = ?1 and u.isActive = true")
+    @Query(value = "SELECT u FROM User u WHERE u.department = ?1 and u.active = true")
     List<User> findAllByDepartment(UserDepartment department);
 }

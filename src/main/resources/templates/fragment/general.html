@@ -24,6 +24,7 @@
         <ul class="it-nav" th:if="${user.department.name() == 'IT' || user.department.name() == 'ADMIN'}">
             <h6>IT Panel</h6>
             <li><a th:href="@{/computers}">Computers</a></li>
+            <li><a th:href="@{/logs}">Logs</a></li>
         </ul>
         <ul class="logout-button">
             <li><a th:href="@{/logout}">Logout</a></li>

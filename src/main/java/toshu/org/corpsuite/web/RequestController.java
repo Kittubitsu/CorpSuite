@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.request.model.Request;
+import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
@@ -26,21 +27,32 @@ public class RequestController {
     private final UserService userService;
     private final RequestService requestService;
 
+    private Boolean showQuery;
+
     public RequestController(UserService userService, RequestService requestService) {
         this.userService = userService;
         this.requestService = requestService;
     }
 
     @GetMapping
-    public ModelAndView getRequestPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getRequestPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
+        ModelAndView mav = new ModelAndView("request");
 
         User user = userService.findById(authenticationMetadata.getUserId());
 
         List<Request> requestList = requestService.getAllByUser(user);
 
-        ModelAndView mav = new ModelAndView("request");
-        mav.addObject("user", user);
         mav.addObject("requestList", requestList);
+
+        showQuery = show;
+
+        if (!show) {
+            List<Request> filteredRequestList = requestList.stream().filter(request -> request.getStatus().equals(RequestStatus.PENDING)).toList();
+            mav.addObject("requestList", filteredRequestList);
+        }
+
+        mav.addObject("bool", show);
+        mav.addObject("user", user);
 
         return mav;
     }
@@ -87,7 +99,7 @@ public class RequestController {
 
         requestService.addRequest(absenceRequest, user, manager);
 
-        return new ModelAndView("redirect:/requests");
+        return new ModelAndView("redirect:/requests?show=" + showQuery);
     }
 
     @GetMapping("/edit/{id}")
@@ -123,6 +135,6 @@ public class RequestController {
 
         requestService.editRequest(absenceRequest, id, user);
 
-        return new ModelAndView("redirect:/requests");
+        return new ModelAndView("redirect:/requests?show=" + showQuery);
     }
 }

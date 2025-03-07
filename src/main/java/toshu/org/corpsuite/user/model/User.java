@@ -47,7 +47,7 @@ public class User {
     private UserPosition position;
 
     @Column(nullable = false)
-    private boolean isActive;
+    private boolean active;
 
     private LocalDateTime createdOn;
 

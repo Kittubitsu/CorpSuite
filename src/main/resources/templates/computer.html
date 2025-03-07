@@ -13,7 +13,8 @@
         <h1>Computers</h1>
         <div class="table-nav">
             <a th:href="@{/computers/add}">Add Computer</a>
-            <a th:href="@{/computers/history}">History</a>
+            <a id="history-button" th:href="@{'/computers?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span
+                    th:unless="${bool}">Show</span> History</a>
         </div>
         <table>
             <thead>
@@ -35,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="computer : ${computers}">
+            <tr th:each="computer : ${computers}" th:style="${computer.active == false} ? 'background-color: #f5a9a9' : ''">
                 <td><a th:href="@{'/computers/edit/' + ${computer.id}}">Edit</a></td>
                 <td th:text="${computer.id}"></td>
                 <td th:text="${computer.computerName}"></td>
@@ -55,6 +56,7 @@
         </table>
     </div>
 </div>
+<script src="/js/history.js"></script>
 <footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>
