@@ -2,6 +2,7 @@ package toshu.org.corpsuite.user.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -286,5 +287,12 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-
+    @Scheduled(cron = "0 0 0 1 1 *")
+    public void addPaidLeaveToAllUsers() {
+        for (User activeUser : getAllActiveUsers()) {
+            activeUser.setPaidLeaveCount(activeUser.getPaidLeaveCount() + 20);
+            userRepository.save(activeUser);
+        }
+        log.info("Paid Leave days added to all users!");
+    }
 }

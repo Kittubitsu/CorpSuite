@@ -33,7 +33,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${users}" th:if="${user.firstName != 'admin'}">
+            <tr th:each="user : ${users}">
                 <td><a th:href="@{'/users/edit/' + ${user.id}}">Edit</a></td>
                 <td th:text="${user.firstName + ' ' + user.lastName}"></td>
                 <td th:text="${user.corporateEmail}"></td>
@@ -44,8 +44,8 @@
                 <td th:text="${user.card?.id == null} ? 'None' : ${user.card.id}"></td>
                 <td th:text="${user.computers.isEmpty()} ? 'None' : ${user.computers.get(0).computerName}"></td>
                 <td th:text="${user.active == true ? 'Active' : 'Deactivated'}"></td>
-                <td th:text="${user.updatedOn}"></td>
-                <td th:text="${user.leftOn}"></td>
+                <td th:text="${#temporals.format(user.updatedOn,'dd-MMMM-YYYY hh:mm:ss')}"></td>
+                <td th:text="${#temporals.format(user.leftOn,'dd-MMMM-YYYY hh:mm:ss')}"></td>
             </tr>
             </tbody>
         </table>

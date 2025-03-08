@@ -2,6 +2,7 @@ package toshu.org.corpsuite.web;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -31,6 +32,7 @@ public class UserController {
         this.cardService = cardService;
     }
 
+    @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @GetMapping
     public ModelAndView getUsersPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         ModelAndView mav = new ModelAndView("user");
@@ -96,6 +98,7 @@ public class UserController {
         return new ModelAndView("redirect:/home");
     }
 
+    @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @GetMapping("/add")
     public ModelAndView getAddAccountPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
@@ -112,6 +115,7 @@ public class UserController {
         return mav;
     }
 
+    @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @PostMapping("/add")
     public ModelAndView handleAddPage(@Valid @ModelAttribute("userRequest") AddUser userRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
