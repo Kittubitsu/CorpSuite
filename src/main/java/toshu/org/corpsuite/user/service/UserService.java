@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void addUser(AddUser addUser) {
+    public User addUser(AddUser addUser) {
 
         Optional<User> optionalUser = userRepository.findUserByCorporateEmail(addUser.getCorporateEmail());
 
@@ -41,10 +41,10 @@ public class UserService implements UserDetailsService {
             throw new DomainException("This email exists already!");
         }
 
-        initializeUser(addUser);
+        return initializeUser(addUser);
     }
 
-    public void initializeUser(AddUser userAdd) {
+    public User initializeUser(AddUser userAdd) {
 
         if (userAdd.getPosition().equals(UserPosition.ADMIN) && userAdd.getDepartment().equals(UserDepartment.ADMIN)) {
             User user = User.builder()
@@ -68,8 +68,7 @@ public class UserService implements UserDetailsService {
                     .profilePicture(userAdd.getProfilePicture())
                     .build();
 
-            userRepository.save(user);
-            return;
+            return userRepository.save(user);
         }
 
         if (userAdd.getPosition().equals(UserPosition.MANAGER)) {
@@ -104,9 +103,8 @@ public class UserService implements UserDetailsService {
                 userRepository.save(user);
             });
 
-            userRepository.save(newManager);
 
-            return;
+            return userRepository.save(newManager);
         }
 
         Optional<User> departmentManagerOptional = getDepartmentManager(userAdd.getDepartment());
@@ -139,9 +137,7 @@ public class UserService implements UserDetailsService {
             departmentManager.getSubordinates().add(user);
 
             userRepository.save(departmentManager);
-            userRepository.save(user);
-
-            return;
+            return userRepository.save(user);
         }
 
         User user = User.builder()
@@ -165,8 +161,7 @@ public class UserService implements UserDetailsService {
                 .profilePicture(userAdd.getProfilePicture())
                 .build();
 
-        userRepository.save(user);
-
+        return userRepository.save(user);
     }
 
 

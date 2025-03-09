@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cards</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/log.css">
+</head>
+<body>
+<div class="cards-page-layout">
+  <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
+  <div class="cards-overview">
+    <h1>Logs</h1>
+    <div class="table-nav">
+      <p>Filter:</p>
+      <a>Add Card</a>
+      <a>History</a>
+    </div>
+    <table>
+      <thead>
+      <tr>
+        <th>Email</th>
+        <th>Action</th>
+        <th>Module</th>
+        <th>Comment</th>
+        <th>Timestamp</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="log : ${logs}">
+        <td th:text="${log.email}"></td>
+        <td th:text="${log.action}"></td>
+        <td th:text="${log.module}"></td>
+        <td th:text="${log.comment}"></td>
+        <td th:text="${#temporals.format(log.timestamp,'YYYY-MMMM-DD hh:mm:ss')}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<footer th:replace="~{fragment/general :: footer}"></footer>
+</body>
+</html>

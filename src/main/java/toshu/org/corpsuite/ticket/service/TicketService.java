@@ -23,7 +23,7 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
     }
 
-    public void addTicket(TicketAdd ticketAdd, User requester, User responsible) {
+    public Ticket addTicket(TicketAdd ticketAdd, User requester, User responsible) {
 
         Ticket ticket = Ticket.builder()
                 .requester(requester)
@@ -34,7 +34,7 @@ public class TicketService {
                 .opened(LocalDateTime.now())
                 .build();
 
-        ticketRepository.save(ticket);
+        return ticketRepository.save(ticket);
     }
 
     public List<Ticket> getAllTickets() {

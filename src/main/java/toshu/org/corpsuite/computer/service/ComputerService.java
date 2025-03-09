@@ -21,7 +21,7 @@ public class ComputerService {
         this.computerRepository = computerRepository;
     }
 
-    public void addComputer(ComputerAdd computerAdd) {
+    public Computer addComputer(ComputerAdd computerAdd) {
 
         if (computerRepository.findComputerByComputerName(computerAdd.getComputerName()).isPresent()) {
             throw new DomainException("Computer with that name exists already!");
@@ -45,7 +45,7 @@ public class ComputerService {
                 .owner(computerAdd.getOwner())
                 .build();
 
-        computerRepository.save(computer);
+        return computerRepository.save(computer);
     }
 
     public List<Computer> getAllComputers() {

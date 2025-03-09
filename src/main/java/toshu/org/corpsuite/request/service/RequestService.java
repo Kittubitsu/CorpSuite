@@ -27,7 +27,7 @@ public class RequestService {
     }
 
     @Transactional
-    public void addRequest(RequestAdd requestAdd, User requester, User responsible) {
+    public Request addRequest(RequestAdd requestAdd, User requester, User responsible) {
 
         Request request = Request.builder()
                 .requester(requester)
@@ -42,7 +42,7 @@ public class RequestService {
 
         userService.subtractUserPaidLeave(requester.getId(), requestAdd.getTotalDays());
 
-        requestRepository.save(request);
+        return requestRepository.save(request);
     }
 
     @Transactional

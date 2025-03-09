@@ -3,42 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Cards</title>
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/card.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/card.css">
 </head>
 <body>
 <div class="cards-page-layout">
-  <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
-  <div class="cards-overview">
-    <h1>Cards</h1>
-    <div class="table-nav">
-      <a th:href="@{/cards/add}">Add Card</a>
-      <a th:href="@{/cards/history}">History</a>
+    <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
+    <div class="cards-overview">
+        <h1>Cards</h1>
+        <div class="table-nav">
+            <a th:href="@{/cards/add}">Add Card</a>
+            <a id="history-button" th:href="@{'/cards?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span
+                    th:unless="${bool}">Show</span> History</a>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Actions</th>
+                <th>ID</th>
+                <th>User</th>
+                <th>Code</th>
+                <th>Type</th>
+                <th>Active Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="card : ${cards}" th:style="${card.isActive() == false} ? 'background-color: #f5a9a9' : ''">
+                <td><a th:href="@{'/cards/edit/' + ${card.id}}">Edit</a></td>
+                <td th:text="${card.id}"></td>
+                <td th:text="${#strings.isEmpty(card.owner) ? 'None' : card.owner.firstName + ' ' + card.owner.lastName}"></td>
+                <td th:text="${card.code}"></td>
+                <td th:text="${card.type.name()}"></td>
+                <td th:text="${card.isActive() ? 'Active' : 'Inactive'}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <table>
-      <thead>
-      <tr>
-        <th>Actions</th>
-        <th>ID</th>
-        <th>User</th>
-        <th>Code</th>
-        <th>Type</th>
-        <th>Active Status</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="card : ${cards}">
-        <td><a th:href="@{'/cards/edit/' + ${card.id}}">Edit</a></td>
-        <td th:text="${card.id}"></td>
-        <td th:text="${#strings.isEmpty(card.owner) ? 'None' : card.owner.firstName + ' ' + card.owner.lastName}"></td>
-        <td th:text="${card.code}"></td>
-        <td th:text="${card.type.name()}"></td>
-        <td th:text="${card.isActive() ? 'Active' : 'Inactive'}"></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
 </div>
+<script src="/js/history.js"></script>
 <footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>

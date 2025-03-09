@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import toshu.org.corpsuite.log.client.dto.LogRequest;
+import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.service.RequestService;
@@ -26,12 +28,14 @@ public class RequestController {
 
     private final UserService userService;
     private final RequestService requestService;
+    private final LogService logService;
 
     private Boolean showQuery;
 
-    public RequestController(UserService userService, RequestService requestService) {
+    public RequestController(UserService userService, RequestService requestService, LogService logService) {
         this.userService = userService;
         this.requestService = requestService;
+        this.logService = logService;
     }
 
     @GetMapping
@@ -97,7 +101,15 @@ public class RequestController {
             return mav;
         }
 
-        requestService.addRequest(absenceRequest, user, manager);
+        Request request = requestService.addRequest(absenceRequest, user, manager);
+
+        logService.saveLog(LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("CREATE")
+                .module("Request")
+                .comment("Request created with id [%s]".formatted(request.getId()))
+                .build());
+
 
         return new ModelAndView("redirect:/requests?show=" + showQuery);
     }
@@ -134,6 +146,13 @@ public class RequestController {
         }
 
         requestService.editRequest(absenceRequest, id, user);
+
+        logService.saveLog(LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("EDIT")
+                .module("Request")
+                .comment("Request edited with id [%s]".formatted(id))
+                .build());
 
         return new ModelAndView("redirect:/requests?show=" + showQuery);
     }

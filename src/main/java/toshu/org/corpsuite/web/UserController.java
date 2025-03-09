@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.card.model.Card;
 import toshu.org.corpsuite.card.service.CardService;
+import toshu.org.corpsuite.log.client.dto.LogRequest;
+import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
+import toshu.org.corpsuite.user.model.UserDepartment;
 import toshu.org.corpsuite.user.service.UserService;
 import toshu.org.corpsuite.web.dto.AddUser;
 import toshu.org.corpsuite.web.dto.EditUser;
@@ -26,20 +29,35 @@ public class UserController {
 
     private final UserService userService;
     private final CardService cardService;
+    private final LogService logService;
+    private Boolean showQuery;
 
-    public UserController(UserService userService, CardService cardService) {
+    public UserController(UserService userService, CardService cardService, LogService logService) {
         this.userService = userService;
         this.cardService = cardService;
+        this.logService = logService;
     }
 
     @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @GetMapping
-    public ModelAndView getUsersPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getUsersPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
+
         ModelAndView mav = new ModelAndView("user");
+
         User user = userService.findById(authenticationMetadata.getUserId());
-        List<User> users = userService.getAllActiveUsers();
-        mav.addObject("user", user);
+        List<User> users = userService.getAllUsers();
+
+        showQuery = show;
+
         mav.addObject("users", users);
+
+        if (!show) {
+            List<User> filteredUsers = users.stream().filter(User::isActive).toList();
+            mav.addObject("users", filteredUsers);
+        }
+
+        mav.addObject("bool", show);
+        mav.addObject("user", user);
 
         return mav;
     }
@@ -79,8 +97,9 @@ public class UserController {
     @PutMapping("/edit/{id}")
     public ModelAndView handleAccountEditPage(@Valid @ModelAttribute("userRequest") EditUser userRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
+        User user = userService.findById(authenticationMetadata.getUserId());
+
         if (result.hasErrors()) {
-            User user = userService.findById(authenticationMetadata.getUserId());
             List<Card> allCards = cardService.getAllFreeCards();
 
             ModelAndView mav = new ModelAndView();
@@ -93,7 +112,20 @@ public class UserController {
 
             return mav;
         }
+
         userService.editUser(id, userRequest);
+
+        logService.saveLog(LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("EDIT")
+                .module("User")
+                .comment("User edited with id [%s]".formatted(user.getId()))
+                .build());
+
+
+        if (user.getDepartment().equals(UserDepartment.HR) || user.getDepartment().equals(UserDepartment.ADMIN)) {
+            return new ModelAndView("redirect:/users?show=" + showQuery);
+        }
 
         return new ModelAndView("redirect:/home");
     }
@@ -119,9 +151,9 @@ public class UserController {
     @PostMapping("/add")
     public ModelAndView handleAddPage(@Valid @ModelAttribute("userRequest") AddUser userRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
+        User user = userService.findById(authenticationMetadata.getUserId());
         if (result.hasErrors()) {
             List<Card> allCards = cardService.getAllCards();
-            User user = userService.findById(authenticationMetadata.getUserId());
 
             ModelAndView mav = new ModelAndView("user-edit");
             mav.addObject("userRequest", userRequest);
@@ -132,9 +164,16 @@ public class UserController {
 
             return mav;
         }
-        userService.addUser(userRequest);
+        User createdUser = userService.addUser(userRequest);
 
-        return new ModelAndView("redirect:/users");
+        logService.saveLog(LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("CREATE")
+                .module("User")
+                .comment("User created with id [%s]".formatted(createdUser.getId()))
+                .build());
+
+        return new ModelAndView("redirect:/users?show=" + showQuery);
     }
 
 

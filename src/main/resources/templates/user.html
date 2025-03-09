@@ -13,7 +13,8 @@
         <h1>Users</h1>
         <div class="table-nav">
             <a th:href="@{/users/add}">Add new User</a>
-            <a th:href="@{/users/history}">History</a>
+            <a id="history-button" th:href="@{'/users?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span
+                    th:unless="${bool}">Show</span> History</a>
         </div>
         <table>
             <thead>
@@ -33,7 +34,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${users}">
+            <tr th:each="user : ${users}" th:style="${user.active == false} ? 'background-color: #f5a9a9' : ''">
                 <td><a th:href="@{'/users/edit/' + ${user.id}}">Edit</a></td>
                 <td th:text="${user.firstName + ' ' + user.lastName}"></td>
                 <td th:text="${user.corporateEmail}"></td>
@@ -51,6 +52,7 @@
         </table>
     </div>
 </div>
+<script src="/js/history.js"></script>
 <footer th:replace="~{fragment/general :: footer}"></footer>
 </body>
 </html>
