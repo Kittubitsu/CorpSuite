@@ -38,6 +38,7 @@ h1 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 800px;
+    position: relative;
 }
 
 .cards-overview table {
@@ -88,7 +89,7 @@ h1 {
 
 }
 
-td:last-of-type{
+td:last-of-type {
     text-align: center;
 }
 
@@ -103,8 +104,38 @@ td a {
     transition: 0.3s;
 }
 
-td a:hover{
+td a:hover {
     background: #47748f;
+}
+
+.table-nav-bottom {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: center;
+    position: absolute;
+    bottom: 2.5%;
+    left: 0;
+    width: 100%;
+}
+
+.table-nav-bottom-button {
+    text-decoration: none;
+    text-align: center;
+    width: 2em;
+    height: 1.5em;
+    border: none;
+    background: #2c3e50;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.table-nav-bottom-button:disabled {
+    background: #8391ac;
+    cursor: not-allowed;
 }
 
 /* ====== Responsive Design ====== */
