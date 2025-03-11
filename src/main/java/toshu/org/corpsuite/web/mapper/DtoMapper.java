@@ -24,7 +24,7 @@ public class DtoMapper {
                 .comment(computer.getComment())
                 .motherboard(computer.getMotherboard())
                 .operatingSystem(computer.getOperatingSystem())
-                .isActive(computer.isActive())
+                .active(computer.isActive())
                 .macAddress(computer.getMacAddress())
                 .build();
     }
@@ -56,7 +56,7 @@ public class DtoMapper {
         return AddCardRequest.builder()
                 .code(card.getCode())
                 .type(card.getType())
-                .isActive(card.isActive())
+                .active(card.isActive())
                 .build();
     }
     
@@ -68,7 +68,7 @@ public class DtoMapper {
                 .card(user.getCard())
                 .country(user.getCountry())
                 .department(user.getDepartment())
-                .isActive(user.isActive())
+                .active(user.isActive())
                 .password(user.getPassword())
                 .position(user.getPosition())
                 .profilePicture(user.getProfilePicture())

@@ -21,7 +21,7 @@ public class Card {
     @NotNull
     private CardType type;
 
-    private boolean isActive;
+    private boolean active;
 
     private String code;
 

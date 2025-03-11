@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService {
                     .country(userAdd.getCountry())
                     .department(userAdd.getDepartment())
                     .password(passwordEncoder.encode(userAdd.getPassword()))
-                    .active(userAdd.getIsActive())
+                    .active(userAdd.getActive())
                     .createdOn(LocalDateTime.now())
                     .updatedOn(LocalDateTime.now())
                     .paidLeaveCount(0)
@@ -96,7 +96,7 @@ public class UserService implements UserDetailsService {
                     .country(userAdd.getCountry())
                     .department(userAdd.getDepartment())
                     .password(passwordEncoder.encode(userAdd.getPassword()))
-                    .active(userAdd.getIsActive())
+                    .active(userAdd.getActive())
                     .createdOn(LocalDateTime.now())
                     .updatedOn(LocalDateTime.now())
                     .paidLeaveCount(20)
@@ -125,64 +125,42 @@ public class UserService implements UserDetailsService {
 
         Optional<User> departmentManagerOptional = getDepartmentManager(userAdd.getDepartment());
 
+        User user = new User();
+
         if (departmentManagerOptional.isPresent()) {
             User departmentManager = departmentManagerOptional.get();
 
-            User user = User.builder()
-                    .firstName(userAdd.getFirstName())
-                    .lastName(userAdd.getLastName())
-                    .corporateEmail(userAdd.getCorporateEmail())
-                    .position(userAdd.getPosition())
-                    .country(userAdd.getCountry())
-                    .department(userAdd.getDepartment())
-                    .password(passwordEncoder.encode(userAdd.getPassword()))
-                    .active(userAdd.getIsActive())
-                    .createdOn(LocalDateTime.now())
-                    .updatedOn(LocalDateTime.now())
-                    .paidLeaveCount(20)
-                    .manager(departmentManager)
-                    .computers(new ArrayList<>())
-                    .openedTickets(new ArrayList<>())
-                    .assignedTickets(new ArrayList<>())
-                    .openedRequests(new ArrayList<>())
-                    .assignedRequests(new ArrayList<>())
-                    .card(userAdd.getCard())
-                    .profilePicture(userAdd.getProfilePicture())
-                    .build();
+            user.setManager(departmentManager);
 
             departmentManager.getSubordinates().add(user);
 
             userRepository.save(departmentManager);
-            return userRepository.save(user);
         }
 
-        User user = User.builder()
-                .firstName(userAdd.getFirstName())
-                .lastName(userAdd.getLastName())
-                .corporateEmail(userAdd.getCorporateEmail())
-                .position(userAdd.getPosition())
-                .country(userAdd.getCountry())
-                .department(userAdd.getDepartment())
-                .password(passwordEncoder.encode(userAdd.getPassword()))
-                .active(userAdd.getIsActive())
-                .createdOn(LocalDateTime.now())
-                .updatedOn(LocalDateTime.now())
-                .paidLeaveCount(20)
-                .computers(new ArrayList<>())
-                .openedTickets(new ArrayList<>())
-                .assignedTickets(new ArrayList<>())
-                .openedRequests(new ArrayList<>())
-                .assignedRequests(new ArrayList<>())
-                .card(userAdd.getCard())
-                .profilePicture(userAdd.getProfilePicture())
-                .build();
+        user.setFirstName(userAdd.getFirstName());
+        user.setLastName(userAdd.getLastName());
+        user.setCorporateEmail(userAdd.getCorporateEmail());
+        user.setPosition(userAdd.getPosition());
+        user.setCountry(userAdd.getCountry());
+        user.setDepartment(userAdd.getDepartment());
+        user.setPassword(passwordEncoder.encode(userAdd.getPassword()));
+        user.setActive(userAdd.getActive());
+        user.setCreatedOn(LocalDateTime.now());
+        user.setUpdatedOn(LocalDateTime.now());
+        user.setPaidLeaveCount(20);
+        user.setOpenedTickets(new ArrayList<>());
+        user.setAssignedTickets(new ArrayList<>());
+        user.setOpenedRequests(new ArrayList<>());
+        user.setAssignedRequests(new ArrayList<>());
+        user.setCard(userAdd.getCard());
+        user.setProfilePicture(userAdd.getProfilePicture());
 
         return userRepository.save(user);
     }
 
 
     public List<User> getAllUsers(Boolean show) {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll().stream().filter(user -> !user.getPosition().equals(UserPosition.ADMIN)).toList();
 
         if (!show) {
             return users.stream().filter(User::isActive).toList();
@@ -231,24 +209,24 @@ public class UserService implements UserDetailsService {
 
         }
 
-        if (userRequest.getDepartment() == null && userRequest.getIsActive() == null && userRequest.getCorporateEmail() == null && userRequest.getPosition() == null && userRequest.getCard() == null) {
+        if (userRequest.getDepartment() == null && userRequest.getActive() == null && userRequest.getCorporateEmail() == null && userRequest.getPosition() == null && userRequest.getCard() == null) {
             userRequest.setDepartment(userToEdit.getDepartment());
-            userRequest.setIsActive(userToEdit.isActive());
+            userRequest.setActive(userToEdit.isActive());
             userRequest.setCorporateEmail(userToEdit.getCorporateEmail());
             userRequest.setPosition(userToEdit.getPosition());
             userRequest.setCard(userToEdit.getCard());
         }
 
-        if (!userRequest.getIsActive()) {
+        if (!userRequest.getActive()) {
             userRequest.setCard(null);
             userToEdit.setLeftOn(LocalDateTime.now());
         }
 
-        if (!userToEdit.isActive() && userRequest.getIsActive()) {
+        if (!userToEdit.isActive() && userRequest.getActive()) {
             userToEdit.setLeftOn(null);
         }
 
-        if (userToEdit.getPosition().equals(UserPosition.MANAGER) && !userRequest.getIsActive()) {
+        if (userToEdit.getPosition().equals(UserPosition.MANAGER) && !userRequest.getActive()) {
             List<User> subordinates = userToEdit.getSubordinates();
             subordinates.forEach(user -> {
                 user.setManager(null);
@@ -269,7 +247,7 @@ public class UserService implements UserDetailsService {
         userToEdit.setFirstName(userRequest.getFirstName());
         userToEdit.setLastName(userRequest.getLastName());
         userToEdit.setDepartment(userRequest.getDepartment());
-        userToEdit.setActive(userRequest.getIsActive());
+        userToEdit.setActive(userRequest.getActive());
         userToEdit.setCountry(userRequest.getCountry());
         userToEdit.setCard(userRequest.getCard());
         userToEdit.setCorporateEmail(userRequest.getCorporateEmail());

@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (screen.width > 1080) {
-            rowsPerPage = 12
+            rowsPerPage = 11
         }
 
         for (let i = 0; i < tableRows.length; i += rowsPerPage) {

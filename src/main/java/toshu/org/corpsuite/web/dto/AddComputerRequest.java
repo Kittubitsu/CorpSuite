@@ -33,7 +33,7 @@ public class AddComputerRequest {
 
     private int age;
 
-    private Boolean isActive;
+    private Boolean active;
 
     private User owner;
 

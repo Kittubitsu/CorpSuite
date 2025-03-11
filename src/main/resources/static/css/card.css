@@ -40,6 +40,11 @@ h1 {
     max-width: 800px;
 }
 
+.table-container {
+    overflow-y: scroll;
+    height: 90.5%;
+}
+
 .cards-overview table {
     width: 100%;
     border-collapse: collapse;

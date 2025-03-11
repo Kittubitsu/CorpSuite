@@ -16,40 +16,42 @@
             <a id="history-button" th:href="@{'/users?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span
                     th:unless="${bool}">Show</span> History</a>
         </div>
-        <table>
-            <thead>
-            <tr>
-                <th>Actions</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Country</th>
-                <th>Department</th>
-                <th>Position</th>
-                <th>Manager</th>
-                <th>Card</th>
-                <th>Computer</th>
-                <th>Status</th>
-                <th>UpdatedOn</th>
-                <th>LeftOn</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${users}" th:style="${user.active == false} ? 'background-color: #f5a9a9' : ''">
-                <td><a th:href="@{'/users/edit/' + ${user.id}}">Edit</a></td>
-                <td th:text="${user.firstName + ' ' + user.lastName}"></td>
-                <td th:text="${user.corporateEmail}"></td>
-                <td th:text="${user.country}"></td>
-                <td th:text="${user.department}"></td>
-                <td th:text="${user.position}"></td>
-                <td th:text="${user.manager?.id == null ? 'None' : user.manager.firstName + ' ' + user.manager.lastName}"></td>
-                <td th:text="${user.card?.id == null} ? 'None' : ${user.card.id}"></td>
-                <td th:text="${user.computers.isEmpty()} ? 'None' : ${user.computers.get(0).computerName}"></td>
-                <td th:text="${user.active == true ? 'Active' : 'Deactivated'}"></td>
-                <td th:text="${#temporals.format(user.updatedOn,'dd-MMMM-YYYY hh:mm:ss')}"></td>
-                <td th:text="${#temporals.format(user.leftOn,'dd-MMMM-YYYY hh:mm:ss')}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Actions</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Country</th>
+                    <th>Department</th>
+                    <th>Position</th>
+                    <th>Manager</th>
+                    <th>Card</th>
+                    <th>Computer</th>
+                    <th>Status</th>
+                    <th>UpdatedOn</th>
+                    <th>LeftOn</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}" th:style="${user.active == false} ? 'background-color: #f5a9a9' : ''">
+                    <td><a th:href="@{'/users/edit/' + ${user.id}}">Edit</a></td>
+                    <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+                    <td th:text="${user.corporateEmail}"></td>
+                    <td th:text="${user.country}"></td>
+                    <td th:text="${user.department}"></td>
+                    <td th:text="${user.position}"></td>
+                    <td th:text="${user.manager?.id == null ? 'None' : user.manager.firstName + ' ' + user.manager.lastName}"></td>
+                    <td th:text="${user.card?.id == null} ? 'None' : ${user.card.id}"></td>
+                    <td th:text="${user.computers.isEmpty()} ? 'None' : ${user.computers.get(0).computerName}"></td>
+                    <td th:text="${user.active == true ? 'Active' : 'Deactivated'}"></td>
+                    <td th:text="${#temporals.format(user.updatedOn,'dd-MMMM-YYYY hh:mm:ss')}"></td>
+                    <td th:text="${#temporals.format(user.leftOn,'dd-MMMM-YYYY hh:mm:ss')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <script src="/js/history.js"></script>

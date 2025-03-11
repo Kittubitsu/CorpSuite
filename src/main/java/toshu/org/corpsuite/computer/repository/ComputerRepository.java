@@ -13,7 +13,7 @@ public interface ComputerRepository extends JpaRepository<Computer, Long> {
 
     Optional<Computer> findComputerByComputerName(String computerName);
 
-    @Query(value = "SELECT c FROM Computer c WHERE c.isActive = true")
+    @Query(value = "SELECT c FROM Computer c WHERE c.active = true")
     List<Computer> findAllComputersByActiveTrue();
 
 }

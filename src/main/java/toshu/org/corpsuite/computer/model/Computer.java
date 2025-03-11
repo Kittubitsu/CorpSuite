@@ -49,7 +49,7 @@ public class Computer {
     private int age;
 
     @Column(nullable = false)
-    private boolean isActive;
+    private boolean active;
 
     @ManyToOne
     private User owner;

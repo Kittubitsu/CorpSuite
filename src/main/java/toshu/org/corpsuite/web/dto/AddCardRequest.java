@@ -12,5 +12,5 @@ public class AddCardRequest {
 
     private CardType type;
 
-    private Boolean isActive;
+    private Boolean active;
 }

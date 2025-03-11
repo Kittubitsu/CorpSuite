@@ -16,28 +16,30 @@
             <a id="history-button" th:href="@{'/cards?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span
                     th:unless="${bool}">Show</span> History</a>
         </div>
-        <table>
-            <thead>
-            <tr>
-                <th>Actions</th>
-                <th>ID</th>
-                <th>User</th>
-                <th>Code</th>
-                <th>Type</th>
-                <th>Active Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="card : ${cards}" th:style="${card.isActive() == false} ? 'background-color: #f5a9a9' : ''">
-                <td><a th:href="@{'/cards/edit/' + ${card.id}}">Edit</a></td>
-                <td th:text="${card.id}"></td>
-                <td th:text="${#strings.isEmpty(card.owner) ? 'None' : card.owner.firstName + ' ' + card.owner.lastName}"></td>
-                <td th:text="${card.code}"></td>
-                <td th:text="${card.type.name()}"></td>
-                <td th:text="${card.isActive() ? 'Active' : 'Inactive'}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Actions</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Code</th>
+                    <th>Type</th>
+                    <th>Active Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="card : ${cards}" th:style="${card.active == false} ? 'background-color: #f5a9a9' : ''">
+                    <td><a th:href="@{'/cards/edit/' + ${card.id}}">Edit</a></td>
+                    <td th:text="${card.id}"></td>
+                    <td th:text="${#strings.isEmpty(card.owner) ? 'None' : card.owner.firstName + ' ' + card.owner.lastName}"></td>
+                    <td th:text="${card.code}"></td>
+                    <td th:text="${card.type.name()}"></td>
+                    <td th:text="${card.active ? 'Active' : 'Inactive'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <script src="/js/history.js"></script>

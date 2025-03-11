@@ -34,7 +34,7 @@ public class CardService {
 
         Card card = Card.builder()
                 .code(cardRequest.getCode())
-                .isActive(cardRequest.getIsActive())
+                .active(cardRequest.getActive())
                 .type(cardRequest.getType())
                 .build();
 
@@ -78,7 +78,7 @@ public class CardService {
         card.setCode(cardRequest.getCode());
         card.setType(cardRequest.getType());
         card.setCode(cardRequest.getCode());
-        card.setActive(cardRequest.getIsActive());
+        card.setActive(cardRequest.getActive());
 
         Card saved = cardRepository.save(card);
 

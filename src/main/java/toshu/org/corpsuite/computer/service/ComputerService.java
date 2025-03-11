@@ -49,7 +49,7 @@ public class ComputerService {
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .age(addComputerRequest.getAge())
-                .isActive(addComputerRequest.getIsActive())
+                .active(addComputerRequest.getActive())
                 .owner(addComputerRequest.getOwner())
                 .build();
 
@@ -86,7 +86,7 @@ public class ComputerService {
 
         computer.setComputerName(computerRequest.getComputerName());
         computer.setAge(computerRequest.getAge());
-        computer.setActive(computerRequest.getIsActive());
+        computer.setActive(computerRequest.getActive());
         computer.setCpu(computerRequest.getCpu());
         computer.setComment(computerRequest.getComment());
         computer.setBarcode(computerRequest.getBarcode());

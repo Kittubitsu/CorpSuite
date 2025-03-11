@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findUserByCorporateEmail(String corporateEmail);
 
-    @Query(value = "SELECT u FROM User u WHERE u.active = true and u.department != 'ADMIN'")
+    @Query(value = "SELECT u FROM User u WHERE u.active = true")
     List<User> findAllByActive();
 
     @Query(value = "SELECT u FROM User u WHERE u.department = ?1 and u.position = 'MANAGER' and u.active = true")

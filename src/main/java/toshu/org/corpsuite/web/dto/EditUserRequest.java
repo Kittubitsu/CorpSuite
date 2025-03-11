@@ -34,7 +34,7 @@ public class EditUserRequest {
     private String corporateEmail;
 
     @Nullable
-    private Boolean isActive;
+    private Boolean active;
 
     @Pattern(regexp = "^$|.{8,}", message = "Password must be at least 8 characters!")
     private String password;

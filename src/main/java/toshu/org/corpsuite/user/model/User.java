@@ -8,7 +8,6 @@ import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.ticket.model.Ticket;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,7 +59,7 @@ public class User {
     private User manager;
 
     @OneToMany(mappedBy = "manager")
-    private List<User> subordinates = new ArrayList<>();
+    private List<User> subordinates;
 
     private int paidLeaveCount;
 

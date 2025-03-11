@@ -4,9 +4,11 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 h1 {
     text-align: center;
 }
+
 body {
     font: 14px/1.5 Lato, sans-serif;
     background: linear-gradient(to right, #f0f0f0, #e8e8e8);
@@ -61,6 +63,11 @@ body {
     background: #f9f9f9;
 }
 
+.table-container {
+    overflow-y: scroll;
+    height: 90.5%;
+}
+
 .table-nav {
     display: flex;
     justify-content: space-between;
@@ -86,7 +93,7 @@ body {
 
 }
 
-td:last-of-type{
+td:last-of-type {
     text-align: center;
 }
 
@@ -101,7 +108,7 @@ td a {
     transition: 0.3s;
 }
 
-td a:hover{
+td a:hover {
     background: #47748f;
 }
 

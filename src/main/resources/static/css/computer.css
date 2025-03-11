@@ -61,6 +61,11 @@ h1 {
     background: #f9f9f9;
 }
 
+.table-container {
+    overflow-y: scroll;
+    height: 90.5%;
+}
+
 .table-nav {
     display: flex;
     justify-content: space-between;

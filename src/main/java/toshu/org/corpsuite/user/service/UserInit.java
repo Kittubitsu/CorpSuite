@@ -22,7 +22,7 @@ public class UserInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (userService.getAllUsers(true).isEmpty()) {
+        if (userService.getAllActiveUsers().isEmpty()) {
             AddUserRequest userAdd = AddUserRequest.builder()
                     .firstName("admin")
                     .lastName("admin")
@@ -31,7 +31,7 @@ public class UserInit implements CommandLineRunner {
                     .country("Bulgaria")
                     .department(UserDepartment.ADMIN)
                     .password("admin123")
-                    .isActive(true)
+                    .active(true)
                     .build();
 
             userService.addUser(userAdd, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());

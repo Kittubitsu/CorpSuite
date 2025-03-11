@@ -34,7 +34,7 @@ public class AddUserRequest {
     @Email(message = "Must be an email!")
     private String corporateEmail;
 
-    private Boolean isActive;
+    private Boolean active;
 
     @NotEmpty(message = "Password cannot be empty!")
     @Size(min = 8, message = "Password must be at least 8 characters")
