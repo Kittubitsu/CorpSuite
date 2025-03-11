@@ -1,12 +1,12 @@
 package toshu.org.corpsuite.web.mapper;
 
 import lombok.experimental.UtilityClass;
+import toshu.org.corpsuite.card.model.Card;
 import toshu.org.corpsuite.computer.model.Computer;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.ticket.model.Ticket;
-import toshu.org.corpsuite.web.dto.AddComputerRequest;
-import toshu.org.corpsuite.web.dto.AddAbsenceRequest;
-import toshu.org.corpsuite.web.dto.AddTicketRequest;
+import toshu.org.corpsuite.user.model.User;
+import toshu.org.corpsuite.web.dto.*;
 
 @UtilityClass
 public class DtoMapper {
@@ -49,6 +49,29 @@ public class DtoMapper {
                 .fromDate(request.getFromDate())
                 .toDate(request.getToDate())
                 .totalDays(request.getTotalDaysOff())
+                .build();
+    }
+
+    public static AddCardRequest toCardDto(Card card) {
+        return AddCardRequest.builder()
+                .code(card.getCode())
+                .type(card.getType())
+                .isActive(card.isActive())
+                .build();
+    }
+    
+    public static EditUserRequest toEditUserDto(User user){
+        return EditUserRequest.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .corporateEmail(user.getCorporateEmail())
+                .card(user.getCard())
+                .country(user.getCountry())
+                .department(user.getDepartment())
+                .isActive(user.isActive())
+                .password(user.getPassword())
+                .position(user.getPosition())
+                .profilePicture(user.getProfilePicture())
                 .build();
     }
 }

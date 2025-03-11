@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import toshu.org.corpsuite.log.client.dto.LogRequest;
-import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
@@ -27,19 +25,17 @@ public class RequestController {
 
     private final UserService userService;
     private final RequestService requestService;
-    private final LogService logService;
 
-    public RequestController(UserService userService, RequestService requestService, LogService logService) {
+    public RequestController(UserService userService, RequestService requestService) {
         this.userService = userService;
         this.requestService = requestService;
-        this.logService = logService;
     }
 
     @GetMapping
     public ModelAndView getRequestPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
         ModelAndView mav = new ModelAndView("request");
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         List<Request> requestList = requestService.getAllByUser(user, show);
 
@@ -52,7 +48,7 @@ public class RequestController {
     @GetMapping("/add")
     public ModelAndView getRequestAddPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         ModelAndView mav = new ModelAndView("request-add");
         mav.addObject("absenceRequest", AddAbsenceRequest.builder()
@@ -69,7 +65,7 @@ public class RequestController {
     @PostMapping("/add")
     public ModelAndView handleRequestAddPage(@Valid @ModelAttribute("absenceRequest") AddAbsenceRequest absenceRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         User manager = user.getManager();
 
@@ -87,23 +83,14 @@ public class RequestController {
             return mav;
         }
 
-        Request request = requestService.addRequest(absenceRequest, user, manager);
-
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("CREATE")
-                .module("Request")
-                .comment("Request created with id [%s]".formatted(request.getId()))
-                .build());
-
+        requestService.addRequest(absenceRequest, user, manager);
 
         return new ModelAndView("redirect:/requests?show=false");
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView getRequestEditPage(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getRequestEditPage(@PathVariable UUID id) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
         Request request = requestService.getById(id);
 
         ModelAndView mav = new ModelAndView("request-add");
@@ -117,7 +104,7 @@ public class RequestController {
     @PutMapping("/edit/{id}")
     public ModelAndView handleRequestEditPage(@Valid @ModelAttribute("absenceRequest") AddAbsenceRequest absenceRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView("request-add");
@@ -130,13 +117,6 @@ public class RequestController {
         }
 
         requestService.editRequest(absenceRequest, id, user);
-
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("EDIT")
-                .module("Request")
-                .comment("Request edited with id [%s]".formatted(id))
-                .build());
 
         return new ModelAndView("redirect:/requests?show=false");
     }

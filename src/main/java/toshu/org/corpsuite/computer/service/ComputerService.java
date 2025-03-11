@@ -1,12 +1,16 @@
 package toshu.org.corpsuite.computer.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import toshu.org.corpsuite.computer.model.Computer;
 import toshu.org.corpsuite.computer.repository.ComputerRepository;
+import toshu.org.corpsuite.event.LoggingEvent;
 import toshu.org.corpsuite.exception.ComputerAlreadyExistsException;
 import toshu.org.corpsuite.exception.DomainException;
+import toshu.org.corpsuite.log.client.dto.LogRequest;
+import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.web.dto.AddComputerRequest;
 
 import java.time.LocalDateTime;
@@ -17,13 +21,15 @@ import java.util.List;
 public class ComputerService {
 
     private final ComputerRepository computerRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public ComputerService(ComputerRepository computerRepository) {
+    public ComputerService(ComputerRepository computerRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.computerRepository = computerRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public Computer addComputer(AddComputerRequest addComputerRequest) {
+    public void addComputer(AddComputerRequest addComputerRequest, User user) {
 
         if (computerRepository.findComputerByComputerName(addComputerRequest.getComputerName()).isPresent()) {
             throw new ComputerAlreadyExistsException("Computer with that name exists already!");
@@ -47,7 +53,16 @@ public class ComputerService {
                 .owner(addComputerRequest.getOwner())
                 .build();
 
-        return computerRepository.save(computer);
+        Computer saved = computerRepository.save(computer);
+
+        LogRequest logRequest = LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("CREATE")
+                .module("Computer")
+                .comment("Computer created with id [%d]".formatted(saved.getId()))
+                .build();
+
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
     }
 
     public List<Computer> getAllComputers(Boolean show) {
@@ -62,12 +77,12 @@ public class ComputerService {
         return computerRepository.findAllComputersByActiveTrue();
     }
 
-    public Computer findById(long id) {
+    public Computer getById(long id) {
         return computerRepository.findById(id).orElseThrow(() -> new DomainException("Computer does not exist!"));
     }
 
-    public void editComputer(long id, AddComputerRequest computerRequest) {
-        Computer computer = findById(id);
+    public void editComputer(long id, AddComputerRequest computerRequest, User user) {
+        Computer computer = getById(id);
 
         computer.setComputerName(computerRequest.getComputerName());
         computer.setAge(computerRequest.getAge());
@@ -88,7 +103,16 @@ public class ComputerService {
             computer.setDecommissionedOn(LocalDateTime.now());
         }
 
-        computerRepository.save(computer);
+        Computer saved = computerRepository.save(computer);
+
+        LogRequest logRequest = LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("EDIT")
+                .module("Computer")
+                .comment("Computer edited with id [%d]".formatted(saved.getId()))
+                .build();
+
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
 
     }
 

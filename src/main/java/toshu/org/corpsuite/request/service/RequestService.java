@@ -2,8 +2,11 @@ package toshu.org.corpsuite.request.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import toshu.org.corpsuite.event.LoggingEvent;
 import toshu.org.corpsuite.exception.DomainException;
+import toshu.org.corpsuite.log.client.dto.LogRequest;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.repository.RequestRepository;
@@ -19,15 +22,17 @@ public class RequestService {
 
     private final RequestRepository requestRepository;
     private final UserService userService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public RequestService(RequestRepository requestRepository, UserService userService) {
+    public RequestService(RequestRepository requestRepository, UserService userService, ApplicationEventPublisher applicationEventPublisher) {
         this.requestRepository = requestRepository;
         this.userService = userService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
-    public Request addRequest(AddAbsenceRequest addAbsenceRequest, User requester, User responsible) {
+    public void addRequest(AddAbsenceRequest addAbsenceRequest, User requester, User responsible) {
 
         Request request = Request.builder()
                 .requester(requester)
@@ -42,7 +47,16 @@ public class RequestService {
 
         userService.subtractUserPaidLeave(requester.getId(), addAbsenceRequest.getTotalDays());
 
-        return requestRepository.save(request);
+        Request saved = requestRepository.save(request);
+
+        LogRequest logRequest = LogRequest.builder()
+                .email(requester.getCorporateEmail())
+                .action("CREATE")
+                .module("Request")
+                .comment("Request created with id [%s]".formatted(saved.getId()))
+                .build();
+
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
     }
 
     @Transactional
@@ -59,11 +73,15 @@ public class RequestService {
         }
 
         requestRepository.save(request);
-    }
 
-    public List<Request> getAllRequests() {
+        LogRequest logRequest = LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("EDIT")
+                .module("Request")
+                .comment("Request edited with id [%s]".formatted(requestId))
+                .build();
 
-        return requestRepository.findAll();
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
     }
 
     public List<Request> getAllByUser(User user, Boolean show) {

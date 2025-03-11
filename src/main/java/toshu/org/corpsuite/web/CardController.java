@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.card.model.Card;
 import toshu.org.corpsuite.card.service.CardService;
-import toshu.org.corpsuite.log.client.dto.LogRequest;
-import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
 import toshu.org.corpsuite.web.dto.AddCardRequest;
+import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 import java.util.List;
 
@@ -23,12 +22,10 @@ public class CardController {
 
     private final UserService userService;
     private final CardService cardService;
-    private final LogService logService;
 
-    public CardController(UserService userService, CardService cardService, LogService logService) {
+    public CardController(UserService userService, CardService cardService) {
         this.userService = userService;
         this.cardService = cardService;
-        this.logService = logService;
     }
 
     @GetMapping
@@ -58,18 +55,9 @@ public class CardController {
     @PostMapping("/add")
     public ModelAndView handleAddCardPage(AddCardRequest cardRequest, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
+        User user = userService.getById(authenticationMetadata.getUserId());
 
-        User user = userService.findById(authenticationMetadata.getUserId());
-
-        Card card = cardService.addCard(cardRequest);
-
-
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("CREATE")
-                .module("Card")
-                .comment("Card created with id [%d]".formatted(card.getId()))
-                .build());
+        cardService.addCard(cardRequest, user);
 
         return new ModelAndView("redirect:/cards?show=false");
     }
@@ -80,11 +68,7 @@ public class CardController {
         Card card = cardService.getCardById(id);
 
         ModelAndView mav = new ModelAndView("card-edit");
-        mav.addObject("cardRequest", AddCardRequest.builder()
-                .code(card.getCode())
-                .type(card.getType())
-                .isActive(card.isActive())
-                .build());
+        mav.addObject("cardRequest", DtoMapper.toCardDto(card));
 
         mav.addObject("method", "PUT");
         mav.addObject("endpoint", "edit/" + card.getId());
@@ -94,16 +78,9 @@ public class CardController {
     @PutMapping("/edit/{id}")
     public ModelAndView handleEditCardPage(AddCardRequest cardRequest, @PathVariable Long id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        cardService.editCard(cardRequest, id);
+        User user = userService.getById(authenticationMetadata.getUserId());
 
-        User user = userService.findById(authenticationMetadata.getUserId());
-
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("EDIT")
-                .module("Card")
-                .comment("Card edited with id [%d]".formatted(id))
-                .build());
+        cardService.editCard(cardRequest, id, user);
 
         return new ModelAndView("redirect:/cards?show=false");
     }

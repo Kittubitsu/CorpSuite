@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.computer.model.Computer;
 import toshu.org.corpsuite.computer.service.ComputerService;
-import toshu.org.corpsuite.log.client.dto.LogRequest;
-import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
@@ -26,12 +24,10 @@ public class ComputerController {
 
     private final UserService userService;
     private final ComputerService computerService;
-    private final LogService logService;
 
-    public ComputerController(UserService userService, ComputerService computerService, LogService logService) {
+    public ComputerController(UserService userService, ComputerService computerService) {
         this.userService = userService;
         this.computerService = computerService;
-        this.logService = logService;
     }
 
     @GetMapping
@@ -63,7 +59,7 @@ public class ComputerController {
     @PostMapping("/add")
     public ModelAndView handleComputerAdd(@Valid @ModelAttribute("computerRequest") AddComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         if (result.hasErrors()) {
             List<User> usersWithoutComputer = userService.getUsersWithoutComputer();
@@ -75,15 +71,7 @@ public class ComputerController {
             return mav;
         }
 
-
-        Computer computer = computerService.addComputer(computerRequest);
-
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("CREATE")
-                .module("Computer")
-                .comment("Computer created with id [%d]".formatted(computer.getId()))
-                .build());
+        computerService.addComputer(computerRequest,user);
 
         return new ModelAndView("redirect:/computers?show=false");
     }
@@ -92,7 +80,7 @@ public class ComputerController {
     public ModelAndView getComputerEditPage(@PathVariable long id) {
 
         List<User> usersWithoutComputer = userService.getUsersWithoutComputer();
-        Computer computer = computerService.findById(id);
+        Computer computer = computerService.getById(id);
 
         if (computer.getOwner() != null) {
             usersWithoutComputer.add(computer.getOwner());
@@ -110,10 +98,10 @@ public class ComputerController {
     @PutMapping("/edit/{id}")
     public ModelAndView handleEditPage(@PathVariable long id, @Valid @ModelAttribute("computerRequest") AddComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         if (result.hasErrors()) {
-            Computer computer = computerService.findById(id);
+            Computer computer = computerService.getById(id);
             List<User> usersWithoutComputer = userService.getUsersWithoutComputer();
 
             if (computer.getOwner() != null) {
@@ -129,14 +117,7 @@ public class ComputerController {
             return mav;
         }
 
-        computerService.editComputer(id, computerRequest);
-
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("EDIT")
-                .module("Computer")
-                .comment("Computer edited with id [%d]".formatted(id))
-                .build());
+        computerService.editComputer(id, computerRequest, user);
 
         return new ModelAndView("redirect:/computers?show=false");
     }

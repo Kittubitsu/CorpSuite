@@ -2,15 +2,18 @@ package toshu.org.corpsuite.user.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import toshu.org.corpsuite.event.LoggingEvent;
 import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.exception.SamePasswordException;
 import toshu.org.corpsuite.exception.UserAlreadyExistsException;
+import toshu.org.corpsuite.log.client.dto.LogRequest;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.model.UserDepartment;
@@ -28,14 +31,16 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher applicationEventPublisher) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public User addUser(AddUserRequest addUserRequest) {
+    public void addUser(AddUserRequest addUserRequest, User user) {
 
         Optional<User> optionalUser = userRepository.findUserByCorporateEmail(addUserRequest.getCorporateEmail());
 
@@ -43,7 +48,16 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("This email exists already!");
         }
 
-        return initializeUser(addUserRequest);
+        User saved = initializeUser(addUserRequest);
+
+        LogRequest logRequest = LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("CREATE")
+                .module("User")
+                .comment("User created with id [%s]".formatted(saved.getId()))
+                .build();
+
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
     }
 
     public User initializeUser(AddUserRequest userAdd) {
@@ -177,18 +191,18 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
-    public User findById(UUID id) {
+    public User getById(UUID id) {
         return userRepository.findById(id).orElseThrow(() -> new DomainException("User could not be found!"));
     }
 
-    public User findByEmail(String email) {
+    public User getByEmail(String email) {
         return userRepository.findUserByCorporateEmail(email).orElseThrow(() -> new DomainException("User could not be found!"));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = findByEmail(username);
+        User user = getByEmail(username);
 
         return new AuthenticationMetadata(user.getId(), user.getCorporateEmail(), user.getFirstName() + "." + user.getLastName(), user.getPassword(), user.getDepartment(), user.isActive());
     }
@@ -205,8 +219,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAllByDepartmentAndPositionNot(department, position);
     }
 
-    public void editUser(UUID id, EditUserRequest userRequest) {
-        User userToEdit = findById(id);
+    public void editUser(UUID id, EditUserRequest userRequest, User mainUser) {
+        User userToEdit = getById(id);
 
         if (!userRequest.getPassword().isEmpty()) {
             if (passwordEncoder.matches(userRequest.getPassword(), userToEdit.getPassword())) {
@@ -264,6 +278,15 @@ public class UserService implements UserDetailsService {
         userToEdit.setUpdatedOn(LocalDateTime.now());
 
         userRepository.save(userToEdit);
+
+        LogRequest logRequest = LogRequest.builder()
+                .email(mainUser.getCorporateEmail())
+                .action("EDIT")
+                .module("User")
+                .comment("User edited with id [%s]".formatted(userToEdit.getId()))
+                .build();
+
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
     }
 
     public List<User> getUsersWithoutComputer() {
@@ -281,14 +304,14 @@ public class UserService implements UserDetailsService {
 
     public void subtractUserPaidLeave(UUID id, int paidLeaveCount) {
 
-        User user = findById(id);
+        User user = getById(id);
         user.setPaidLeaveCount(user.getPaidLeaveCount() - paidLeaveCount);
         userRepository.save(user);
     }
 
     public void addUserPaidLeave(UUID id, int paidLeaveCount) {
 
-        User user = findById(id);
+        User user = getById(id);
         user.setPaidLeaveCount(user.getPaidLeaveCount() + paidLeaveCount);
         userRepository.save(user);
     }

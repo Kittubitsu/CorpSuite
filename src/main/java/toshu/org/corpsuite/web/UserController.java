@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.card.model.Card;
 import toshu.org.corpsuite.card.service.CardService;
-import toshu.org.corpsuite.log.client.dto.LogRequest;
-import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.model.UserDepartment;
 import toshu.org.corpsuite.user.service.UserService;
 import toshu.org.corpsuite.web.dto.AddUserRequest;
 import toshu.org.corpsuite.web.dto.EditUserRequest;
+import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,12 +28,10 @@ public class UserController {
 
     private final UserService userService;
     private final CardService cardService;
-    private final LogService logService;
 
-    public UserController(UserService userService, CardService cardService, LogService logService) {
+    public UserController(UserService userService, CardService cardService) {
         this.userService = userService;
         this.cardService = cardService;
-        this.logService = logService;
     }
 
     @PreAuthorize("hasAnyRole('HR','ADMIN')")
@@ -53,40 +50,26 @@ public class UserController {
     @GetMapping("/edit/{id}")
     public ModelAndView getAccountEditPage(@PathVariable UUID id) {
 
-        ModelAndView mav = new ModelAndView();
-        User userToEdit = userService.findById(id);
-        List<Card> allCards = cardService.getAllFreeCards();
+        ModelAndView mav = new ModelAndView("user-edit");
+        User user = userService.getById(id);
+        List<Card> allCards = cardService.getAllFreeCards(user);
 
-        if (userToEdit.getCard() != null) {
-            allCards.add(userToEdit.getCard());
-        }
 
-        mav.setViewName("user-edit");
-        mav.addObject("userRequest", EditUserRequest.builder()
-                .firstName(userToEdit.getFirstName())
-                .lastName(userToEdit.getLastName())
-                .corporateEmail(userToEdit.getCorporateEmail())
-                .card(userToEdit.getCard())
-                .country(userToEdit.getCountry())
-                .department(userToEdit.getDepartment())
-                .isActive(userToEdit.isActive())
-                .password(userToEdit.getPassword())
-                .position(userToEdit.getPosition())
-                .profilePicture(userToEdit.getProfilePicture())
-                .build());
+        mav.addObject("userRequest", DtoMapper.toEditUserDto(user));
         mav.addObject("method", "PUT");
         mav.addObject("cards", allCards);
         mav.addObject("endpoint", "edit/" + id);
+
         return mav;
     }
 
     @PutMapping("/edit/{id}")
     public ModelAndView handleAccountEditPage(@Valid @ModelAttribute("userRequest") EditUserRequest userRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         if (result.hasErrors()) {
-            List<Card> allCards = cardService.getAllFreeCards();
+            List<Card> allCards = cardService.getAllFreeCards(user);
 
             ModelAndView mav = new ModelAndView();
             mav.setViewName("user-edit");
@@ -98,14 +81,7 @@ public class UserController {
             return mav;
         }
 
-        userService.editUser(id, userRequest);
-
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("EDIT")
-                .module("User")
-                .comment("User edited with id [%s]".formatted(user.getId()))
-                .build());
+        userService.editUser(id, userRequest, user);
 
 
         if (user.getDepartment().equals(UserDepartment.HR) || user.getDepartment().equals(UserDepartment.ADMIN)) {
@@ -117,8 +93,11 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @GetMapping("/add")
-    public ModelAndView getAddAccountPage() {
-        List<Card> allCards = cardService.getAllFreeCards();
+    public ModelAndView getAddAccountPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+
+        List<Card> allCards = cardService.getAllFreeCards(user);
 
         ModelAndView mav = new ModelAndView("user-edit");
         mav.addObject("userRequest", AddUserRequest.builder().build());
@@ -133,7 +112,8 @@ public class UserController {
     @PostMapping("/add")
     public ModelAndView handleAddPage(@Valid @ModelAttribute("userRequest") AddUserRequest userRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.findById(authenticationMetadata.getUserId());
+        User user = userService.getById(authenticationMetadata.getUserId());
+
         if (result.hasErrors()) {
             List<Card> allCards = cardService.getAllCards(true);
 
@@ -145,14 +125,8 @@ public class UserController {
 
             return mav;
         }
-        User createdUser = userService.addUser(userRequest);
 
-        logService.saveLog(LogRequest.builder()
-                .email(user.getCorporateEmail())
-                .action("CREATE")
-                .module("User")
-                .comment("User created with id [%s]".formatted(createdUser.getId()))
-                .build());
+        userService.addUser(userRequest, user);
 
         return new ModelAndView("redirect:/users?show=false");
     }

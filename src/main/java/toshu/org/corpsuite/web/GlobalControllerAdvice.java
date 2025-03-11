@@ -22,6 +22,6 @@ public class GlobalControllerAdvice {
         if (authenticationMetadata == null) {
             return null;
         }
-        return userService.findById(authenticationMetadata.getUserId());
+        return userService.getById(authenticationMetadata.getUserId());
     }
 }

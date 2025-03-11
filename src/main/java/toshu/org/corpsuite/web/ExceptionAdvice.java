@@ -1,16 +1,15 @@
 package toshu.org.corpsuite.web;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toshu.org.corpsuite.exception.CardAlreadyExistsException;
-import toshu.org.corpsuite.exception.ComputerAlreadyExistsException;
-import toshu.org.corpsuite.exception.SamePasswordException;
-import toshu.org.corpsuite.exception.UserAlreadyExistsException;
+import toshu.org.corpsuite.exception.*;
 
+@Slf4j
 @ControllerAdvice
 public class ExceptionAdvice {
 
@@ -53,6 +52,14 @@ public class ExceptionAdvice {
 
         redirectAttributes.addFlashAttribute("samePasswordException", exception.getMessage());
         return "redirect:" + request.getRequestURI();
+    }
+
+    @ExceptionHandler(LogServiceConnectionException.class)
+    public String handleLogService(LogServiceConnectionException logServiceConnectionException) {
+
+        log.error(logServiceConnectionException.getMessage());
+
+        return "redirect:/home";
     }
 
 

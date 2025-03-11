@@ -1,8 +1,11 @@
 package toshu.org.corpsuite.ticket.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import toshu.org.corpsuite.event.LoggingEvent;
 import toshu.org.corpsuite.exception.DomainException;
+import toshu.org.corpsuite.log.client.dto.LogRequest;
 import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.ticket.model.TicketStatus;
 import toshu.org.corpsuite.ticket.repository.TicketRepository;
@@ -17,13 +20,15 @@ import java.util.UUID;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.ticketRepository = ticketRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public Ticket addTicket(AddTicketRequest addTicketRequest, User requester, User responsible) {
+    public void addTicket(AddTicketRequest addTicketRequest, User requester, User responsible) {
 
         Ticket ticket = Ticket.builder()
                 .requester(requester)
@@ -34,12 +39,17 @@ public class TicketService {
                 .opened(LocalDateTime.now())
                 .build();
 
-        return ticketRepository.save(ticket);
-    }
+        Ticket saved = ticketRepository.save(ticket);
 
-    public List<Ticket> getAllTickets() {
+        LogRequest logRequest = LogRequest.builder()
+                .email(requester.getCorporateEmail())
+                .action("CREATE")
+                .module("Ticket")
+                .comment("Ticket created with id [%s]".formatted(saved.getId()))
+                .build();
 
-        return ticketRepository.findAll();
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
+
     }
 
     public List<Ticket> getAllByUser(User user, boolean show) {
@@ -51,19 +61,29 @@ public class TicketService {
         return ticketList;
     }
 
-    public Ticket findById(UUID id) {
+    public Ticket getById(UUID id) {
         return ticketRepository.findById(id).orElseThrow(() -> new DomainException("Ticket with this ID does not exist!"));
     }
 
-    public void editTicket(UUID id, AddTicketRequest ticketRequest) {
-        Ticket ticket = findById(id);
+    public void editTicket(UUID id, AddTicketRequest ticketRequest, User user) {
+        Ticket ticket = getById(id);
         ticket.setType(ticketRequest.getType());
         ticket.setComment(ticketRequest.getComment());
         ticket.setStatus(ticketRequest.getStatus());
         if (ticket.getStatus().equals(TicketStatus.COMPLETED)) {
             ticket.setClosed(LocalDateTime.now());
         }
+
         ticketRepository.save(ticket);
+
+        LogRequest logRequest = LogRequest.builder()
+                .email(user.getCorporateEmail())
+                .action("EDIT")
+                .module("Ticket")
+                .comment("Ticket edited with id [%s]".formatted(id))
+                .build();
+
+        applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
     }
 
 }

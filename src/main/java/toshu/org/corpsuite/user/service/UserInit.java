@@ -3,6 +3,7 @@ package toshu.org.corpsuite.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.model.UserDepartment;
 import toshu.org.corpsuite.user.model.UserPosition;
 import toshu.org.corpsuite.web.dto.AddUserRequest;
@@ -33,7 +34,7 @@ public class UserInit implements CommandLineRunner {
                     .isActive(true)
                     .build();
 
-            userService.addUser(userAdd);
+            userService.addUser(userAdd, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
         }
 
 
