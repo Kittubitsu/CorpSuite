@@ -48,6 +48,7 @@
                     <input type="password" class="form-control" id="password" placeholder="Enter password"
                            th:field="*{password}">
                     <p class="error-field" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                    <p class="error-field" th:if="${samePasswordException}" th:text="${samePasswordException}"></p>
                 </div>
             </div>
             <div class="admin-details" th:if="${user.department.name() == 'ADMIN' || user.department.name() == 'HR'}">
@@ -58,6 +59,7 @@
                            th:field="*{corporateEmail}">
                     <p class="error-field" th:if="${#fields.hasErrors('corporateEmail')}"
                        th:errors="*{corporateEmail}"></p>
+                    <p class="error-field" th:if="${alreadyExistsException}" th:text="${alreadyExistsException}"></p>
                 </div>
                 <div class="form-group">
                     <label for="department-select">Department</label>

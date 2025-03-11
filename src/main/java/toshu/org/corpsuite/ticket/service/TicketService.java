@@ -7,7 +7,7 @@ import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.ticket.model.TicketStatus;
 import toshu.org.corpsuite.ticket.repository.TicketRepository;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.TicketAdd;
+import toshu.org.corpsuite.web.dto.AddTicketRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,14 +23,14 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
     }
 
-    public Ticket addTicket(TicketAdd ticketAdd, User requester, User responsible) {
+    public Ticket addTicket(AddTicketRequest addTicketRequest, User requester, User responsible) {
 
         Ticket ticket = Ticket.builder()
                 .requester(requester)
                 .responsible(responsible)
-                .comment(ticketAdd.getComment())
-                .type(ticketAdd.getType())
-                .status(ticketAdd.getStatus())
+                .comment(addTicketRequest.getComment())
+                .type(addTicketRequest.getType())
+                .status(addTicketRequest.getStatus())
                 .opened(LocalDateTime.now())
                 .build();
 
@@ -42,16 +42,20 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    public List<Ticket> getAllByUser(User user) {
+    public List<Ticket> getAllByUser(User user, boolean show) {
+        List<Ticket> ticketList = ticketRepository.findAllByRequesterOrResponsible(user, user);
+        if (!show) {
+            return ticketList.stream().filter(ticket -> ticket.getStatus().equals(TicketStatus.PENDING)).toList();
+        }
 
-        return ticketRepository.findAllByRequesterOrResponsible(user, user);
+        return ticketList;
     }
 
     public Ticket findById(UUID id) {
         return ticketRepository.findById(id).orElseThrow(() -> new DomainException("Ticket with this ID does not exist!"));
     }
 
-    public void editTicket(UUID id, TicketAdd ticketRequest) {
+    public void editTicket(UUID id, AddTicketRequest ticketRequest) {
         Ticket ticket = findById(id);
         ticket.setType(ticketRequest.getType());
         ticket.setComment(ticketRequest.getComment());

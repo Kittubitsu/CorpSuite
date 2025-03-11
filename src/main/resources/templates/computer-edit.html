@@ -24,6 +24,7 @@
                                th:field="*{computerName}">
                         <p class="error-field" th:if="${#fields.hasErrors('computerName')}"
                            th:errors="*{computerName}"></p>
+                        <p class="error-field" th:if="${alreadyExistsException}" th:text="${alreadyExistsException}"></p>
                     </div>
                     <div class="form-group">
                         <label for="barcode">Barcode</label>

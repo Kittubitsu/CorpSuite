@@ -1,6 +1,5 @@
 package toshu.org.corpsuite.log.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import toshu.org.corpsuite.exception.DomainException;
@@ -23,7 +22,7 @@ public class LogService {
         ResponseEntity<List<Log>> listResponseEntity = logClient.getAllLogs();
 
         if (!listResponseEntity.getStatusCode().is2xxSuccessful()) {
-            throw new DomainException("Cannot get list of logs!");
+            throw new DomainException("Cannot get list of logs due to an error in the log service!");
         }
 
         return listResponseEntity.getBody();
@@ -33,7 +32,7 @@ public class LogService {
         ResponseEntity<Void> response = logClient.saveLog(logRequest);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new DomainException("Could not communicate with log service!");
+            throw new DomainException("Log cannot be saved, due to an error in the communication with log service!");
         }
     }
 }

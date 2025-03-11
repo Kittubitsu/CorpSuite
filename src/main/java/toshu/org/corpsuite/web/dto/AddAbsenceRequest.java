@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class RequestAdd {
+public class AddAbsenceRequest {
 
     private String requesterEmail;
 

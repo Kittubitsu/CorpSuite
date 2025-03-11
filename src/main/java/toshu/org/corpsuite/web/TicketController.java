@@ -10,12 +10,11 @@ import toshu.org.corpsuite.log.client.dto.LogRequest;
 import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.ticket.model.Ticket;
-import toshu.org.corpsuite.ticket.model.TicketStatus;
 import toshu.org.corpsuite.ticket.service.TicketService;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.TicketAdd;
-import toshu.org.corpsuite.web.mapper.dtoMapper;
+import toshu.org.corpsuite.web.dto.AddTicketRequest;
+import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +27,6 @@ public class TicketController {
     private final TicketService ticketService;
     private final LogService logService;
 
-    private Boolean showQuery;
 
     public TicketController(UserService userService, TicketService ticketService, LogService logService) {
         this.userService = userService;
@@ -41,16 +39,9 @@ public class TicketController {
 
         User user = userService.findById(authenticationMetadata.getUserId());
         ModelAndView mav = new ModelAndView("ticket");
-        List<Ticket> ticketList = ticketService.getAllByUser(user);
-
-        showQuery = show;
+        List<Ticket> ticketList = ticketService.getAllByUser(user, show);
 
         mav.addObject("tickets", ticketList);
-        if (!show) {
-            List<Ticket> filteredList = ticketList.stream().filter(ticket -> ticket.getStatus().equals(TicketStatus.PENDING)).toList();
-            mav.addObject("tickets", filteredList);
-        }
-
         mav.addObject("bool", show);
         mav.addObject("user", user);
 
@@ -64,7 +55,7 @@ public class TicketController {
 
         ModelAndView mav = new ModelAndView("ticket-add");
         mav.addObject("user", user);
-        mav.addObject("ticketRequest", TicketAdd.builder().requester(user.getCorporateEmail()).build());
+        mav.addObject("ticketRequest", AddTicketRequest.builder().requester(user.getCorporateEmail()).build());
         mav.addObject("endpoint", "add");
         mav.addObject("method", "POST");
 
@@ -72,7 +63,7 @@ public class TicketController {
     }
 
     @PostMapping("/add")
-    public ModelAndView handleTicketAddPage(@Valid @ModelAttribute("ticketRequest") TicketAdd ticketRequest, BindingResult result) {
+    public ModelAndView handleTicketAddPage(@Valid @ModelAttribute("ticketRequest") AddTicketRequest ticketRequest, BindingResult result) {
 
         User requesterUser = userService.findByEmail(ticketRequest.getRequester());
 
@@ -95,7 +86,7 @@ public class TicketController {
                 .build());
 
 
-        return new ModelAndView("redirect:/tickets?show=" + showQuery);
+        return new ModelAndView("redirect:/tickets?show=false");
     }
 
     @GetMapping("/edit/{id}")
@@ -103,7 +94,7 @@ public class TicketController {
         Ticket ticket = ticketService.findById(id);
 
         ModelAndView mav = new ModelAndView("ticket-add");
-        mav.addObject("ticketRequest", dtoMapper.toTicketDto(ticket));
+        mav.addObject("ticketRequest", DtoMapper.toTicketDto(ticket));
         mav.addObject("endpoint", "edit/" + id);
         mav.addObject("method", "PUT");
 
@@ -111,7 +102,7 @@ public class TicketController {
     }
 
     @PutMapping("/edit/{id}")
-    public ModelAndView handleTicketEditPage(@PathVariable UUID id, @Valid @ModelAttribute("ticketRequest") TicketAdd ticketRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleTicketEditPage(@PathVariable UUID id, @Valid @ModelAttribute("ticketRequest") AddTicketRequest ticketRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
 
         User user = userService.findById(authenticationMetadata.getUserId());
@@ -134,6 +125,6 @@ public class TicketController {
                 .comment("Ticket edited with id [%s]".formatted(id))
                 .build());
 
-        return new ModelAndView("redirect:/tickets?show=" + showQuery);
+        return new ModelAndView("redirect:/tickets?show=false");
     }
 }

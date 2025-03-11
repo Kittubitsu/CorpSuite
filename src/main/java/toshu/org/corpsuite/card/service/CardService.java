@@ -3,13 +3,12 @@ package toshu.org.corpsuite.card.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toshu.org.corpsuite.card.model.Card;
-import toshu.org.corpsuite.card.model.CardType;
 import toshu.org.corpsuite.card.repository.CardRepository;
+import toshu.org.corpsuite.exception.CardAlreadyExistsException;
 import toshu.org.corpsuite.exception.DomainException;
-import toshu.org.corpsuite.web.dto.CardAdd;
+import toshu.org.corpsuite.web.dto.AddCardRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CardService {
@@ -21,10 +20,10 @@ public class CardService {
         this.cardRepository = cardRepository;
     }
 
-    public Card addCard(CardAdd cardRequest) {
+    public Card addCard(AddCardRequest cardRequest) {
 
         if (cardRepository.findCardByCode(cardRequest.getCode()).isPresent()) {
-            throw new DomainException("Card with this code exists already!");
+            throw new CardAlreadyExistsException("Card with this code exists already!");
         }
 
         Card card = Card.builder()
@@ -41,9 +40,12 @@ public class CardService {
         return cardRepository.findById(id).orElseThrow(() -> new DomainException("Card not found!"));
     }
 
-    public List<Card> getAllCards() {
-
-        return cardRepository.findAll();
+    public List<Card> getAllCards(Boolean show) {
+        List<Card> cards = cardRepository.findAll();
+        if (!show) {
+            return cards.stream().filter(Card::isActive).toList();
+        }
+        return cards;
     }
 
     public List<Card> getAllFreeCards() {
@@ -51,11 +53,11 @@ public class CardService {
         return cardRepository.findAllByOwnerIsNullAndActive();
     }
 
-    public List<Card> getAllActiveCards(){
+    public List<Card> getAllActiveCards() {
         return cardRepository.findAllActiveCards();
     }
 
-    public void editCard(CardAdd cardRequest, Long id) {
+    public void editCard(AddCardRequest cardRequest, Long id) {
 
         Card card = getCardById(id);
         card.setCode(cardRequest.getCode());

@@ -9,13 +9,12 @@ import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.log.client.dto.LogRequest;
 import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.request.model.Request;
-import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.RequestAdd;
-import toshu.org.corpsuite.web.mapper.dtoMapper;
+import toshu.org.corpsuite.web.dto.AddAbsenceRequest;
+import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 
 import java.util.List;
@@ -30,8 +29,6 @@ public class RequestController {
     private final RequestService requestService;
     private final LogService logService;
 
-    private Boolean showQuery;
-
     public RequestController(UserService userService, RequestService requestService, LogService logService) {
         this.userService = userService;
         this.requestService = requestService;
@@ -44,19 +41,10 @@ public class RequestController {
 
         User user = userService.findById(authenticationMetadata.getUserId());
 
-        List<Request> requestList = requestService.getAllByUser(user);
+        List<Request> requestList = requestService.getAllByUser(user, show);
 
         mav.addObject("requestList", requestList);
-
-        showQuery = show;
-
-        if (!show) {
-            List<Request> filteredRequestList = requestList.stream().filter(request -> request.getStatus().equals(RequestStatus.PENDING)).toList();
-            mav.addObject("requestList", filteredRequestList);
-        }
-
         mav.addObject("bool", show);
-        mav.addObject("user", user);
 
         return mav;
     }
@@ -67,8 +55,7 @@ public class RequestController {
         User user = userService.findById(authenticationMetadata.getUserId());
 
         ModelAndView mav = new ModelAndView("request-add");
-        mav.addObject("user", user);
-        mav.addObject("absenceRequest", RequestAdd.builder()
+        mav.addObject("absenceRequest", AddAbsenceRequest.builder()
                 .requesterEmail(user.getCorporateEmail())
                 .responsibleEmail(user.getManager() == null ? "None" : user.getManager().getCorporateEmail())
                 .totalDays(1)
@@ -80,7 +67,7 @@ public class RequestController {
     }
 
     @PostMapping("/add")
-    public ModelAndView handleRequestAddPage(@Valid @ModelAttribute("absenceRequest") RequestAdd absenceRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleRequestAddPage(@Valid @ModelAttribute("absenceRequest") AddAbsenceRequest absenceRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.findById(authenticationMetadata.getUserId());
 
@@ -92,7 +79,6 @@ public class RequestController {
 
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView("request-add");
-            mav.addObject("user", user);
             absenceRequest.setTotalDays(1);
             mav.addObject("absenceRequest", absenceRequest);
             mav.addObject("endpoint", "add");
@@ -111,7 +97,7 @@ public class RequestController {
                 .build());
 
 
-        return new ModelAndView("redirect:/requests?show=" + showQuery);
+        return new ModelAndView("redirect:/requests?show=false");
     }
 
     @GetMapping("/edit/{id}")
@@ -121,8 +107,7 @@ public class RequestController {
         Request request = requestService.getById(id);
 
         ModelAndView mav = new ModelAndView("request-add");
-        mav.addObject("user", user);
-        mav.addObject("absenceRequest", dtoMapper.toRequestDto(request));
+        mav.addObject("absenceRequest", DtoMapper.toRequestDto(request));
         mav.addObject("endpoint", "edit/" + id);
         mav.addObject("method", "PUT");
 
@@ -130,13 +115,12 @@ public class RequestController {
     }
 
     @PutMapping("/edit/{id}")
-    public ModelAndView handleRequestEditPage(@Valid @ModelAttribute("absenceRequest") RequestAdd absenceRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleRequestEditPage(@Valid @ModelAttribute("absenceRequest") AddAbsenceRequest absenceRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.findById(authenticationMetadata.getUserId());
 
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView("request-add");
-            mav.addObject("user", user);
             absenceRequest.setTotalDays(1);
             mav.addObject("absenceRequest", absenceRequest);
             mav.addObject("endpoint", "edit/" + id);
@@ -154,6 +138,6 @@ public class RequestController {
                 .comment("Request edited with id [%s]".formatted(id))
                 .build());
 
-        return new ModelAndView("redirect:/requests?show=" + showQuery);
+        return new ModelAndView("redirect:/requests?show=false");
     }
 }

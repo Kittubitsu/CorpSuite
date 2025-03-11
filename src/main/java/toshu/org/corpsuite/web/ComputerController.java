@@ -14,8 +14,8 @@ import toshu.org.corpsuite.log.service.LogService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.ComputerAdd;
-import toshu.org.corpsuite.web.mapper.dtoMapper;
+import toshu.org.corpsuite.web.dto.AddComputerRequest;
+import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 import java.util.List;
 
@@ -27,7 +27,6 @@ public class ComputerController {
     private final UserService userService;
     private final ComputerService computerService;
     private final LogService logService;
-    private Boolean showQuery;
 
     public ComputerController(UserService userService, ComputerService computerService, LogService logService) {
         this.userService = userService;
@@ -36,24 +35,14 @@ public class ComputerController {
     }
 
     @GetMapping
-    public ModelAndView getComputerPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
+    public ModelAndView getComputerPage(@RequestParam(name = "show", defaultValue = "false") Boolean show) {
 
         ModelAndView mav = new ModelAndView("computer");
 
-        User user = userService.findById(authenticationMetadata.getUserId());
-        List<Computer> computers = computerService.getAllComputers();
-
-        showQuery = show;
+        List<Computer> computers = computerService.getAllComputers(show);
 
         mav.addObject("computers", computers);
-
-        if (!show) {
-            List<Computer> filteredComputers = computers.stream().filter(Computer::isActive).toList();
-            mav.addObject("computers", filteredComputers);
-        }
-
         mav.addObject("bool", show);
-        mav.addObject("user", user);
 
         return mav;
     }
@@ -65,14 +54,14 @@ public class ComputerController {
         ModelAndView mav = new ModelAndView("computer-edit");
         mav.addObject("method", "POST");
         mav.addObject("endpoint", "add");
-        mav.addObject("computerRequest", ComputerAdd.builder().build());
+        mav.addObject("computerRequest", AddComputerRequest.builder().build());
         mav.addObject("freeUsers", usersWithoutComputer);
 
         return mav;
     }
 
     @PostMapping("/add")
-    public ModelAndView handleComputerAdd(@Valid @ModelAttribute("computerRequest") ComputerAdd computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleComputerAdd(@Valid @ModelAttribute("computerRequest") AddComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.findById(authenticationMetadata.getUserId());
 
@@ -96,7 +85,7 @@ public class ComputerController {
                 .comment("Computer created with id [%d]".formatted(computer.getId()))
                 .build());
 
-        return new ModelAndView("redirect:/computers?show=" + showQuery);
+        return new ModelAndView("redirect:/computers?show=false");
     }
 
     @GetMapping("/edit/{id}")
@@ -112,14 +101,14 @@ public class ComputerController {
         ModelAndView mav = new ModelAndView("computer-edit");
         mav.addObject("method", "PUT");
         mav.addObject("endpoint", "edit/" + id);
-        mav.addObject("computerRequest", dtoMapper.toComputerDto(computer));
+        mav.addObject("computerRequest", DtoMapper.toComputerDto(computer));
         mav.addObject("freeUsers", usersWithoutComputer);
 
         return mav;
     }
 
     @PutMapping("/edit/{id}")
-    public ModelAndView handleEditPage(@PathVariable long id, @Valid @ModelAttribute("computerRequest") ComputerAdd computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleEditPage(@PathVariable long id, @Valid @ModelAttribute("computerRequest") AddComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.findById(authenticationMetadata.getUserId());
 
@@ -149,7 +138,7 @@ public class ComputerController {
                 .comment("Computer edited with id [%d]".formatted(id))
                 .build());
 
-        return new ModelAndView("redirect:/computers?show=" + showQuery);
+        return new ModelAndView("redirect:/computers?show=false");
     }
 
 }

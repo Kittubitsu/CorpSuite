@@ -7,7 +7,7 @@ import toshu.org.corpsuite.user.model.User;
 
 @Data
 @Builder
-public class ComputerAdd {
+public class AddComputerRequest {
 
     @NotEmpty(message = "Computer name cannot be empty!")
     private String computerName;

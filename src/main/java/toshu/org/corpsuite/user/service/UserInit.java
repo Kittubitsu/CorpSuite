@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import toshu.org.corpsuite.user.model.UserDepartment;
 import toshu.org.corpsuite.user.model.UserPosition;
-import toshu.org.corpsuite.web.dto.AddUser;
+import toshu.org.corpsuite.web.dto.AddUserRequest;
 
 @Component
 public class UserInit implements CommandLineRunner {
@@ -21,8 +21,8 @@ public class UserInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (userService.getAllUsers().isEmpty()) {
-            AddUser userAdd = AddUser.builder()
+        if (userService.getAllUsers(true).isEmpty()) {
+            AddUserRequest userAdd = AddUserRequest.builder()
                     .firstName("admin")
                     .lastName("admin")
                     .corporateEmail("admin@corpsuite.com")

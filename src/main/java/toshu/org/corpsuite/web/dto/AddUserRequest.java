@@ -17,7 +17,7 @@ import toshu.org.corpsuite.user.model.UserPosition;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddUser {
+public class AddUserRequest {
     @NotEmpty(message = "First name cannot be empty!")
     private String firstName;
 

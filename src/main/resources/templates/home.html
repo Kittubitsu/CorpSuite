@@ -56,8 +56,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="request : ${user.openedRequests}">
-                        <td th:text="${#temporals.format(request.fromDate,'dd/MMMM/YYYY')}"></td>
-                        <td th:text="${#temporals.format(request.toDate,'dd/MMMM/YYYY')}"></td>
+                        <td th:text="${#temporals.format(request.fromDate,'dd/MM/YYYY')}"></td>
+                        <td th:text="${#temporals.format(request.toDate,'dd/MM/YYYY')}"></td>
                         <td th:text="${request.type}"></td>
                         <td th:text="${request.responsible.corporateEmail}"></td>
                         <td th:text="${request.status.name()}"></td>

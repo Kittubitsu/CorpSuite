@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cards</title>
+    <title>Logs</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/log.css">
 </head>
@@ -11,9 +11,13 @@
     <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
     <div class="cards-overview">
         <h1>Logs</h1>
-        <div class="table-nav">
+        <div class="table-nav" th:if="${false}">
+            <!--scrapping this idea for now-->
             <p>Filter:</p>
-            <a>Add Card</a>
+            <label for="email-select">Email:</label>
+            <select name="email-select" id="email-select">
+                <option value="" selected>All</option>
+            </select>
             <a>History</a>
         </div>
         <table>
@@ -27,18 +31,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="log : ${logs}">
-                <td th:text="${log.email}"></td>
-                <td th:text="${log.action}"></td>
-                <td th:text="${log.module}"></td>
-                <td th:text="${log.comment}"></td>
-                <td th:text="${#temporals.format(log.timestamp,'YYYY-MMMM-DD hh:mm:ss')}"></td>
-            </tr>
             </tbody>
         </table>
     </div>
 </div>
-<script src="/js/log.js"></script>
 <footer th:replace="~{fragment/general :: footer}"></footer>
+<script src="/js/log.js"></script>
 </body>
 </html>

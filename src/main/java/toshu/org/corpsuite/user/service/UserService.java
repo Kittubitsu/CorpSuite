@@ -9,13 +9,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import toshu.org.corpsuite.exception.DomainException;
+import toshu.org.corpsuite.exception.SamePasswordException;
+import toshu.org.corpsuite.exception.UserAlreadyExistsException;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.model.UserDepartment;
 import toshu.org.corpsuite.user.model.UserPosition;
 import toshu.org.corpsuite.user.repository.UserRepository;
-import toshu.org.corpsuite.web.dto.AddUser;
-import toshu.org.corpsuite.web.dto.EditUser;
+import toshu.org.corpsuite.web.dto.AddUserRequest;
+import toshu.org.corpsuite.web.dto.EditUserRequest;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -33,18 +35,18 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User addUser(AddUser addUser) {
+    public User addUser(AddUserRequest addUserRequest) {
 
-        Optional<User> optionalUser = userRepository.findUserByCorporateEmail(addUser.getCorporateEmail());
+        Optional<User> optionalUser = userRepository.findUserByCorporateEmail(addUserRequest.getCorporateEmail());
 
         if (optionalUser.isPresent()) {
-            throw new DomainException("This email exists already!");
+            throw new UserAlreadyExistsException("This email exists already!");
         }
 
-        return initializeUser(addUser);
+        return initializeUser(addUserRequest);
     }
 
-    public User initializeUser(AddUser userAdd) {
+    public User initializeUser(AddUserRequest userAdd) {
 
         if (userAdd.getPosition().equals(UserPosition.ADMIN) && userAdd.getDepartment().equals(UserDepartment.ADMIN)) {
             User user = User.builder()
@@ -165,8 +167,14 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers(Boolean show) {
+        List<User> users = userRepository.findAll();
+
+        if (!show) {
+            return users.stream().filter(User::isActive).toList();
+        }
+
+        return users;
     }
 
     public User findById(UUID id) {
@@ -174,13 +182,13 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findUserByCorporateEmail(email).orElseThrow(() -> new DomainException("No such user exists!"));
+        return userRepository.findUserByCorporateEmail(email).orElseThrow(() -> new DomainException("User could not be found!"));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findUserByCorporateEmail(username).orElseThrow(() -> new DomainException("User does not exist!"));
+        User user = findByEmail(username);
 
         return new AuthenticationMetadata(user.getId(), user.getCorporateEmail(), user.getFirstName() + "." + user.getLastName(), user.getPassword(), user.getDepartment(), user.isActive());
     }
@@ -197,12 +205,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findAllByDepartmentAndPositionNot(department, position);
     }
 
-    public void editUser(UUID id, EditUser userRequest) {
+    public void editUser(UUID id, EditUserRequest userRequest) {
         User userToEdit = findById(id);
 
         if (!userRequest.getPassword().isEmpty()) {
             if (passwordEncoder.matches(userRequest.getPassword(), userToEdit.getPassword())) {
-                throw new DomainException("Cannot use the same password, please try again!");
+                throw new SamePasswordException("Cannot use the same password!");
             }
 
             userToEdit.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -220,7 +228,10 @@ public class UserService implements UserDetailsService {
         if (!userRequest.getIsActive()) {
             userRequest.setCard(null);
             userToEdit.setLeftOn(LocalDateTime.now());
-            userRequest.setPosition(UserPosition.JUNIOR);
+        }
+
+        if (!userToEdit.isActive() && userRequest.getIsActive()) {
+            userToEdit.setLeftOn(null);
         }
 
         if (userToEdit.getPosition().equals(UserPosition.MANAGER) && !userRequest.getIsActive()) {

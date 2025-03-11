@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <link rel="stylesheet" href="/css/generic-error.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<div class="error-body">
+    <img src="/images/Sad_mac_(white).jpg" alt="">
+    <h1>Uh oh...</h1>
+    <p>It seems like you've reached the end of the road.</p>
+    <p>Error: <span class="error-field" th:if="${errorMessage}" th:text="${errorMessage}"></span></p>
+    <a th:href="@{/home}">Go Back</a>
+</div>
+<footer th:insert="~{fragment/general.html :: footer}"></footer>
+</body>
+</html>

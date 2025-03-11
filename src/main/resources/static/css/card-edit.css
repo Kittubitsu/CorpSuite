@@ -104,6 +104,12 @@ body {
     padding-right: 2.5em;
 }
 
+.error-field {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
+
 /* ====== Responsive Design ====== */
 /*@media (max-width: 768px) {*/
 /*    .account-page-layout {*/

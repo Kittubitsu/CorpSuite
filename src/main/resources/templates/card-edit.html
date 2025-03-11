@@ -24,6 +24,7 @@
                 <div class="form-group">
                     <label for="card-code">Card Code</label>
                     <input type="text" class="form-control" id="card-code" placeholder="Enter card code" th:field="*{code}">
+                    <p class="error-field" th:if="${alreadyExistsException}" th:text="${alreadyExistsException}"></p>
                 </div>
                 <div class="form-check form-switch form-group btn-check-container">
                     <label>Status</label>

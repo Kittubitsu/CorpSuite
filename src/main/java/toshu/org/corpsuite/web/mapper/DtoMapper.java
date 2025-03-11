@@ -4,15 +4,15 @@ import lombok.experimental.UtilityClass;
 import toshu.org.corpsuite.computer.model.Computer;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.ticket.model.Ticket;
-import toshu.org.corpsuite.web.dto.ComputerAdd;
-import toshu.org.corpsuite.web.dto.RequestAdd;
-import toshu.org.corpsuite.web.dto.TicketAdd;
+import toshu.org.corpsuite.web.dto.AddComputerRequest;
+import toshu.org.corpsuite.web.dto.AddAbsenceRequest;
+import toshu.org.corpsuite.web.dto.AddTicketRequest;
 
 @UtilityClass
-public class dtoMapper {
+public class DtoMapper {
 
-    public static ComputerAdd toComputerDto(Computer computer) {
-        return ComputerAdd.builder()
+    public static AddComputerRequest toComputerDto(Computer computer) {
+        return AddComputerRequest.builder()
                 .computerName(computer.getComputerName())
                 .age(computer.getAge())
                 .cpu(computer.getCpu())
@@ -29,8 +29,8 @@ public class dtoMapper {
                 .build();
     }
 
-    public static TicketAdd toTicketDto(Ticket ticket) {
-        return TicketAdd.builder()
+    public static AddTicketRequest toTicketDto(Ticket ticket) {
+        return AddTicketRequest.builder()
                 .requester(ticket.getRequester().getCorporateEmail())
                 .department(ticket.getResponsible().getDepartment())
                 .comment(ticket.getComment())
@@ -39,8 +39,8 @@ public class dtoMapper {
                 .build();
     }
 
-    public static RequestAdd toRequestDto(Request request) {
-        return RequestAdd.builder()
+    public static AddAbsenceRequest toRequestDto(Request request) {
+        return AddAbsenceRequest.builder()
                 .requesterEmail(request.getRequester().getCorporateEmail())
                 .responsibleEmail(request.getResponsible().getCorporateEmail())
                 .type(request.getType())
