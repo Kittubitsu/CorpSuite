@@ -86,4 +86,8 @@ public class TicketService {
         applicationEventPublisher.publishEvent(new LoggingEvent(logRequest));
     }
 
+
+    public List<Ticket> getFirstFivePendingTicketsByUser(User user) {
+        return ticketRepository.findAllByRequesterOrResponsible(user, user).stream().filter(ticket -> ticket.getStatus().equals(TicketStatus.PENDING)).limit(5).toList();
+    }
 }

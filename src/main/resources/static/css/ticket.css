@@ -7,7 +7,7 @@
 
 body {
     font: 14px/1.5 Lato, sans-serif;
-    background: radial-gradient(circle, #ffffff 40%, #dcdcdc 100%);
+    background: linear-gradient(to bottom, rgba(209, 251, 255, 0.3), #e0e0e0);
     display: flex;
     justify-content: center;
     height: 100vh;
@@ -93,6 +93,11 @@ td:last-of-type{
     text-align: center;
 }
 
+.table-container {
+    overflow-y: scroll;
+    height: 90.5%;
+}
+
 td a {
     text-decoration: none;
     color: white;
@@ -109,7 +114,7 @@ td a:hover{
 }
 
 /* ====== Responsive Design ====== */
-/*@media (max-width: 1024px) {*/
+/*@media (max-width: 1080px) {*/
 /*    .ticket-page-layout {*/
 /*        flex-direction: column;*/
 /*        align-items: center;*/

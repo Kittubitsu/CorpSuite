@@ -55,7 +55,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="request : ${user.openedRequests}">
+                    <tr th:each="request : ${requestList}">
                         <td th:text="${#temporals.format(request.fromDate,'dd/MM/YYYY')}"></td>
                         <td th:text="${#temporals.format(request.toDate,'dd/MM/YYYY')}"></td>
                         <td th:text="${request.type}"></td>
@@ -80,7 +80,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="ticket : ${user.openedTickets}" th:if="${ticket.status.name() == 'PENDING'}">
+                    <tr th:each="ticket : ${ticketList}">
                         <td th:text="${ticket.comment.substring(0,5) + '...'}"></td>
                         <td th:text="${ticket.responsible.corporateEmail}"></td>
                         <td th:text="${ticket.type.name()}"></td>

@@ -16,30 +16,32 @@
             <a id="history-button" th:href="@{'/requests?show=' + ${bool}}"><span th:if="${bool}">Hide</span><span
                     th:unless="${bool}">Show</span> History</a>
         </div>
-        <table>
-            <thead>
-            <tr>
-                <th>From Date</th>
-                <th>To Date</th>
-                <th>Type</th>
-                <th>Approval</th>
-                <th><a href="">Status</a></th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="request : ${requestList}"
-                th:style="${request.status.name() == 'REJECTED'} ? 'background-color: #f5a9a9' : ''"
-                th:styleappend="${request.status.name() == 'APPROVED'} ? 'background-color: #a9f5a9' : ''">
-                <td th:text="${request.fromDate}">1 jan 2025</td>
-                <td th:text="${request.toDate}">5 jan 2025</td>
-                <td th:text="${request.type}">Paid Leave</td>
-                <td th:text="${request.responsible.corporateEmail}">Gosho</td>
-                <td th:text="${request.status.name()}">Approved</td>
-                <td><a th:href="@{'/requests/edit/' + ${request.id}}">Edit</a></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Type</th>
+                    <th>Approval</th>
+                    <th><a href="">Status</a></th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="request : ${requestList}"
+                    th:style="${request.status.name() == 'REJECTED'} ? 'background-color: #f5a9a9' : ''"
+                    th:styleappend="${request.status.name() == 'APPROVED'} ? 'background-color: #a9f5a9' : ''">
+                    <td th:text="${request.fromDate}">1 jan 2025</td>
+                    <td th:text="${request.toDate}">5 jan 2025</td>
+                    <td th:text="${request.type}">Paid Leave</td>
+                    <td th:text="${request.responsible.corporateEmail}">Gosho</td>
+                    <td th:text="${request.status.name()}">Approved</td>
+                    <td><a th:href="@{'/requests/edit/' + ${request.id}}">Edit</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <script src="/js/history.js"></script>
