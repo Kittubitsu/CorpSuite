@@ -11,14 +11,10 @@
     <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
     <div class="cards-overview">
         <h1>Logs</h1>
-        <div class="table-nav" th:if="${false}">
-            <!--scrapping this idea for now-->
-            <p>Filter:</p>
-            <label for="email-select">Email:</label>
-            <select name="email-select" id="email-select">
-                <option value="" selected>All</option>
-            </select>
-            <a>History</a>
+        <div class="table-nav">
+            <form id="delete-logs" th:action="@{/api/v1/logs}" th:method="DELETE">
+                <button class="clear-log-btn" id="clear-log-btn" type="submit" form="delete-logs">Clear Logs</button>
+            </form>
         </div>
         <table>
             <thead>

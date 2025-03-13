@@ -3,6 +3,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let tableBodyElement = document.querySelector("table tbody");
     const months = ["Януари", "Февруари", "Март", "Април", "Май", "Юни", "Юли", "Август", "Септември", "Октомври", "Ноември", "Декември"];
 
+    let clearBtnEl = document.getElementById("clear-log-btn");
+
+
+    clearBtnEl.addEventListener("click", () => {
+        setTimeout(() => {
+            location.reload();
+        },100)
+    })
+
     fetch("api/v1/logs").then(res => {
         if (!res.ok) {
             throw new Error(res.status.toString());
@@ -50,10 +59,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let pageList = [];
         let count = 1;
-        let rowsPerPage = 10;
+        let rowsPerPage = 9;
 
 
-        if (screen.width > 1080) {
+        if (screen.height > 1080) {
             rowsPerPage = 11
         }
 

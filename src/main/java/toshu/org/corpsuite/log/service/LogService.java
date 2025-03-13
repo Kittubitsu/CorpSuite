@@ -43,4 +43,12 @@ public class LogService {
             throw new LogServiceConnectionException("Log cannot be saved, due to an error in the communication with log service!");
         }
     }
+
+    public void deleteAllLogs() {
+        ResponseEntity<Void> response = logClient.deleteAllLogs();
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new LogServiceConnectionException("Logs cannot be deleted due to error in the communication with the log service!");
+        }
+    }
 }
