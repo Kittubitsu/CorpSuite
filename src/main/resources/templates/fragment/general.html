@@ -11,27 +11,44 @@
         <img src="/images/test.png" alt="" width="200">
         <ul class="main-nav">
             <li><a th:href="@{/home}">Home</a></li>
-            <li><a th:href="@{/tickets}">Tickets</a></li>
-            <li><a th:href="@{/requests}">Requests</a></li>
+            <li><a th:href="@{'/tickets?show=' + ${bool}}">Tickets</a></li>
+            <li><a th:href="@{'/requests?show=' + ${bool}}">Requests</a></li>
             <li><a th:href="@{'/users/edit/' + ${user.id}}">Account</a></li>
         </ul>
 
         <ul class="hr-nav" th:if="${user.department.name() == 'HR' || user.department.name() == 'ADMIN'}">
             <h6>HR Panel</h6>
-            <li><a th:href="@{/users}">Users</a></li>
-            <li><a th:href="@{/cards}">Cards</a></li>
+            <li><a th:href="@{'/users?show=' + ${bool}}">Users</a></li>
+            <li><a th:href="@{'/cards?show=' + ${bool}}">Cards</a></li>
         </ul>
         <ul class="it-nav" th:if="${user.department.name() == 'IT' || user.department.name() == 'ADMIN'}">
             <h6>IT Panel</h6>
-            <li><a th:href="@{/computers}">Computers</a></li>
+            <li><a th:href="@{'/computers?show=' + ${bool}}">Computers</a></li>
             <li><a th:href="@{/logs}">Logs</a></li>
         </ul>
         <ul class="logout-button">
             <li><a th:href="@{/logout}">Logout</a></li>
         </ul>
     </nav>
-</div>
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll(".nav-bar-left .menu ul li a");
+            const currentPage = window.location.pathname;
 
+            menuItems.forEach(item => {
+                if (item.getAttribute("href") === currentPage) {
+                    item.classList.add("active");
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.addEventListener("click", function () {
+                    localStorage.setItem("activeMenu", item.getAttribute("href"));
+                });
+            });
+        });
+    </script>
+</div>
 <footer th:fragment="footer">
     <p>&#169; 2025 CorpSuite Ltd.</p>
 </footer>

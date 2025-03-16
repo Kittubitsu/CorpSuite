@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import toshu.org.corpsuite.history.History;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.ticket.service.TicketService;
@@ -23,23 +24,24 @@ public class TicketController {
 
     private final UserService userService;
     private final TicketService ticketService;
+    private final History history;
 
 
-    public TicketController(UserService userService, TicketService ticketService) {
+    public TicketController(UserService userService, TicketService ticketService, History history) {
         this.userService = userService;
         this.ticketService = ticketService;
+        this.history = history;
     }
 
     @GetMapping
-    public ModelAndView getTicketPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
-
-        User user = userService.getById(authenticationMetadata.getUserId());
+    public ModelAndView getTicketPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show") Boolean show) {
         ModelAndView mav = new ModelAndView("ticket");
+
+        history.setShow(show);
+        User user = userService.getById(authenticationMetadata.getUserId());
         List<Ticket> ticketList = ticketService.getAllByUser(user, show);
 
         mav.addObject("tickets", ticketList);
-        mav.addObject("bool", show);
-        mav.addObject("user", user);
 
         return mav;
     }
@@ -50,7 +52,6 @@ public class TicketController {
         User user = userService.getById(authenticationMetadata.getUserId());
 
         ModelAndView mav = new ModelAndView("ticket-add");
-        mav.addObject("user", user);
         mav.addObject("ticketRequest", AddTicketRequest.builder().requester(user.getCorporateEmail()).build());
         mav.addObject("endpoint", "add");
         mav.addObject("method", "POST");
@@ -75,14 +76,15 @@ public class TicketController {
 
         ticketService.addTicket(ticketRequest, requesterUser, responsibleUser);
 
-        return new ModelAndView("redirect:/tickets?show=false");
+        return new ModelAndView("redirect:/tickets?show=" + history.isShow());
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView getTicketEditPage(@PathVariable UUID id) {
+        ModelAndView mav = new ModelAndView("ticket-add");
+
         Ticket ticket = ticketService.getById(id);
 
-        ModelAndView mav = new ModelAndView("ticket-add");
         mav.addObject("ticketRequest", DtoMapper.toTicketDto(ticket));
         mav.addObject("endpoint", "edit/" + id);
         mav.addObject("method", "PUT");
@@ -107,6 +109,6 @@ public class TicketController {
 
         ticketService.editTicket(id, ticketRequest, user);
 
-        return new ModelAndView("redirect:/tickets?show=false");
+        return new ModelAndView("redirect:/tickets?show=" + history.isShow());
     }
 }

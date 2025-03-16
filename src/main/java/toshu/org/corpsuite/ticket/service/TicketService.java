@@ -70,7 +70,7 @@ public class TicketService {
         ticket.setType(ticketRequest.getType());
         ticket.setComment(ticketRequest.getComment());
         ticket.setStatus(ticketRequest.getStatus());
-        if (ticket.getStatus().equals(TicketStatus.COMPLETED)) {
+        if (ticket.getStatus().equals(TicketStatus.COMPLETED) || ticket.getStatus().equals(TicketStatus.REJECTED)) {
             ticket.setClosed(LocalDateTime.now());
         }
 
@@ -87,7 +87,7 @@ public class TicketService {
     }
 
 
-    public List<Ticket> getFirstFivePendingTicketsByUser(User user) {
-        return ticketRepository.findAllByRequesterOrResponsible(user, user).stream().filter(ticket -> ticket.getStatus().equals(TicketStatus.PENDING)).limit(5).toList();
+    public List<Ticket> getFirstThreePendingTicketsByUser(User user) {
+        return ticketRepository.findAllByRequesterOrResponsible(user, user).stream().filter(ticket -> ticket.getStatus().equals(TicketStatus.PENDING)).limit(3).toList();
     }
 }

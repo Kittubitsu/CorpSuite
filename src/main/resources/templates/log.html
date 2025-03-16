@@ -5,11 +5,12 @@
     <title>Logs</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/log.css">
+    <link rel="icon" type="image/ico" th:href="@{/images/favicon.ico}">
 </head>
 <body>
-<div class="cards-page-layout">
+<div class="log-page-layout">
     <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
-    <div class="cards-overview">
+    <div class="log-overview">
         <h1>Logs</h1>
         <div class="table-nav">
             <form id="delete-logs" th:action="@{/api/v1/logs}" th:method="DELETE">

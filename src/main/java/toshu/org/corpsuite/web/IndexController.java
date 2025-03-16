@@ -17,8 +17,8 @@ public class IndexController {
 
     @GetMapping("/login")
     public ModelAndView getLoginPage(@RequestParam(value = "error", required = false) String error) {
-
         ModelAndView mav = new ModelAndView("login");
+
         if (error != null) {
             mav.addObject("error", "");
         }

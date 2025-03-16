@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import toshu.org.corpsuite.history.History;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
@@ -25,32 +26,33 @@ public class RequestController {
 
     private final UserService userService;
     private final RequestService requestService;
+    private final History history;
 
-    public RequestController(UserService userService, RequestService requestService) {
+    public RequestController(UserService userService, RequestService requestService, History history) {
         this.userService = userService;
         this.requestService = requestService;
+        this.history = history;
     }
 
     @GetMapping
-    public ModelAndView getRequestPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", defaultValue = "false") Boolean show) {
+    public ModelAndView getRequestPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show") Boolean show) {
         ModelAndView mav = new ModelAndView("request");
 
         User user = userService.getById(authenticationMetadata.getUserId());
-
+        history.setShow(show);
         List<Request> requestList = requestService.getAllByUser(user, show);
 
         mav.addObject("requestList", requestList);
-        mav.addObject("bool", show);
 
         return mav;
     }
 
     @GetMapping("/add")
     public ModelAndView getRequestAddPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        ModelAndView mav = new ModelAndView("request-add");
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
-        ModelAndView mav = new ModelAndView("request-add");
         mav.addObject("absenceRequest", AddAbsenceRequest.builder()
                 .requesterEmail(user.getCorporateEmail())
                 .responsibleEmail(user.getManager() == null ? "None" : user.getManager().getCorporateEmail())
@@ -85,15 +87,15 @@ public class RequestController {
 
         requestService.addRequest(absenceRequest, user, manager);
 
-        return new ModelAndView("redirect:/requests?show=false");
+        return new ModelAndView("redirect:/requests?show=" + history.isShow());
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView getRequestEditPage(@PathVariable UUID id) {
+        ModelAndView mav = new ModelAndView("request-add");
 
         Request request = requestService.getById(id);
 
-        ModelAndView mav = new ModelAndView("request-add");
         mav.addObject("absenceRequest", DtoMapper.toRequestDto(request));
         mav.addObject("endpoint", "edit/" + id);
         mav.addObject("method", "PUT");
@@ -118,6 +120,6 @@ public class RequestController {
 
         requestService.editRequest(absenceRequest, id, user);
 
-        return new ModelAndView("redirect:/requests?show=false");
+        return new ModelAndView("redirect:/requests?show=" + history.isShow());
     }
 }

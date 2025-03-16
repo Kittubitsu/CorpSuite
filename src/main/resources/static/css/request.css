@@ -72,8 +72,7 @@ h1 {
 .table-nav a {
     text-decoration: none;
     text-align: center;
-    width: 5vw;
-    padding: 5px;
+    padding: 0.5em 1em;
     border: none;
     background: #2c3e50;
     color: white;
@@ -89,8 +88,7 @@ h1 {
 }
 
 .table-container {
-    overflow-y: scroll;
-    height: 90.5%;
+    overflow-y: auto;
 }
 
 td:last-of-type{

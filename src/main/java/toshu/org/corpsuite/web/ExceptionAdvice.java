@@ -20,9 +20,10 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView genericError(Exception exception) {
-
         ModelAndView mav = new ModelAndView("generic-error");
+
         mav.addObject("errorMessage", exception.getMessage());
+
         return mav;
     }
 
@@ -30,6 +31,7 @@ public class ExceptionAdvice {
     public String handleCardExists(RedirectAttributes redirectAttributes, CardAlreadyExistsException exception) {
 
         redirectAttributes.addFlashAttribute("alreadyExistsException", exception.getMessage());
+
         return "redirect:/cards/add";
     }
 
@@ -37,6 +39,7 @@ public class ExceptionAdvice {
     public String handleComputerExists(RedirectAttributes redirectAttributes, ComputerAlreadyExistsException exception) {
 
         redirectAttributes.addFlashAttribute("alreadyExistsException", exception.getMessage());
+
         return "redirect:/computers/add";
     }
 
@@ -44,6 +47,7 @@ public class ExceptionAdvice {
     public String handleUserExists(RedirectAttributes redirectAttributes, UserAlreadyExistsException exception) {
 
         redirectAttributes.addFlashAttribute("alreadyExistsException", exception.getMessage());
+
         return "redirect:/users/add";
     }
 
@@ -51,6 +55,7 @@ public class ExceptionAdvice {
     public String handleSamePassword(HttpServletRequest request, SamePasswordException exception, RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("samePasswordException", exception.getMessage());
+
         return "redirect:" + request.getRequestURI();
     }
 

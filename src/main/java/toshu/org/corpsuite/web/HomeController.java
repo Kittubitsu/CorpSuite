@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.request.model.Request;
 import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
@@ -33,12 +32,11 @@ public class HomeController {
 
     @GetMapping
     public ModelAndView getHomePage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-
         ModelAndView mav = new ModelAndView("home");
-        User user = userService.getById(authenticationMetadata.getUserId());
 
-        List<Request> requestList = requestService.getFirstFivePendingRequestsByUser(user);
-        List<Ticket> ticketList = ticketService.getFirstFivePendingTicketsByUser(user);
+        User user = userService.getById(authenticationMetadata.getUserId());
+        List<Request> requestList = requestService.getFirstThreePendingRequestsByUser(user);
+        List<Ticket> ticketList = ticketService.getFirstThreePendingTicketsByUser(user);
 
         mav.addObject("requestList", requestList);
         mav.addObject("ticketList", ticketList);

@@ -11,7 +11,7 @@ footer {
     font-size: 16px;
     background: white;
     height: 100%;
-    padding: 2em;
+    padding: 1em;
     color: black;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -22,7 +22,8 @@ footer {
 }
 
 .nav-bar-left {
-    min-height: 970px;
+    min-height: 0;
+    height: 100%;
 }
 
 .main-nav {
@@ -53,6 +54,10 @@ footer {
     background: #ddd;
 }
 
+.active {
+    background: #ddd;
+}
+
 .hr-nav h6, .it-nav h6 {
     opacity: 80%;
     margin-top: 2em;
@@ -69,8 +74,4 @@ footer {
 
 .logout-button li a {
     background-color: #ff3838;
-}
-
-@media (max-height: 1080px) {
-
 }

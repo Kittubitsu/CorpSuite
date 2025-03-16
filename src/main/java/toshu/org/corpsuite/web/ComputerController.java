@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.computer.model.Computer;
 import toshu.org.corpsuite.computer.service.ComputerService;
+import toshu.org.corpsuite.history.History;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
@@ -24,21 +25,22 @@ public class ComputerController {
 
     private final UserService userService;
     private final ComputerService computerService;
+    private final History history;
 
-    public ComputerController(UserService userService, ComputerService computerService) {
+    public ComputerController(UserService userService, ComputerService computerService, History history) {
         this.userService = userService;
         this.computerService = computerService;
+        this.history = history;
     }
 
     @GetMapping
-    public ModelAndView getComputerPage(@RequestParam(name = "show", defaultValue = "false") Boolean show) {
-
+    public ModelAndView getComputerPage(@RequestParam(name = "show") Boolean show) {
         ModelAndView mav = new ModelAndView("computer");
 
+        history.setShow(show);
         List<Computer> computers = computerService.getAllComputers(show);
 
         mav.addObject("computers", computers);
-        mav.addObject("bool", show);
 
         return mav;
     }
@@ -71,13 +73,14 @@ public class ComputerController {
             return mav;
         }
 
-        computerService.addComputer(computerRequest,user);
+        computerService.addComputer(computerRequest, user);
 
-        return new ModelAndView("redirect:/computers?show=false");
+        return new ModelAndView("redirect:/computers?show=" + history.isShow());
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView getComputerEditPage(@PathVariable long id) {
+        ModelAndView mav = new ModelAndView("computer-edit");
 
         List<User> usersWithoutComputer = userService.getUsersWithoutComputer();
         Computer computer = computerService.getById(id);
@@ -86,7 +89,6 @@ public class ComputerController {
             usersWithoutComputer.add(computer.getOwner());
         }
 
-        ModelAndView mav = new ModelAndView("computer-edit");
         mav.addObject("method", "PUT");
         mav.addObject("endpoint", "edit/" + id);
         mav.addObject("computerRequest", DtoMapper.toComputerDto(computer));
@@ -119,7 +121,7 @@ public class ComputerController {
 
         computerService.editComputer(id, computerRequest, user);
 
-        return new ModelAndView("redirect:/computers?show=false");
+        return new ModelAndView("redirect:/computers?show=" + history.isShow());
     }
 
 }

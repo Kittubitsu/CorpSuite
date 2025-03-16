@@ -30,7 +30,7 @@ h1 {
 .ticket-overview {
     flex: 1;
     background: white;
-    padding: 20px;
+    padding: 1em;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -73,8 +73,7 @@ h1 {
 .table-nav a {
     text-decoration: none;
     text-align: center;
-    width: 5vw;
-    padding: 5px;
+    padding: 0.5em 1em;
     border: none;
     background: #2c3e50;
     color: white;
@@ -94,8 +93,7 @@ td:last-of-type{
 }
 
 .table-container {
-    overflow-y: scroll;
-    height: 90.5%;
+    overflow-y: auto;
 }
 
 td a {

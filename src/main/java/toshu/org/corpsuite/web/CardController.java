@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import toshu.org.corpsuite.card.model.Card;
 import toshu.org.corpsuite.card.service.CardService;
+import toshu.org.corpsuite.history.History;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
@@ -22,29 +23,30 @@ public class CardController {
 
     private final UserService userService;
     private final CardService cardService;
+    private final History history;
 
-    public CardController(UserService userService, CardService cardService) {
+    public CardController(UserService userService, CardService cardService, History history) {
         this.userService = userService;
         this.cardService = cardService;
+        this.history = history;
     }
 
     @GetMapping
-    public ModelAndView getCards(@RequestParam(name = "show", defaultValue = "false") Boolean show) {
-
+    public ModelAndView getCards(@RequestParam(name = "show") Boolean show) {
         ModelAndView mav = new ModelAndView("card");
 
+        history.setShow(show);
         List<Card> cards = cardService.getAllCards(show);
 
         mav.addObject("cards", cards);
-        mav.addObject("bool", show);
 
         return mav;
     }
 
     @GetMapping("/add")
     public ModelAndView getAddCardPage() {
-
         ModelAndView mav = new ModelAndView("card-edit");
+
         mav.addObject("cardRequest", AddCardRequest.builder().build());
         mav.addObject("method", "POST");
         mav.addObject("endpoint", "add");
@@ -59,19 +61,19 @@ public class CardController {
 
         cardService.addCard(cardRequest, user);
 
-        return new ModelAndView("redirect:/cards?show=false");
+        return new ModelAndView("redirect:/cards?show=" + history.isShow());
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView getEditCardPage(@PathVariable Long id) {
+        ModelAndView mav = new ModelAndView("card-edit");
 
         Card card = cardService.getCardById(id);
 
-        ModelAndView mav = new ModelAndView("card-edit");
         mav.addObject("cardRequest", DtoMapper.toCardDto(card));
-
         mav.addObject("method", "PUT");
         mav.addObject("endpoint", "edit/" + card.getId());
+
         return mav;
     }
 
@@ -82,6 +84,6 @@ public class CardController {
 
         cardService.editCard(cardRequest, id, user);
 
-        return new ModelAndView("redirect:/cards?show=false");
+        return new ModelAndView("redirect:/cards?show=" + history.isShow());
     }
 }

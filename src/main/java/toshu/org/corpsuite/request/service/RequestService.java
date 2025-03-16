@@ -97,7 +97,7 @@ public class RequestService {
         return requestRepository.findById(id).orElseThrow(() -> new DomainException("No such request could be found!"));
     }
 
-    public List<Request> getFirstFivePendingRequestsByUser(User user) {
-        return requestRepository.findAllByRequesterOrResponsible(user, user).stream().filter(request -> request.getStatus().equals(RequestStatus.PENDING)).limit(5).toList();
+    public List<Request> getFirstThreePendingRequestsByUser(User user) {
+        return requestRepository.findAllByRequesterOrResponsible(user, user).stream().filter(request -> request.getStatus().equals(RequestStatus.PENDING)).limit(3).toList();
     }
 }
