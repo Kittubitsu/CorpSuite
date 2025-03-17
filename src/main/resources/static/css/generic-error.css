@@ -24,7 +24,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 650px;
-    max-height: 60vh;
+    max-height: 80vh;
     width: 500px;
     gap: 5em;
 }

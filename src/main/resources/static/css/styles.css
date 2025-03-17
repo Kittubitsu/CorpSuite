@@ -58,8 +58,9 @@ footer {
     background: #ddd;
 }
 
-.hr-nav h6, .it-nav h6 {
-    opacity: 80%;
+.menu p {
+    opacity: 60%;
+    font-weight: bold;
     margin-top: 2em;
     margin-bottom: 1em;
     font-size: 12px;

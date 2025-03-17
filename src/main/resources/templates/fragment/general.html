@@ -13,16 +13,15 @@
             <li><a th:href="@{/home}">Home</a></li>
             <li><a th:href="@{'/tickets?show=' + ${bool}}">Tickets</a></li>
             <li><a th:href="@{'/requests?show=' + ${bool}}">Requests</a></li>
-            <li><a th:href="@{'/users/edit/' + ${user.id}}">Account</a></li>
         </ul>
 
+        <p th:if="${user.department.name() == 'HR' || user.department.name() == 'ADMIN'}">HR Panel</p>
         <ul class="hr-nav" th:if="${user.department.name() == 'HR' || user.department.name() == 'ADMIN'}">
-            <h6>HR Panel</h6>
             <li><a th:href="@{'/users?show=' + ${bool}}">Users</a></li>
             <li><a th:href="@{'/cards?show=' + ${bool}}">Cards</a></li>
         </ul>
+        <p th:if="${user.department.name() == 'IT' || user.department.name() == 'ADMIN'}">IT Panel</p>
         <ul class="it-nav" th:if="${user.department.name() == 'IT' || user.department.name() == 'ADMIN'}">
-            <h6>IT Panel</h6>
             <li><a th:href="@{'/computers?show=' + ${bool}}">Computers</a></li>
             <li><a th:href="@{/logs}">Logs</a></li>
         </ul>
@@ -36,7 +35,7 @@
             const currentPage = window.location.pathname;
 
             menuItems.forEach(item => {
-                if (item.getAttribute("href") === currentPage) {
+                if (item.getAttribute("href").includes(currentPage)) {
                     item.classList.add("active");
                 }
             });
