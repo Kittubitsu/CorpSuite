@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="modal(id)" class="modal fade" th:id="${id}" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="edit-page-layout">
+                <div class="account-page-edit-form">
+                    <h1 th:if="${endpoint == 'add'}">Add User</h1>
+                    <h1 th:if="${endpoint != 'add'}">Edit User</h1>
+                    <form id="acc-details" class="form-main" th:action="@{'/users/' + ${endpoint}}"
+                          th:method="${method}"
+                          th:object="${userRequest}">
+                        <div class="account-details">
+                            <p th:if="${user.department.name() == 'ADMIN' || user.department.name() == 'HR'}">Account
+                                Panel</p>
+                            <div class="form-group">
+                                <label for="first-name">First Name</label>
+                                <input type="text" class="form-control" id="first-name" placeholder="Enter first name"
+                                       th:field="*{firstName}">
+                                <p class="error-field" th:if="${#fields.hasErrors('firstName')}"
+                                   th:errors="*{firstName}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="last-name">Last Name</label>
+                                <input type="text" class="form-control" id="last-name" placeholder="Enter last name"
+                                       th:field="*{lastName}">
+                                <p class="error-field" th:if="${#fields.hasErrors('lastName')}"
+                                   th:errors="*{lastName}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="profilePic">Profile Picture</label>
+                                <input type="url" class="form-control" id="profilePic"
+                                       placeholder="Enter profile picture link"
+                                       th:field="*{profilePicture}">
+                                <p class="error-field" th:if="${#fields.hasErrors('profilePicture')}"
+                                   th:errors="*{profilePicture}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" class="form-control" id="country" placeholder="Enter country"
+                                       th:field="*{country}">
+                                <p class="error-field" th:if="${#fields.hasErrors('country')}"
+                                   th:errors="*{country}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Enter password"
+                                       th:field="*{password}">
+                                <p class="error-field" th:if="${#fields.hasErrors('password')}"
+                                   th:errors="*{password}"></p>
+                                <p class="error-field" th:if="${samePasswordException}"
+                                   th:text="${samePasswordException}"></p>
+                            </div>
+                        </div>
+                        <div class="admin-details"
+                             th:if="${user.department.name() == 'ADMIN' || user.department.name() == 'HR'}">
+                            <p>Admin Panel</p>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Enter email"
+                                       th:field="*{corporateEmail}">
+                                <p class="error-field" th:if="${#fields.hasErrors('corporateEmail')}"
+                                   th:errors="*{corporateEmail}"></p>
+                                <p class="error-field" th:if="${alreadyExistsException}"
+                                   th:text="${alreadyExistsException}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="department-select">Department</label>
+                                <select name="department" id="department-select" th:field="*{department}">
+                                    <option value="" selected hidden>Please select a department!</option>
+                                    <option th:each="department : ${T(toshu.org.corpsuite.user.model.UserDepartment).values()}"
+                                            th:value="${department}" th:text="${department}"></option>
+                                </select>
+                                <p class="error-field" th:if="${#fields.hasErrors('department')}"
+                                   th:errors="*{department}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="position-select">Position</label>
+                                <select name="position" id="position-select" th:field="*{position}">
+                                    <option value="" selected hidden>Please select a position!</option>
+                                    <option th:each="position : ${T(toshu.org.corpsuite.user.model.UserPosition).values()}"
+                                            th:value="${position}" th:text="${position}"></option>
+                                </select>
+                                <p class="error-field" th:if="${#fields.hasErrors('position')}"
+                                   th:errors="*{position}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-select">Card</label>
+                                <select name="position" id="card-select" th:field="*{card}">
+                                    <option value="" selected hidden>Please select a card!</option>
+                                    <option value="">None</option>
+                                    <option th:each="card : ${cards}" th:value="${card.id}"
+                                            th:text="${card.id + ' - ' + card.type.name()}"></option>
+                                </select>
+                                <p class="error-field" th:if="${#fields.hasErrors('card')}" th:errors="*{card}"></p>
+                            </div>
+                            <div class="form-check form-switch form-group btn-check-container">
+                                <label>Status</label>
+                                <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off"
+                                       th:field="*{active}">
+                                <label class="btn btn-outline-primary" for="btn-check-outlined"></label><br>
+                            </div>
+                        </div>
+                    </form>
+                    <button class="submit-button" type="submit" form="acc-details">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

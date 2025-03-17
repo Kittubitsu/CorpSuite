@@ -20,7 +20,7 @@ public class AuthenticationMetadata implements UserDetails {
     private String username;
     private String password;
     private UserDepartment role;
-    private boolean isActive;
+    private Boolean isActive;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

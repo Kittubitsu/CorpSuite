@@ -7,6 +7,8 @@
 
 h1 {
     text-align: center;
+    font-size: 2em;
+    font-weight: bold;
 }
 
 body {
@@ -72,7 +74,7 @@ body {
     margin-bottom: 1em;
 }
 
-.table-nav a {
+.table-nav a, .table-nav button {
     text-decoration: none;
     text-align: center;
     padding: 0.5em 1em;

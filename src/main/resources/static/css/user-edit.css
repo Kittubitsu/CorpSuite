@@ -1,38 +1,14 @@
-/* ====== Global Styles ====== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-h1 {
-    margin-bottom: 1em;
-}
-
-body {
-    font: 14px/1.5 Lato, sans-serif;
-    background: radial-gradient(circle, #ffffff 40%, #dcdcdc 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-/* ====== Main Layout ====== */
-.account-page-layout {
+.edit-page-layout {
     display: flex;
     gap: 20px;
-    max-width: 800px;
+    min-width: 600px;
+    max-width: 900px;
+    min-height: 700px;
 }
 
 .account-details>p, .admin-details>p {
     font-style: italic;
     opacity: 50%;
-}
-
-.user-img {
-    margin-bottom: 2em;
-    border-radius: 50%;
 }
 
 /* ====== Account Form Section ====== */
@@ -89,7 +65,7 @@ body {
 /* ====== Submit Button ====== */
 .submit-button {
     width: 8em;
-    height: 3em;
+    height: 4em;
     padding: 10px;
     border: none;
     background: #2c3e50;

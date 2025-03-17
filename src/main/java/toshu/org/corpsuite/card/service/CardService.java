@@ -62,11 +62,11 @@ public class CardService {
         return cards;
     }
 
-    public List<Card> getAllFreeCards(User userToEdit) {
+    public List<Card> getAllFreeCards(User user) {
         List<Card> allCards = cardRepository.findAllByOwnerIsNullAndActive();
 
-        if (userToEdit.getCard() != null) {
-            allCards.add(userToEdit.getCard());
+        if (user.getCard() != null) {
+            allCards.add(user.getCard());
         }
 
         return allCards;
