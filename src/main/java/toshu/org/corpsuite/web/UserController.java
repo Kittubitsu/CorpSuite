@@ -1,6 +1,5 @@
 package toshu.org.corpsuite.web;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,38 +39,32 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @GetMapping
-    public ModelAndView getUsersPage(@RequestParam(name = "show", required = false) Boolean show, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getUsersPage(@RequestParam(name = "show") Boolean show) {
         ModelAndView mav = new ModelAndView("user");
 
         history.setShow(show);
         List<User> users = userService.getAllUsers(show);
-        User user = userService.getById(authenticationMetadata.getUserId());
-        List<Card> allCards = cardService.getAllFreeCards(user);
 
-        mav.addObject("userRequest", AddUserRequest.builder().build());
-        mav.addObject("cards", allCards);
-        mav.addObject("method", "POST");
-        mav.addObject("endpoint", "add");
         mav.addObject("users", users);
 
         return mav;
     }
 
-//    @GetMapping("/edit/{id}")
-//    public ModelAndView getAccountEditPage(@PathVariable UUID id) {
-//        ModelAndView mav = new ModelAndView("user-edit");
-//
-//        User user = userService.getById(id);
-//        List<Card> allCards = cardService.getAllFreeCards(user);
-//
-//
-//        mav.addObject("userRequest", DtoMapper.toEditUserDto(user));
-//        mav.addObject("method", "PUT");
-//        mav.addObject("cards", allCards);
-//        mav.addObject("endpoint", "edit/" + id);
-//
-//        return mav;
-//    }
+    @GetMapping("/edit/{id}")
+    public ModelAndView getAccountEditPage(@PathVariable UUID id) {
+        ModelAndView mav = new ModelAndView("user-edit");
+
+        User user = userService.getById(id);
+        List<Card> allCards = cardService.getAllFreeCards(user);
+
+
+        mav.addObject("userRequest", DtoMapper.toEditUserDto(user));
+        mav.addObject("method", "PUT");
+        mav.addObject("cards", allCards);
+        mav.addObject("endpoint", "edit/" + id);
+
+        return mav;
+    }
 
     @PutMapping("/edit/{id}")
     public ModelAndView handleAccountEditPage(@Valid @ModelAttribute("userRequest") EditUserRequest userRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
@@ -79,17 +72,14 @@ public class UserController {
         User user = userService.getById(authenticationMetadata.getUserId());
 
         if (result.hasErrors()) {
-            ModelAndView mav = new ModelAndView();
-
             List<Card> allCards = cardService.getAllFreeCards(user);
-            List<User> users = userService.getAllUsers(history.isShow());
 
-            mav.setViewName("user");
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("user-edit");
             mav.addObject("userRequest", userRequest);
             mav.addObject("method", "PUT");
             mav.addObject("cards", allCards);
             mav.addObject("endpoint", "edit/" + id);
-            mav.addObject("users", users);
 
             return mav;
         }
@@ -98,27 +88,27 @@ public class UserController {
 
 
         if (user.getDepartment().equals(UserDepartment.HR) || user.getDepartment().equals(UserDepartment.ADMIN)) {
-            return new ModelAndView("redirect:/users?show=" + history.isShow());
+            return new ModelAndView("redirect:/users?show="  + history.isShow());
         }
 
         return new ModelAndView("redirect:/home");
     }
 
-//    @PreAuthorize("hasAnyRole('HR','ADMIN')")
-//    @GetMapping("/add")
-//    public ModelAndView getAddAccountPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-//        ModelAndView mav = new ModelAndView("user-edit");
-//
-//        User user = userService.getById(authenticationMetadata.getUserId());
-//        List<Card> allCards = cardService.getAllFreeCards(user);
-//
-//        mav.addObject("userRequest", AddUserRequest.builder().build());
-//        mav.addObject("cards", allCards);
-//        mav.addObject("method", "POST");
-//        mav.addObject("endpoint", "add");
-//
-//        return mav;
-//    }
+    @PreAuthorize("hasAnyRole('HR','ADMIN')")
+    @GetMapping("/add")
+    public ModelAndView getAddAccountPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        ModelAndView mav = new ModelAndView("user-edit");
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+        List<Card> allCards = cardService.getAllFreeCards(user);
+
+        mav.addObject("userRequest", AddUserRequest.builder().build());
+        mav.addObject("cards", allCards);
+        mav.addObject("method", "POST");
+        mav.addObject("endpoint", "add");
+
+        return mav;
+    }
 
     @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @PostMapping("/add")
@@ -127,12 +117,9 @@ public class UserController {
         User user = userService.getById(authenticationMetadata.getUserId());
 
         if (result.hasErrors()) {
-            ModelAndView mav = new ModelAndView("user");
-
             List<Card> allCards = cardService.getAllCards(true);
-            List<User> users = userService.getAllUsers(history.isShow());
 
-            mav.addObject("users", users);
+            ModelAndView mav = new ModelAndView("user-edit");
             mav.addObject("userRequest", userRequest);
             mav.addObject("cards", allCards);
             mav.addObject("method", "POST");
@@ -143,7 +130,7 @@ public class UserController {
 
         userService.addUser(userRequest, user);
 
-        return new ModelAndView("redirect:/users?show=" + history.isShow());
+        return new ModelAndView("redirect:/users?show="  + history.isShow());
     }
 
 
