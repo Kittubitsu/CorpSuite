@@ -70,6 +70,7 @@ public class TicketService {
         ticket.setType(ticketRequest.getType());
         ticket.setComment(ticketRequest.getComment());
         ticket.setStatus(ticketRequest.getStatus());
+
         if (ticket.getStatus().equals(TicketStatus.COMPLETED) || ticket.getStatus().equals(TicketStatus.REJECTED)) {
             ticket.setClosed(LocalDateTime.now());
         }

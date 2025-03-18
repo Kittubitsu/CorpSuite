@@ -180,6 +180,8 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
+        //USERNAME IS EMAIL IN MY CASE
+
         User user = getByEmail(username);
 
         return new AuthenticationMetadata(user.getId(), user.getCorporateEmail(), user.getFirstName() + "." + user.getLastName(), user.getPassword(), user.getDepartment(), user.isActive());

@@ -93,7 +93,6 @@ public class RequestService {
     }
 
     public Request getById(UUID id) {
-
         return requestRepository.findById(id).orElseThrow(() -> new DomainException("No such request could be found!"));
     }
 
