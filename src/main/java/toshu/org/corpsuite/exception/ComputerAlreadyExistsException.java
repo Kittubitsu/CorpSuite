@@ -5,7 +5,4 @@ public class ComputerAlreadyExistsException extends RuntimeException {
         super(message);
     }
 
-    public ComputerAlreadyExistsException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

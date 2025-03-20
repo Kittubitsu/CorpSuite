@@ -5,7 +5,4 @@ public class SamePasswordException extends RuntimeException {
         super(message);
     }
 
-    public SamePasswordException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

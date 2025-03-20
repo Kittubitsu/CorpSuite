@@ -5,7 +5,4 @@ public class LogServiceConnectionException extends RuntimeException {
         super(message);
     }
 
-    public LogServiceConnectionException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

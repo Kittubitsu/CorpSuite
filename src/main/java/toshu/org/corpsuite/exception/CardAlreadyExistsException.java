@@ -5,7 +5,4 @@ public class CardAlreadyExistsException extends RuntimeException {
         super(message);
     }
 
-    public CardAlreadyExistsException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

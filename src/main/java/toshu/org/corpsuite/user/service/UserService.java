@@ -62,31 +62,6 @@ public class UserService implements UserDetailsService {
 
     public User initializeUser(AddUserRequest userAdd) {
 
-        if (userAdd.getPosition().equals(UserPosition.ADMIN) && userAdd.getDepartment().equals(UserDepartment.ADMIN)) {
-            User user = User.builder()
-                    .firstName(userAdd.getFirstName())
-                    .lastName(userAdd.getLastName())
-                    .corporateEmail(userAdd.getCorporateEmail())
-                    .position(userAdd.getPosition())
-                    .country(userAdd.getCountry())
-                    .department(userAdd.getDepartment())
-                    .password(passwordEncoder.encode(userAdd.getPassword()))
-                    .active(userAdd.getActive())
-                    .createdOn(LocalDateTime.now())
-                    .updatedOn(LocalDateTime.now())
-                    .paidLeaveCount(0)
-                    .computers(new ArrayList<>())
-                    .openedTickets(new ArrayList<>())
-                    .assignedTickets(new ArrayList<>())
-                    .openedRequests(new ArrayList<>())
-                    .assignedRequests(new ArrayList<>())
-                    .card(userAdd.getCard())
-                    .profilePicture(userAdd.getProfilePicture())
-                    .build();
-
-            return userRepository.save(user);
-        }
-
         if (userAdd.getPosition().equals(UserPosition.MANAGER)) {
             User newManager = User.builder()
                     .firstName(userAdd.getFirstName())
@@ -158,7 +133,6 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-
     public List<User> getAllUsers(Boolean show) {
         List<User> users = userRepository.findAll().stream().filter(user -> !user.getPosition().equals(UserPosition.ADMIN)).toList();
 
@@ -174,7 +148,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User getByEmail(String email) {
-        return userRepository.findUserByCorporateEmail(email).orElseThrow(() -> new DomainException("User could not be found!"));
+        return userRepository.findUserByCorporateEmail(email).orElseThrow(() -> new UsernameNotFoundException("User could not be found!"));
     }
 
     @Override
@@ -211,6 +185,8 @@ public class UserService implements UserDetailsService {
 
         }
 
+
+        //When not an admin/hr role, these return as null from the form, so they need to be reassigned.
         if (userRequest.getDepartment() == null && userRequest.getActive() == null && userRequest.getCorporateEmail() == null && userRequest.getPosition() == null && userRequest.getCard() == null) {
             userRequest.setDepartment(userToEdit.getDepartment());
             userRequest.setActive(userToEdit.isActive());
