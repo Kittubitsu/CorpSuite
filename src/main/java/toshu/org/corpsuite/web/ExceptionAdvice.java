@@ -2,9 +2,11 @@ package toshu.org.corpsuite.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toshu.org.corpsuite.exception.*;
@@ -18,6 +20,7 @@ public class ExceptionAdvice {
         return "redirect:/home";
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public ModelAndView genericError(Exception exception) {
         ModelAndView mav = new ModelAndView("generic-error");

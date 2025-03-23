@@ -32,7 +32,7 @@ public class CardController {
     }
 
     @GetMapping
-    public ModelAndView getCards(@RequestParam(name = "show") Boolean show) {
+    public ModelAndView getCards(@RequestParam(name = "show", required = false, defaultValue = "false") Boolean show) {
         ModelAndView mav = new ModelAndView("card");
 
         history.setShow(show);

@@ -27,15 +27,15 @@
                     <p>Manager: <span th:text="${#strings.isEmpty(user.manager?.corporateEmail) ? 'None' : user.manager.corporateEmail}"></span></p>
                     <p>Position: <span th:text="${user.position}"></span></p>
                     <p>Paid Leave Days Left: <span th:text="${user.paidLeaveCount}"></span></p>
-                    <p>Access Card Number: <span th:text="${#strings.isEmpty(user.card?.id) ? 'None' : user.card.id}">5</span></p>
+                    <p>Access Card Number: <span th:text="${#strings.isEmpty(user.card?.id) ? 'None' : user.card.id}"></span></p>
                 </div>
                 <div class="computer-details">
                     <h3>Computer Details</h3>
-                    <p>Name: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).computerName}"></span></p>
-                    <p>CPU: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).cpu}"></span></p>
-                    <p>GPU: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).gpu}"></span></p>
-                    <p>RAM: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).ram}"></span></p>
-                    <p>Storage: <span th:text="${user.computers.isEmpty() ? 'None' : user.computers.get(0).storage}"></span></p>
+                    <p>Name: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).computerName}"></span></p>
+                    <p>CPU: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).cpu}"></span></p>
+                    <p>GPU: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).gpu}"></span></p>
+                    <p>RAM: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).ram}"></span></p>
+                    <p>Storage: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).storage}"></span></p>
                 </div>
             </div>
         </div>
