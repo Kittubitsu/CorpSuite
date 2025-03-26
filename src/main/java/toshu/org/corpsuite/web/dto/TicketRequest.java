@@ -12,7 +12,7 @@ import toshu.org.corpsuite.user.model.UserDepartment;
 
 @Data
 @Builder
-public class AddTicketRequest {
+public class TicketRequest {
 
     private String requester;
 

@@ -14,7 +14,7 @@ import toshu.org.corpsuite.event.LoggingEvent;
 import toshu.org.corpsuite.exception.CardAlreadyExistsException;
 import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.AddCardRequest;
+import toshu.org.corpsuite.web.dto.CardRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class CardServiceUTest {
     void givenCardAlreadyExists_whenAddingDuplicateCard_thenThrows() {
 
         //Given
-        AddCardRequest cardRequest = AddCardRequest.builder()
+        CardRequest cardRequest = CardRequest.builder()
                 .code("15")
                 .active(true)
                 .type(CardType.IT)
@@ -62,7 +62,7 @@ public class CardServiceUTest {
     void givenCard_whenAddingCard_thenCompletesSuccessfully() {
 
         //Given
-        AddCardRequest cardRequest = AddCardRequest.builder()
+        CardRequest cardRequest = CardRequest.builder()
                 .code("15")
                 .active(true)
                 .type(CardType.IT)
@@ -198,7 +198,7 @@ public class CardServiceUTest {
     void givenExistingCard_whenEditCard_thenCardIsEdited() {
 
         //Given
-        AddCardRequest cardRequest = AddCardRequest.builder()
+        CardRequest cardRequest = CardRequest.builder()
                 .type(CardType.IT)
                 .code("15")
                 .active(true)

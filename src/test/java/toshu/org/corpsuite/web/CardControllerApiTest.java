@@ -15,9 +15,10 @@ import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.model.UserDepartment;
 import toshu.org.corpsuite.user.service.UserService;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.UUID;
+
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -29,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CardController.class)
 public class CardControllerApiTest {
 
-    @MockitoBean
-    private GlobalControllerAdvice globalControllerAdvice;
     @MockitoBean
     private UserService userService;
     @MockitoBean
@@ -206,6 +205,15 @@ public class CardControllerApiTest {
 
         verify(cardService, times(1)).addCard(any(), any());
         verify(userService, times(1)).getById(any());
+    }
+
+    @Test
+    void getRequestToCardsPageWithShowParam_shouldShowCardsPageWithCorrectAttribute() throws Exception {
+        MockHttpServletRequestBuilder request = get("/cards?show=true").with(user(authenticationMetadata));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("bool", true));
     }
 
 }

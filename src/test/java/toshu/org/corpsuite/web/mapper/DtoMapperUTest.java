@@ -45,7 +45,7 @@ public class DtoMapperUTest {
                 .macAddress("175")
                 .build();
 
-        AddComputerRequest computerDto = DtoMapper.toComputerDto(computer);
+        ComputerRequest computerDto = DtoMapper.toComputerDto(computer);
 
         assertEquals(computer.getComputerName(), computerDto.getComputerName());
         assertEquals(computer.getAge(), computerDto.getAge());
@@ -77,7 +77,7 @@ public class DtoMapperUTest {
                 .type(TicketType.OTHER)
                 .build();
 
-        AddTicketRequest ticketDto = DtoMapper.toTicketDto(ticket);
+        TicketRequest ticketDto = DtoMapper.toTicketDto(ticket);
 
         assertEquals(ticket.getRequester().getCorporateEmail(), ticketDto.getRequester());
         assertEquals(ticket.getResponsible().getDepartment(), ticketDto.getDepartment());
@@ -104,7 +104,7 @@ public class DtoMapperUTest {
                 .build();
 
 
-        AddAbsenceRequest requestDto = DtoMapper.toRequestDto(request);
+        AbsenceRequest requestDto = DtoMapper.toRequestDto(request);
 
         assertEquals(request.getRequester().getCorporateEmail(), requestDto.getRequesterEmail());
         assertEquals(request.getResponsible().getCorporateEmail(), requestDto.getResponsibleEmail());
@@ -125,7 +125,7 @@ public class DtoMapperUTest {
                 .build();
 
 
-        AddCardRequest cardDto = DtoMapper.toCardDto(card);
+        CardRequest cardDto = DtoMapper.toCardDto(card);
 
         assertEquals(card.getCode(), cardDto.getCode());
         assertEquals(card.getType(), cardDto.getType());

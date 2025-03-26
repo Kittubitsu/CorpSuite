@@ -39,7 +39,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('HR','ADMIN')")
     @GetMapping
-    public ModelAndView getUsersPage(@RequestParam(name = "show") Boolean show) {
+    public ModelAndView getUsersPage(@RequestParam(name = "show", required = false, defaultValue = "false") Boolean show) {
         ModelAndView mav = new ModelAndView("user");
 
         history.setShow(show);
@@ -88,7 +88,7 @@ public class UserController {
 
 
         if (user.getDepartment().equals(UserDepartment.HR) || user.getDepartment().equals(UserDepartment.ADMIN)) {
-            return new ModelAndView("redirect:/users?show="  + history.isShow());
+            return new ModelAndView("redirect:/users?show=" + history.isShow());
         }
 
         return new ModelAndView("redirect:/home");
@@ -130,7 +130,7 @@ public class UserController {
 
         userService.addUser(userRequest, user);
 
-        return new ModelAndView("redirect:/users?show="  + history.isShow());
+        return new ModelAndView("redirect:/users?show=" + history.isShow());
     }
 
 

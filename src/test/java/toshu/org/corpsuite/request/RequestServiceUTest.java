@@ -15,7 +15,7 @@ import toshu.org.corpsuite.request.repository.RequestRepository;
 import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.AddAbsenceRequest;
+import toshu.org.corpsuite.web.dto.AbsenceRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,15 +113,15 @@ public class RequestServiceUTest {
     @Test
     void givenNewRequest_whenAddingRequest_thenCompletesSuccessfully() {
 
-        AddAbsenceRequest addAbsenceRequest = AddAbsenceRequest.builder().totalDays(1).build();
+        AbsenceRequest absenceRequest = AbsenceRequest.builder().totalDays(1).build();
         User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
         Request request = Request.builder().id(UUID.randomUUID()).build();
 
         when(requestRepository.save(any())).thenReturn(request);
         doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
-        doNothing().when(userService).subtractUserPaidLeave(user.getId(), addAbsenceRequest.getTotalDays());
+        doNothing().when(userService).subtractUserPaidLeave(user.getId(), absenceRequest.getTotalDays());
 
-        requestService.addRequest(addAbsenceRequest, user, user);
+        requestService.addRequest(absenceRequest, user, user);
 
         verify(requestRepository, times(1)).save(any());
         verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));
@@ -131,7 +131,7 @@ public class RequestServiceUTest {
     @Test
     void givenExistingRequest_whenEditingRequest_thenCompletedSuccessfully() {
 
-        AddAbsenceRequest addAbsenceRequest = AddAbsenceRequest.builder().totalDays(1).comment("Egg").status(RequestStatus.PENDING).build();
+        AbsenceRequest absenceRequest = AbsenceRequest.builder().totalDays(1).comment("Egg").status(RequestStatus.PENDING).build();
         User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
         Request request = Request.builder().id(UUID.randomUUID()).build();
 
@@ -139,10 +139,10 @@ public class RequestServiceUTest {
         when(requestRepository.findById(any())).thenReturn(Optional.of(request));
         doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
 
-        requestService.editRequest(addAbsenceRequest, UUID.randomUUID(), user);
+        requestService.editRequest(absenceRequest, UUID.randomUUID(), user);
 
-        assertEquals(addAbsenceRequest.getComment(), request.getComment());
-        assertEquals(addAbsenceRequest.getStatus(), request.getStatus());
+        assertEquals(absenceRequest.getComment(), request.getComment());
+        assertEquals(absenceRequest.getStatus(), request.getStatus());
         verify(requestRepository, times(1)).save(any());
         verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));
     }
@@ -150,7 +150,7 @@ public class RequestServiceUTest {
     @Test
     void givenExistingRequest_whenEditingRequestAndSettingStatusRejected_thenCompletedSuccessfully() {
 
-        AddAbsenceRequest addAbsenceRequest = AddAbsenceRequest.builder().totalDays(1).comment("Egg").status(RequestStatus.REJECTED).type(RequestType.PAID_LEAVE).build();
+        AbsenceRequest absenceRequest = AbsenceRequest.builder().totalDays(1).comment("Egg").status(RequestStatus.REJECTED).type(RequestType.PAID_LEAVE).build();
         User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
         Request request = Request.builder().id(UUID.randomUUID()).build();
 
@@ -159,11 +159,11 @@ public class RequestServiceUTest {
         doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
         doNothing().when(userService).addUserPaidLeave(any(UUID.class), any(Integer.class));
 
-        requestService.editRequest(addAbsenceRequest, UUID.randomUUID(), user);
+        requestService.editRequest(absenceRequest, UUID.randomUUID(), user);
 
-        assertEquals(addAbsenceRequest.getComment(), request.getComment());
-        assertEquals(addAbsenceRequest.getStatus(), request.getStatus());
-        assertEquals(addAbsenceRequest.getType(), request.getType());
+        assertEquals(absenceRequest.getComment(), request.getComment());
+        assertEquals(absenceRequest.getStatus(), request.getStatus());
+        assertEquals(absenceRequest.getType(), request.getType());
         verify(requestRepository, times(1)).save(any());
         verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));
         verify(userService, times(1)).addUserPaidLeave(any(UUID.class), any(Integer.class));

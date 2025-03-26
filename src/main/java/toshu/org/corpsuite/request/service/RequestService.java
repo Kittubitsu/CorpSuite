@@ -12,7 +12,7 @@ import toshu.org.corpsuite.request.model.RequestStatus;
 import toshu.org.corpsuite.request.repository.RequestRepository;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.AddAbsenceRequest;
+import toshu.org.corpsuite.web.dto.AbsenceRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,20 +32,20 @@ public class RequestService {
     }
 
     @Transactional
-    public void addRequest(AddAbsenceRequest addAbsenceRequest, User requester, User responsible) {
+    public void addRequest(AbsenceRequest absenceRequest, User requester, User responsible) {
 
         Request request = Request.builder()
                 .requester(requester)
                 .responsible(responsible)
-                .status(addAbsenceRequest.getStatus())
-                .type(addAbsenceRequest.getType())
-                .comment(addAbsenceRequest.getComment())
-                .fromDate(addAbsenceRequest.getFromDate())
-                .toDate(addAbsenceRequest.getToDate())
-                .totalDaysOff(addAbsenceRequest.getTotalDays())
+                .status(absenceRequest.getStatus())
+                .type(absenceRequest.getType())
+                .comment(absenceRequest.getComment())
+                .fromDate(absenceRequest.getFromDate())
+                .toDate(absenceRequest.getToDate())
+                .totalDaysOff(absenceRequest.getTotalDays())
                 .build();
 
-        userService.subtractUserPaidLeave(requester.getId(), addAbsenceRequest.getTotalDays());
+        userService.subtractUserPaidLeave(requester.getId(), absenceRequest.getTotalDays());
 
         Request saved = requestRepository.save(request);
 
@@ -60,16 +60,16 @@ public class RequestService {
     }
 
     @Transactional
-    public void editRequest(AddAbsenceRequest addAbsenceRequest, UUID requestId, User user) {
+    public void editRequest(AbsenceRequest absenceRequest, UUID requestId, User user) {
 
         Request request = getById(requestId);
 
-        request.setComment(addAbsenceRequest.getComment());
-        request.setType(addAbsenceRequest.getType());
-        request.setStatus(addAbsenceRequest.getStatus());
+        request.setComment(absenceRequest.getComment());
+        request.setType(absenceRequest.getType());
+        request.setStatus(absenceRequest.getStatus());
 
         if (request.getStatus().equals(RequestStatus.REJECTED)) {
-            userService.addUserPaidLeave(user.getId(), addAbsenceRequest.getTotalDays());
+            userService.addUserPaidLeave(user.getId(), absenceRequest.getTotalDays());
         }
 
         requestRepository.save(request);

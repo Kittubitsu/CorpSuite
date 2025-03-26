@@ -11,8 +11,8 @@ import toshu.org.corpsuite.web.dto.*;
 @UtilityClass
 public class DtoMapper {
 
-    public static AddComputerRequest toComputerDto(Computer computer) {
-        return AddComputerRequest.builder()
+    public static ComputerRequest toComputerDto(Computer computer) {
+        return ComputerRequest.builder()
                 .computerName(computer.getComputerName())
                 .age(computer.getAge())
                 .cpu(computer.getCpu())
@@ -29,8 +29,8 @@ public class DtoMapper {
                 .build();
     }
 
-    public static AddTicketRequest toTicketDto(Ticket ticket) {
-        return AddTicketRequest.builder()
+    public static TicketRequest toTicketDto(Ticket ticket) {
+        return TicketRequest.builder()
                 .requester(ticket.getRequester().getCorporateEmail())
                 .department(ticket.getResponsible().getDepartment())
                 .comment(ticket.getComment())
@@ -39,8 +39,8 @@ public class DtoMapper {
                 .build();
     }
 
-    public static AddAbsenceRequest toRequestDto(Request request) {
-        return AddAbsenceRequest.builder()
+    public static AbsenceRequest toRequestDto(Request request) {
+        return AbsenceRequest.builder()
                 .requesterEmail(request.getRequester().getCorporateEmail())
                 .responsibleEmail(request.getResponsible().getCorporateEmail())
                 .type(request.getType())
@@ -52,8 +52,8 @@ public class DtoMapper {
                 .build();
     }
 
-    public static AddCardRequest toCardDto(Card card) {
-        return AddCardRequest.builder()
+    public static CardRequest toCardDto(Card card) {
+        return CardRequest.builder()
                 .code(card.getCode())
                 .type(card.getType())
                 .active(card.isActive())

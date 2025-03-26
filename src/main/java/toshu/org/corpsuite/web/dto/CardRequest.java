@@ -6,7 +6,7 @@ import toshu.org.corpsuite.card.model.CardType;
 
 @Data
 @Builder
-public class AddCardRequest {
+public class CardRequest {
 
     private String code;
 

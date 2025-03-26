@@ -10,7 +10,7 @@ import toshu.org.corpsuite.exception.CardAlreadyExistsException;
 import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.log.client.dto.LogRequest;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.AddCardRequest;
+import toshu.org.corpsuite.web.dto.CardRequest;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class CardService {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public void addCard(AddCardRequest cardRequest, User user) {
+    public void addCard(CardRequest cardRequest, User user) {
 
         if (cardRepository.findCardByCode(cardRequest.getCode()).isPresent()) {
             throw new CardAlreadyExistsException("Card with this code exists already!");
@@ -72,7 +72,7 @@ public class CardService {
         return allCards;
     }
 
-    public void editCard(AddCardRequest cardRequest, Long id, User user) {
+    public void editCard(CardRequest cardRequest, Long id, User user) {
 
         Card card = getCardById(id);
         card.setCode(cardRequest.getCode());

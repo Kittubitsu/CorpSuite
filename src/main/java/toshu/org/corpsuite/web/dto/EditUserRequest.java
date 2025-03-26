@@ -23,29 +23,25 @@ public class EditUserRequest {
     @NotEmpty(message = "Last name cannot be empty!")
     private String lastName;
 
-    @Nullable
     private UserDepartment department;
 
     @NotEmpty(message = "Country cannot be empty!")
     private String country;
 
-    @Nullable
+    @NotEmpty(message = "Email cannot be empty!")
     @Email(message = "Must be an email!")
     private String corporateEmail;
 
-    @Nullable
     private Boolean active;
 
     @Pattern(regexp = "^$|.{8,}", message = "Password must be at least 8 characters!")
     private String password;
 
-    @Nullable
     private UserPosition position;
 
     @URL(message = "Must be a URL!")
     private String profilePicture;
 
-    @Nullable
     private Card card;
 
 }

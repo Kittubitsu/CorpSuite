@@ -14,28 +14,28 @@
     <div class="user-main">
         <div class="user-info">
             <div class="user-greeting">
-                <h1 th:text="${'Good Morning, ' + user.firstName}"></h1>
-                <img class="user-img" th:src="${#strings.isEmpty(user.profilePicture) ? '/images/user-profile-icon.svg' : user.profilePicture}" alt="">
-                <a class="edit-account-button" th:href="@{'/users/edit/' + ${user.id}}">Edit Account</a>
+                <h1 th:text="${'Good Morning, ' + user?.firstName}"></h1>
+                <img class="user-img" th:src="${#strings.isEmpty(user?.profilePicture) ? '/images/user-profile-icon.svg' : user?.profilePicture}" alt="">
+                <a class="edit-account-button" th:href="@{'/users/edit/' + ${user?.id}}">Edit Account</a>
             </div>
             <div class="user-details-main">
                 <div class="user-details">
                     <h3>Account Details</h3>
-                    <p>Name: <span th:text="${user.firstName + ' ' + user.lastName}"></span></p>
-                    <p>Email: <span th:text="${user.corporateEmail}"></span></p>
-                    <p>Department: <span th:text="${user.department}"></span></p>
-                    <p>Manager: <span th:text="${#strings.isEmpty(user.manager?.corporateEmail) ? 'None' : user.manager.corporateEmail}"></span></p>
-                    <p>Position: <span th:text="${user.position}"></span></p>
-                    <p>Paid Leave Days Left: <span th:text="${user.paidLeaveCount}"></span></p>
-                    <p>Access Card Number: <span th:text="${#strings.isEmpty(user.card?.id) ? 'None' : user.card.id}"></span></p>
+                    <p>Name: <span th:text="${user?.firstName + ' ' + user?.lastName}"></span></p>
+                    <p>Email: <span th:text="${user?.corporateEmail}"></span></p>
+                    <p>Department: <span th:text="${user?.department}"></span></p>
+                    <p>Manager: <span th:text="${#strings.isEmpty(user?.manager?.corporateEmail) ? 'None' : user.manager.corporateEmail}"></span></p>
+                    <p>Position: <span th:text="${user?.position}"></span></p>
+                    <p>Paid Leave Days Left: <span th:text="${user?.paidLeaveCount}"></span></p>
+                    <p>Access Card Number: <span th:text="${#strings.isEmpty(user?.card?.id) ? 'None' : user.card.id}"></span></p>
                 </div>
                 <div class="computer-details">
                     <h3>Computer Details</h3>
-                    <p>Name: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).computerName}"></span></p>
-                    <p>CPU: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).cpu}"></span></p>
-                    <p>GPU: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).gpu}"></span></p>
-                    <p>RAM: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).ram}"></span></p>
-                    <p>Storage: <span th:text="${#lists.isEmpty(user.computers) ? 'None' : user.computers?.get(0).storage}"></span></p>
+                    <p>Name: <span th:text="${#lists.isEmpty(user?.computers) ? 'None' : user.computers?.get(0).computerName}"></span></p>
+                    <p>CPU: <span th:text="${#lists.isEmpty(user?.computers) ? 'None' : user.computers?.get(0).cpu}"></span></p>
+                    <p>GPU: <span th:text="${#lists.isEmpty(user?.computers) ? 'None' : user.computers?.get(0).gpu}"></span></p>
+                    <p>RAM: <span th:text="${#lists.isEmpty(user?.computers) ? 'None' : user.computers?.get(0).ram}"></span></p>
+                    <p>Storage: <span th:text="${#lists.isEmpty(user?.computers) ? 'None' : user.computers?.get(0).storage}"></span></p>
                 </div>
             </div>
         </div>

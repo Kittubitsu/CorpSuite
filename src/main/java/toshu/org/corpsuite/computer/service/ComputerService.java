@@ -11,7 +11,7 @@ import toshu.org.corpsuite.exception.ComputerAlreadyExistsException;
 import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.log.client.dto.LogRequest;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.AddComputerRequest;
+import toshu.org.corpsuite.web.dto.ComputerRequest;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -29,28 +29,28 @@ public class ComputerService {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public void addComputer(AddComputerRequest addComputerRequest, User user) {
+    public void addComputer(ComputerRequest computerRequest, User user) {
 
-        if (computerRepository.findComputerByComputerName(addComputerRequest.getComputerName()).isPresent()) {
+        if (computerRepository.findComputerByComputerName(computerRequest.getComputerName()).isPresent()) {
             throw new ComputerAlreadyExistsException("Computer with that name exists already!");
         }
 
         Computer computer = Computer.builder()
-                .computerName(addComputerRequest.getComputerName())
-                .barcode(addComputerRequest.getBarcode())
-                .comment(addComputerRequest.getComment())
-                .operatingSystem(addComputerRequest.getOperatingSystem())
-                .macAddress(addComputerRequest.getMacAddress())
-                .cpu(addComputerRequest.getCpu())
-                .ram(addComputerRequest.getRam())
-                .motherboard(addComputerRequest.getMotherboard())
-                .gpu(addComputerRequest.getGpu())
-                .storage(addComputerRequest.getStorage())
+                .computerName(computerRequest.getComputerName())
+                .barcode(computerRequest.getBarcode())
+                .comment(computerRequest.getComment())
+                .operatingSystem(computerRequest.getOperatingSystem())
+                .macAddress(computerRequest.getMacAddress())
+                .cpu(computerRequest.getCpu())
+                .ram(computerRequest.getRam())
+                .motherboard(computerRequest.getMotherboard())
+                .gpu(computerRequest.getGpu())
+                .storage(computerRequest.getStorage())
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
-                .age(addComputerRequest.getAge())
-                .active(addComputerRequest.getActive())
-                .owner(addComputerRequest.getOwner())
+                .age(computerRequest.getAge())
+                .active(computerRequest.getActive())
+                .owner(computerRequest.getOwner())
                 .build();
 
         Computer saved = computerRepository.save(computer);
@@ -81,7 +81,7 @@ public class ComputerService {
         return computerRepository.findById(id).orElseThrow(() -> new DomainException("Computer does not exist!"));
     }
 
-    public void editComputer(long id, AddComputerRequest computerRequest, User user) {
+    public void editComputer(long id, ComputerRequest computerRequest, User user) {
         Computer computer = getById(id);
 
         computer.setComputerName(computerRequest.getComputerName());

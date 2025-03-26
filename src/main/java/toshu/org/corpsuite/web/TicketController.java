@@ -12,7 +12,7 @@ import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.ticket.service.TicketService;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.AddTicketRequest;
+import toshu.org.corpsuite.web.dto.TicketRequest;
 import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class TicketController {
     }
 
     @GetMapping
-    public ModelAndView getTicketPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show") Boolean show) {
+    public ModelAndView getTicketPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", required = false, defaultValue = "false") Boolean show) {
         ModelAndView mav = new ModelAndView("ticket");
 
         history.setShow(show);
@@ -52,7 +52,7 @@ public class TicketController {
         User user = userService.getById(authenticationMetadata.getUserId());
 
         ModelAndView mav = new ModelAndView("ticket-add");
-        mav.addObject("ticketRequest", AddTicketRequest.builder().requester(user.getCorporateEmail()).build());
+        mav.addObject("ticketRequest", TicketRequest.builder().requester(user.getCorporateEmail()).build());
         mav.addObject("endpoint", "add");
         mav.addObject("method", "POST");
 
@@ -60,7 +60,7 @@ public class TicketController {
     }
 
     @PostMapping("/add")
-    public ModelAndView handleTicketAddPage(@Valid @ModelAttribute("ticketRequest") AddTicketRequest ticketRequest, BindingResult result) {
+    public ModelAndView handleTicketAddPage(@Valid @ModelAttribute("ticketRequest") TicketRequest ticketRequest, BindingResult result) {
 
         User requesterUser = userService.getByEmail(ticketRequest.getRequester());
         User responsibleUser = userService.getRandomUserFromDepartment(ticketRequest.getDepartment());
@@ -93,7 +93,7 @@ public class TicketController {
     }
 
     @PutMapping("/edit/{id}")
-    public ModelAndView handleTicketEditPage(@PathVariable UUID id, @Valid @ModelAttribute("ticketRequest") AddTicketRequest ticketRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleTicketEditPage(@PathVariable UUID id, @Valid @ModelAttribute("ticketRequest") TicketRequest ticketRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
 
         User user = userService.getById(authenticationMetadata.getUserId());

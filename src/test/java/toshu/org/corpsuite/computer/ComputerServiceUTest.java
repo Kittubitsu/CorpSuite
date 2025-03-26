@@ -13,7 +13,7 @@ import toshu.org.corpsuite.event.LoggingEvent;
 import toshu.org.corpsuite.exception.ComputerAlreadyExistsException;
 import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.AddComputerRequest;
+import toshu.org.corpsuite.web.dto.ComputerRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -143,24 +143,24 @@ public class ComputerServiceUTest {
     void givenExistingComputer_whenAddingDuplicate_thenThrows() {
         Computer computer = Computer.builder().computerName("WKS1").build();
 
-        AddComputerRequest addComputerRequest = AddComputerRequest.builder().computerName(computer.getComputerName()).build();
+        ComputerRequest computerRequest = ComputerRequest.builder().computerName(computer.getComputerName()).build();
         when(computerRepository.findComputerByComputerName(computer.getComputerName())).thenReturn(Optional.of(computer));
 
-        assertThrows(ComputerAlreadyExistsException.class, () -> computerService.addComputer(addComputerRequest, User.builder().build()));
+        assertThrows(ComputerAlreadyExistsException.class, () -> computerService.addComputer(computerRequest, User.builder().build()));
         verify(computerRepository, times(1)).findComputerByComputerName(any());
     }
 
     @Test
     void givenMissingComputer_whenAdding_thenCompletesSuccessfully() {
 
-        AddComputerRequest addComputerRequest = AddComputerRequest.builder().computerName("WKS1").active(true).build();
+        ComputerRequest computerRequest = ComputerRequest.builder().computerName("WKS1").active(true).build();
         Computer computer = Computer.builder().id(1).build();
 
-        when(computerRepository.findComputerByComputerName(addComputerRequest.getComputerName())).thenReturn(Optional.empty());
+        when(computerRepository.findComputerByComputerName(computerRequest.getComputerName())).thenReturn(Optional.empty());
         when(computerRepository.save(any())).thenReturn(computer);
         doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
 
-        computerService.addComputer(addComputerRequest, User.builder().corporateEmail("toshu@abv.bg").build());
+        computerService.addComputer(computerRequest, User.builder().corporateEmail("toshu@abv.bg").build());
 
         verify(computerRepository, times(1)).save(any());
         verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));
@@ -170,14 +170,14 @@ public class ComputerServiceUTest {
     @Test
     void givenExistingComputer_whenEditComputer_thenCompletesSuccessfully() {
 
-        AddComputerRequest addComputerRequest = AddComputerRequest.builder().computerName("WKS1").active(true).build();
+        ComputerRequest computerRequest = ComputerRequest.builder().computerName("WKS1").active(true).build();
         Computer computer = Computer.builder().id(1).build();
 
         when(computerRepository.findById(any())).thenReturn(Optional.of(computer));
         when(computerRepository.save(any())).thenReturn(computer);
         doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
 
-        computerService.editComputer(1, addComputerRequest, new User());
+        computerService.editComputer(1, computerRequest, new User());
 
         verify(computerRepository, times(1)).save(any());
         verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));
@@ -187,14 +187,14 @@ public class ComputerServiceUTest {
     @Test
     void givenExistingComputer_whenEditComputerSetToInactive_thenDecommissionedIsAppended() {
 
-        AddComputerRequest addComputerRequest = AddComputerRequest.builder().computerName("WKS1").active(false).build();
+        ComputerRequest computerRequest = ComputerRequest.builder().computerName("WKS1").active(false).build();
         Computer computer = Computer.builder().id(1).build();
 
         when(computerRepository.findById(any())).thenReturn(Optional.of(computer));
         when(computerRepository.save(any())).thenReturn(computer);
         doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
 
-        computerService.editComputer(1, addComputerRequest, new User());
+        computerService.editComputer(1, computerRequest, new User());
 
         verify(computerRepository, times(1)).save(any());
         verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));

@@ -12,7 +12,7 @@ import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.AddAbsenceRequest;
+import toshu.org.corpsuite.web.dto.AbsenceRequest;
 import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 
@@ -35,7 +35,7 @@ public class RequestController {
     }
 
     @GetMapping
-    public ModelAndView getRequestPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show") Boolean show) {
+    public ModelAndView getRequestPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @RequestParam(name = "show", required = false, defaultValue = "false") Boolean show) {
         ModelAndView mav = new ModelAndView("request");
 
         User user = userService.getById(authenticationMetadata.getUserId());
@@ -53,7 +53,7 @@ public class RequestController {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
-        mav.addObject("absenceRequest", AddAbsenceRequest.builder()
+        mav.addObject("absenceRequest", AbsenceRequest.builder()
                 .requesterEmail(user.getCorporateEmail())
                 .responsibleEmail(user.getManager() == null ? "None" : user.getManager().getCorporateEmail())
                 .totalDays(1)
@@ -65,7 +65,7 @@ public class RequestController {
     }
 
     @PostMapping("/add")
-    public ModelAndView handleRequestAddPage(@Valid @ModelAttribute("absenceRequest") AddAbsenceRequest absenceRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleRequestAddPage(@Valid @ModelAttribute("absenceRequest") AbsenceRequest absenceRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
@@ -104,7 +104,7 @@ public class RequestController {
     }
 
     @PutMapping("/edit/{id}")
-    public ModelAndView handleRequestEditPage(@Valid @ModelAttribute("absenceRequest") AddAbsenceRequest absenceRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleRequestEditPage(@Valid @ModelAttribute("absenceRequest") AbsenceRequest absenceRequest, BindingResult result, @PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 

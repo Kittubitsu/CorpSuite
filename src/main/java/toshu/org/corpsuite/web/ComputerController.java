@@ -13,7 +13,7 @@ import toshu.org.corpsuite.history.History;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.AddComputerRequest;
+import toshu.org.corpsuite.web.dto.ComputerRequest;
 import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class ComputerController {
     }
 
     @GetMapping
-    public ModelAndView getComputerPage(@RequestParam(name = "show") Boolean show) {
+    public ModelAndView getComputerPage(@RequestParam(name = "show", required = false, defaultValue = "false") Boolean show) {
         ModelAndView mav = new ModelAndView("computer");
 
         history.setShow(show);
@@ -52,14 +52,14 @@ public class ComputerController {
         ModelAndView mav = new ModelAndView("computer-edit");
         mav.addObject("method", "POST");
         mav.addObject("endpoint", "add");
-        mav.addObject("computerRequest", AddComputerRequest.builder().build());
+        mav.addObject("computerRequest", ComputerRequest.builder().build());
         mav.addObject("freeUsers", usersWithoutComputer);
 
         return mav;
     }
 
     @PostMapping("/add")
-    public ModelAndView handleComputerAdd(@Valid @ModelAttribute("computerRequest") AddComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleComputerAdd(@Valid @ModelAttribute("computerRequest") ComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
@@ -98,7 +98,7 @@ public class ComputerController {
     }
 
     @PutMapping("/edit/{id}")
-    public ModelAndView handleEditPage(@PathVariable long id, @Valid @ModelAttribute("computerRequest") AddComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleEditPage(@PathVariable long id, @Valid @ModelAttribute("computerRequest") ComputerRequest computerRequest, BindingResult result, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 

@@ -10,7 +10,7 @@ import toshu.org.corpsuite.ticket.model.Ticket;
 import toshu.org.corpsuite.ticket.model.TicketStatus;
 import toshu.org.corpsuite.ticket.repository.TicketRepository;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.AddTicketRequest;
+import toshu.org.corpsuite.web.dto.TicketRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,14 +28,14 @@ public class TicketService {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public void addTicket(AddTicketRequest addTicketRequest, User requester, User responsible) {
+    public void addTicket(TicketRequest ticketRequest, User requester, User responsible) {
 
         Ticket ticket = Ticket.builder()
                 .requester(requester)
                 .responsible(responsible)
-                .comment(addTicketRequest.getComment())
-                .type(addTicketRequest.getType())
-                .status(addTicketRequest.getStatus())
+                .comment(ticketRequest.getComment())
+                .type(ticketRequest.getType())
+                .status(ticketRequest.getStatus())
                 .opened(LocalDateTime.now())
                 .build();
 
@@ -65,7 +65,7 @@ public class TicketService {
         return ticketRepository.findById(id).orElseThrow(() -> new DomainException("Ticket with this ID does not exist!"));
     }
 
-    public void editTicket(UUID id, AddTicketRequest ticketRequest, User user) {
+    public void editTicket(UUID id, TicketRequest ticketRequest, User user) {
         Ticket ticket = getById(id);
         ticket.setType(ticketRequest.getType());
         ticket.setComment(ticketRequest.getComment());

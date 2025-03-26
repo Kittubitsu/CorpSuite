@@ -3,7 +3,7 @@ package toshu.org.corpsuite.computer.service;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.AddComputerRequest;
+import toshu.org.corpsuite.web.dto.ComputerRequest;
 
 @Component
 public class ComputerInit implements CommandLineRunner {
@@ -17,7 +17,7 @@ public class ComputerInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (computerService.getAllComputers(true).isEmpty()) {
-            AddComputerRequest addComputerRequest = AddComputerRequest.builder()
+            ComputerRequest computerRequest = ComputerRequest.builder()
                     .computerName("SOFWKS0001")
                     .cpu("AMD Ryzen 7 5700X3D")
                     .gpu("nVidia RTX 3080")
@@ -31,7 +31,7 @@ public class ComputerInit implements CommandLineRunner {
                     .age(0)
                     .build();
 
-            AddComputerRequest addComputerRequest2 = AddComputerRequest.builder()
+            ComputerRequest computerRequest2 = ComputerRequest.builder()
                     .computerName("SOFWKS0002")
                     .cpu("AMD Ryzen 7 5700X3D")
                     .gpu("nVidia RTX 3080")
@@ -45,7 +45,7 @@ public class ComputerInit implements CommandLineRunner {
                     .age(0)
                     .build();
 
-            AddComputerRequest addComputerRequest3 = AddComputerRequest.builder()
+            ComputerRequest computerRequest3 = ComputerRequest.builder()
                     .computerName("SOFWKS0003")
                     .cpu("AMD Ryzen 7 5700X3D")
                     .gpu("nVidia RTX 3080")
@@ -59,7 +59,7 @@ public class ComputerInit implements CommandLineRunner {
                     .age(0)
                     .build();
 
-            AddComputerRequest addComputerRequest4 = AddComputerRequest.builder()
+            ComputerRequest computerRequest4 = ComputerRequest.builder()
                     .computerName("SOFWKS0004")
                     .cpu("AMD Ryzen 7 5700X3D")
                     .gpu("nVidia RTX 3080")
@@ -73,7 +73,7 @@ public class ComputerInit implements CommandLineRunner {
                     .age(0)
                     .build();
 
-            AddComputerRequest addComputerRequest5 = AddComputerRequest.builder()
+            ComputerRequest computerRequest5 = ComputerRequest.builder()
                     .computerName("SOFWKS0005")
                     .cpu("AMD Ryzen 7 5700X3D")
                     .gpu("nVidia RTX 3080")
@@ -88,11 +88,11 @@ public class ComputerInit implements CommandLineRunner {
                     .build();
 
 
-            computerService.addComputer(addComputerRequest, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
-            computerService.addComputer(addComputerRequest2, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
-            computerService.addComputer(addComputerRequest3, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
-            computerService.addComputer(addComputerRequest4, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
-            computerService.addComputer(addComputerRequest5, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
+            computerService.addComputer(computerRequest, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
+            computerService.addComputer(computerRequest2, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
+            computerService.addComputer(computerRequest3, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
+            computerService.addComputer(computerRequest4, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
+            computerService.addComputer(computerRequest5, User.builder().corporateEmail("SYSTEM@CORPSUITE.COM").build());
         }
     }
 }

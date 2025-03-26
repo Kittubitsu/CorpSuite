@@ -14,7 +14,7 @@ import toshu.org.corpsuite.ticket.model.TicketType;
 import toshu.org.corpsuite.ticket.repository.TicketRepository;
 import toshu.org.corpsuite.ticket.service.TicketService;
 import toshu.org.corpsuite.user.model.User;
-import toshu.org.corpsuite.web.dto.AddTicketRequest;
+import toshu.org.corpsuite.web.dto.TicketRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,14 +120,14 @@ public class TicketRequestUTest {
     @Test
     void givenNewTicket_whenAddingTicket_thenCompletesSuccessfully() {
 
-        AddTicketRequest addTicketRequest = AddTicketRequest.builder().build();
+        TicketRequest ticketRequest = TicketRequest.builder().build();
         User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
         Ticket ticket = Ticket.builder().id(UUID.randomUUID()).build();
 
         when(ticketRepository.save(any())).thenReturn(ticket);
         doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
 
-        ticketService.addTicket(addTicketRequest, user, user);
+        ticketService.addTicket(ticketRequest, user, user);
 
         verify(ticketRepository, times(1)).save(any());
         verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));
@@ -136,7 +136,7 @@ public class TicketRequestUTest {
     @Test
     void givenExistingTicket_whenEditingTicket_thenCompletesSuccessfully() {
 
-        AddTicketRequest ticketRequest = AddTicketRequest.builder().type(TicketType.OTHER).status(TicketStatus.PENDING).build();
+        TicketRequest ticketRequest = TicketRequest.builder().type(TicketType.OTHER).status(TicketStatus.PENDING).build();
         Ticket ticket = Ticket.builder().id(UUID.randomUUID()).type(TicketType.DEVICE).status(TicketStatus.COMPLETED).build();
         User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
 
@@ -154,7 +154,7 @@ public class TicketRequestUTest {
     @Test
     void givenExistingTicket_whenEditingTicketToStatusCompleted_thenPropertyChangedAndCompletesSuccessfully() {
 
-        AddTicketRequest ticketRequest = AddTicketRequest.builder().type(TicketType.OTHER).status(TicketStatus.COMPLETED).build();
+        TicketRequest ticketRequest = TicketRequest.builder().type(TicketType.OTHER).status(TicketStatus.COMPLETED).build();
         Ticket ticket = Ticket.builder().id(UUID.randomUUID()).type(TicketType.DEVICE).status(TicketStatus.PENDING).build();
         User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
 
@@ -173,7 +173,7 @@ public class TicketRequestUTest {
     @Test
     void givenExistingTicket_whenEditingTicketToStatusRejected_thenPropertyChangedAndCompletesSuccessfully() {
 
-        AddTicketRequest ticketRequest = AddTicketRequest.builder().type(TicketType.OTHER).status(TicketStatus.REJECTED).build();
+        TicketRequest ticketRequest = TicketRequest.builder().type(TicketType.OTHER).status(TicketStatus.REJECTED).build();
         Ticket ticket = Ticket.builder().id(UUID.randomUUID()).type(TicketType.DEVICE).status(TicketStatus.PENDING).build();
         User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
 

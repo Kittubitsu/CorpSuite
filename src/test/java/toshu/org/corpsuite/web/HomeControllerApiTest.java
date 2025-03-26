@@ -1,11 +1,15 @@
 package toshu.org.corpsuite.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import toshu.org.corpsuite.exception.DomainException;
 import toshu.org.corpsuite.request.service.RequestService;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.ticket.service.TicketService;
@@ -15,6 +19,7 @@ import toshu.org.corpsuite.user.service.UserService;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -22,10 +27,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(HomeController.class)
+@Import(GlobalControllerAdvice.class)
 public class HomeControllerApiTest {
-
-    @MockitoBean
-    private GlobalControllerAdvice globalControllerAdvice;
 
     @MockitoBean
     private UserService userService;
@@ -39,10 +42,13 @@ public class HomeControllerApiTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    void getAuthenticatedRequestToHomeEndpoint_shouldReturnHomeView() throws Exception {
+    private User user;
 
-        User user = User.builder()
+    private AuthenticationMetadata authenticationMetadata;
+
+    @BeforeEach
+    void setUp() {
+        user = User.builder()
                 .id(UUID.randomUUID())
                 .corporateEmail("test@corpsuite.com")
                 .firstName("test")
@@ -52,8 +58,21 @@ public class HomeControllerApiTest {
                 .active(true)
                 .build();
 
+        authenticationMetadata = new AuthenticationMetadata(
+                user.getId(),
+                user.getCorporateEmail(),
+                user.getFirstName(),
+                user.getPassword(),
+                user.getDepartment(),
+                user.isActive());
 
-        AuthenticationMetadata authenticationMetadata = new AuthenticationMetadata(user.getId(), user.getCorporateEmail(), user.getFirstName(), user.getPassword(), user.getDepartment(), user.isActive());
+
+    }
+
+    @Test
+    void getAuthenticatedRequestToHomeEndpoint_shouldReturnHomeView() throws Exception {
+
+
         MockHttpServletRequestBuilder request = get("/home").with(user(authenticationMetadata)).flashAttr("user", user);
 
         when(userService.getById(any())).thenReturn(user);
@@ -74,4 +93,25 @@ public class HomeControllerApiTest {
         mockMvc.perform(request).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("http://localhost/login"));
         verify(userService, never()).getById(any());
     }
+
+    @Test
+    void getRequestToHomeEndpointWithInvalidUser_shouldReturnErrorPage() throws Exception {
+        MockHttpServletRequestBuilder request = get("/home").with(user(authenticationMetadata));
+
+        when(userService.getById(any())).thenThrow(DomainException.class);
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("generic-error"));
+    }
+
+    @Test
+    void getRequestToHomeEndpoint_returnsCorrectUserToModel() throws Exception {
+        when(userService.getById(any())).thenReturn(user);
+
+        MockHttpServletRequestBuilder request = get("/home").with(user(authenticationMetadata));
+
+        mockMvc.perform(request);
+    }
+
 }

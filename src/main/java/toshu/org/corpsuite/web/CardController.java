@@ -11,7 +11,7 @@ import toshu.org.corpsuite.history.History;
 import toshu.org.corpsuite.security.AuthenticationMetadata;
 import toshu.org.corpsuite.user.model.User;
 import toshu.org.corpsuite.user.service.UserService;
-import toshu.org.corpsuite.web.dto.AddCardRequest;
+import toshu.org.corpsuite.web.dto.CardRequest;
 import toshu.org.corpsuite.web.mapper.DtoMapper;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class CardController {
     public ModelAndView getAddCardPage() {
         ModelAndView mav = new ModelAndView("card-edit");
 
-        mav.addObject("cardRequest", AddCardRequest.builder().build());
+        mav.addObject("cardRequest", CardRequest.builder().build());
         mav.addObject("method", "POST");
         mav.addObject("endpoint", "add");
 
@@ -55,7 +55,7 @@ public class CardController {
     }
 
     @PostMapping("/add")
-    public ModelAndView handleAddCardPage(AddCardRequest cardRequest, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleAddCardPage(CardRequest cardRequest, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
@@ -78,7 +78,7 @@ public class CardController {
     }
 
     @PutMapping("/edit/{id}")
-    public ModelAndView handleEditCardPage(AddCardRequest cardRequest, @PathVariable Long id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView handleEditCardPage(CardRequest cardRequest, @PathVariable Long id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
