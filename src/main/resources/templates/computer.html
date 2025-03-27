@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="computers-page-layout">
-    <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
+    <th:block th:insert="~{fragments/general.html :: nav-bar}"></th:block>
     <div class="computers-overview">
         <h1>Computers</h1>
         <div class="table-nav">
@@ -61,6 +61,6 @@
     </div>
 </div>
 <script src="/js/history.js"></script>
-<footer th:replace="~{fragment/general :: footer}"></footer>
+<footer th:replace="~{fragments/general.html :: footer}"></footer>
 </body>
 </html>

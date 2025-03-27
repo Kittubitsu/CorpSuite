@@ -10,7 +10,7 @@
     </parent>
     <groupId>toshu.org</groupId>
     <artifactId>CorpSuite</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.8</version>
     <name>CorpSuite</name>
     <description>CorpSuite</description>
     <url/>
@@ -140,12 +140,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.4.4</version>
                 <configuration>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.36</version>
                         </exclude>
                     </excludes>
                 </configuration>

@@ -21,6 +21,10 @@ public class GlobalControllerAdvice {
     @ModelAttribute("user")
     public User addUserToModel(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
+        if (authenticationMetadata == null) {
+            return null;
+        }
+
         return userService.getById(authenticationMetadata.getUserId());
     }
 

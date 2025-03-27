@@ -140,6 +140,10 @@ td:last-of-type {
     cursor: not-allowed;
 }
 
+table tbody tr {
+    height: 66px;
+}
+
 /* ====== Responsive Design ====== */
 /*@media (max-width: 1024px) {*/
 /*    .request-page-layout {*/

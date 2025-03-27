@@ -1,0 +1,48 @@
+services:
+  db:
+    container_name: corpsuite-mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_USER: corpsuite_admin
+      MYSQL_PASSWORD: corpsuiteadmin123
+      MYSQL_ROOT_PASSWORD: adminp@ss123
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-P", "3306" ]
+
+  corpsuite-log-svc:
+    container_name: corpsuite-log-svc
+    image: kittubitsu/corpsuite-log-svc:1.0.0
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://corpsuite-mysql:3306/corp_suite_log_svc?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: adminp@ss123
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  corpsuite-main:
+    container_name: corpsuite-main
+    image: kittubitsu/corpsuite-main:1.0.8
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://corpsuite-mysql:3306/corp_suite?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: adminp@ss123
+      LOG_SVC_HOSTNAME: corpsuite-log-svc
+      LOG_SVC_PORT: 8081
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:

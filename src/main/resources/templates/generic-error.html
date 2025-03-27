@@ -16,6 +16,6 @@
     <p class="error-field-p">Error: <span class="error-field" th:if="${errorMessage}" th:text="${errorMessage}"></span></p>
     <a th:href="@{/home}">Go Back</a>
 </div>
-<footer th:insert="~{fragment/general.html :: footer}"></footer>
+<footer th:replace="~{fragments/general.html :: footer}"></footer>
 </body>
 </html>

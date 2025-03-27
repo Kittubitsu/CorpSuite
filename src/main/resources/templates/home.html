@@ -10,7 +10,7 @@
 <body>
 
 <div class="home-page-layout">
-    <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
+    <th:block th:insert="~{fragments/general.html :: nav-bar}"></th:block>
     <div class="user-main">
         <div class="user-info">
             <div class="user-greeting">
@@ -93,6 +93,6 @@
         </div>
     </div>
 </div>
-<footer th:replace="~{fragment/general :: footer}"></footer>
+<footer th:replace="~{fragments/general.html :: footer}"></footer>
 </body>
 </html>

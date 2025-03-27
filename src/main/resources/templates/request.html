@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="request-page-layout">
-    <th:block th:insert="~{/fragment/general :: nav-bar}"></th:block>
+    <th:block th:insert="~{fragments/general.html :: nav-bar}"></th:block>
     <div class="request-overview">
         <h1>Requests</h1>
         <div class="table-nav">
@@ -46,6 +46,6 @@
     </div>
 </div>
 <script src="/js/history.js"></script>
-<footer th:replace="~{fragment/general :: footer}"></footer>
+<footer th:replace="~{fragments/general.html :: footer}"></footer>
 </body>
 </html>
