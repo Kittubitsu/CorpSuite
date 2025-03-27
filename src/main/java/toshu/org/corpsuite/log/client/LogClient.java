@@ -11,7 +11,7 @@ import toshu.org.corpsuite.log.client.dto.LogRequest;
 
 import java.util.List;
 
-@FeignClient(name = "corp-suite-log-svc", url = "http://localhost:8081/api/v1/logs")
+@FeignClient(name = "corp-suite-log-svc", url = "http://${url}:${port}/api/v1/logs")
 public interface LogClient {
 
     @GetMapping
