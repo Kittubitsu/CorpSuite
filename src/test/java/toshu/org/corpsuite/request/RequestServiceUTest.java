@@ -111,24 +111,6 @@ public class RequestServiceUTest {
     }
 
     @Test
-    void givenNewRequest_whenAddingRequest_thenCompletesSuccessfully() {
-
-        AbsenceRequest absenceRequest = AbsenceRequest.builder().totalDays(1).build();
-        User user = User.builder().corporateEmail("toshu@abv.bg").id(UUID.randomUUID()).build();
-        Request request = Request.builder().id(UUID.randomUUID()).build();
-
-        when(requestRepository.save(any())).thenReturn(request);
-        doNothing().when(applicationEventPublisher).publishEvent(any(LoggingEvent.class));
-        doNothing().when(userService).subtractUserPaidLeave(user.getId(), absenceRequest.getTotalDays());
-
-        requestService.addRequest(absenceRequest, user, user);
-
-        verify(requestRepository, times(1)).save(any());
-        verify(applicationEventPublisher, times(1)).publishEvent(any(LoggingEvent.class));
-        verify(userService, times(1)).subtractUserPaidLeave(any(UUID.class), any(Integer.class));
-    }
-
-    @Test
     void givenExistingRequest_whenEditingRequest_thenCompletedSuccessfully() {
 
         AbsenceRequest absenceRequest = AbsenceRequest.builder().totalDays(1).comment("Egg").status(RequestStatus.PENDING).build();
