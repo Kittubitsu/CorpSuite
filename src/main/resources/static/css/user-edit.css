@@ -9,26 +9,34 @@ h1 {
     margin-bottom: 1em;
 }
 
+html, body {
+    width: 100%;
+    overflow-x: hidden !important;
+}
+
 body {
     font: 14px/1.5 Lato, sans-serif;
     background: linear-gradient(to bottom, rgba(209, 251, 255, 0.3), #e0e0e0);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     height: 100vh;
 }
 
 /* ====== Main Layout ====== */
-.account-page-layout {
+.edit-page-layout {
     display: flex;
     gap: 20px;
     min-width: 600px;
     max-width: 900px;
+    padding: 20px;
 }
 
-.account-details>p, .admin-details>p {
+.account-details > p, .admin-details > p {
     font-style: italic;
     opacity: 50%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .user-img {
@@ -39,7 +47,7 @@ body {
 /* ====== Account Form Section ====== */
 .account-page-edit-form {
     flex: 1;
-    padding: 30px;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,16 +60,16 @@ body {
 .form-main {
     display: flex;
     flex-direction: row;
-    gap: 9em;
+    gap: 5em;
 }
 
 /* ====== Form Elements ====== */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .form-group:first-of-type {
-    margin-top: 1.5em;
+    margin-top: 1em;
 }
 
 .form-group label {
@@ -112,7 +120,7 @@ body {
     font-weight: bold;
 }
 
-.btn-check-container{
+.btn-check-container {
     margin-right: 2.5em;
 }
 

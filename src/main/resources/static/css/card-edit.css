@@ -13,16 +13,18 @@ body {
     font: 14px/1.5 Lato, sans-serif;
     background: linear-gradient(to bottom, rgba(209, 251, 255, 0.3), #e0e0e0);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     height: 100vh;
 }
 
 /* ====== Main Layout ====== */
 .card-page-layout {
+    padding: 20px;
     display: flex;
     gap: 20px;
-    width: 600px;
+    width: 30em;
 }
 
 .card-details p{
@@ -33,7 +35,7 @@ body {
 /* ====== Account Form Section ====== */
 .card-page-edit-form {
     flex: 1;
-    padding: 30px;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,7 +48,6 @@ body {
 .form-main {
     display: flex;
     flex-direction: row;
-    gap: 9em;
 }
 
 /* ====== Form Elements ====== */
