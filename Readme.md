@@ -6,7 +6,7 @@ Feel free to use the provided docker-compose file in order to run the whole proj
 
 Once the project is running you can access it on the following address: http://localhost:8080/
 
-You can also access the platform on the following address: https://toshu.org/
+You can also access the platform on the following address: https://corp-suite.com/
 
 Default admin credentials are:
 email: admin@corpsuite.com
