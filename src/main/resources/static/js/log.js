@@ -5,11 +5,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let clearBtnEl = document.getElementById("clear-log-btn");
 
+    let rowsPerPage = getRowsPerPage();
+
+
+    function getTableAvailableHeight() {
+        let tableElement = document.querySelector(".log-overview")
+        let tableElementArr = [...tableElement.children]
+
+        let mainElHeight = tableElement.clientHeight - 40; //accounting for the padding
+
+        tableElementArr.forEach(element => {
+            if (element.clientHeight < 100) {
+                mainElHeight = mainElHeight - element.clientHeight;
+            }
+        })
+
+        return mainElHeight - ((45 + 24) + 14)
+    }
+
+    function getCellHeight() {
+        let tableElement = document.querySelector(".log-overview table tbody tr:last-of-type")
+
+        if (tableElement === null || tableElement.clientHeight === 0) {
+            return 66
+        }
+
+        return tableElement.clientHeight;
+    }
+
+    function getRowsPerPage() {
+        let availableTableHeight = getTableAvailableHeight();
+        let cellHeight = getCellHeight();
+
+        return Math.floor(availableTableHeight / cellHeight);
+    }
+
 
     clearBtnEl.addEventListener("click", () => {
         setTimeout(() => {
             location.reload();
-        },100)
+        }, 100)
     })
 
     fetch("api/v1/logs").then(res => {
@@ -50,21 +85,18 @@ document.addEventListener("DOMContentLoaded", function () {
             rowElement.appendChild(cellTimestampElement);
 
             tableBodyElement.appendChild(rowElement)
-        })
-    }).then(() => {
+        });
 
+        setupPagination();
+    });
+
+    function setupPagination() {
         let tableRows = tableBodyElement.children;
         let tableElements = [...tableRows];
 
-
         let pageList = [];
         let count = 1;
-        let rowsPerPage = 9;
-
-
-        if (screen.height > 1080) {
-            rowsPerPage = 11
-        }
+        let rowsPerPage = getRowsPerPage();
 
         for (let i = 0; i < tableRows.length; i += rowsPerPage) {
             pageList.push(count++);
@@ -105,10 +137,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         tableElements.forEach(row => row.style.display = "none");
         tableElements.slice(0, rowsPerPage).forEach(rowsPerPage => rowsPerPage.style.display = "table-row");
+    }
 
-    })
+    window.addEventListener("resize", () => {
+        rowsPerPage = getRowsPerPage();
+        document.querySelector(".table-nav-bottom")?.remove();  // Remove existing pagination
+        setupPagination(); // Recreate pagination based on new rowsPerPage
+    });
 
-    // scrapping this idea for now, will probably come back to it eventually
+    // scrapping this filtering/sorting idea for now, will probably come back to it eventually
 
     // let emails = new Set;
     // tableElements.forEach(row => emails.add(row.children[0].innerHTML));

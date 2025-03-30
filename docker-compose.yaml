@@ -30,7 +30,7 @@ services:
 
   corpsuite-main:
     container_name: corpsuite-main
-    image: kittubitsu/corpsuite-main:1.1.0
+    image: kittubitsu/corpsuite-main:1.1.1
     restart: on-failure
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://corpsuite-mysql:3306/corp_suite?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false

@@ -33,7 +33,7 @@ h1 {
     /*max-width: 1300px;*/
     height: 80vh;
     gap: 20px;
-    min-height: 770px;
+    min-height: 790px;
     /*max-height: 1000px;*/
 }
 
@@ -47,6 +47,7 @@ h1 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 800px;
+    min-width: 780px;
     position: relative;
 }
 
