@@ -21,8 +21,6 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: adminp@ss123
       SERVER_PORT: 8081
-    ports:
-      - "8081:8081"
     depends_on:
       db:
         condition: service_healthy
