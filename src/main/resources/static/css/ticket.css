@@ -28,7 +28,7 @@ body {
     justify-content: center;
     gap: 20px;
     padding: 20px;
-    width: 50vw;
+    width: fit-content;
 }
 
 h1 {
