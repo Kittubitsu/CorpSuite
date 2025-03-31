@@ -10,7 +10,7 @@
     </parent>
     <groupId>toshu.org</groupId>
     <artifactId>CorpSuite</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <name>CorpSuite</name>
     <description>CorpSuite</description>
     <url/>
