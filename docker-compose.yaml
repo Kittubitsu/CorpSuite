@@ -25,7 +25,6 @@ services:
       db:
         condition: service_healthy
 
-
   corpsuite-main:
     container_name: corpsuite-main
     image: kittubitsu/corpsuite-main:latest
