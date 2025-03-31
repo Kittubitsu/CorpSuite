@@ -9,11 +9,19 @@ html, body {
     overflow-x: hidden !important;
 }
 
+.form-main {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
 body {
     font: 14px/1.5 Lato, sans-serif;
     background: linear-gradient(to bottom, rgba(209, 251, 255, 0.3), #e0e0e0);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     flex-direction: column;
     height: 100vh;
@@ -21,8 +29,14 @@ body {
     margin: 0 auto;
 }
 
+img {
+    width: 400px;
+    height: 150px;
+    object-fit: cover;
+}
+
 .form-container {
-    margin-top: -7rem;
+    /*margin-top: -7rem;*/
     background: white;
     padding: 30px;
     border-radius: 10px;
@@ -33,7 +47,6 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 15rem;
 }
 
 .login-form {

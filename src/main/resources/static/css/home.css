@@ -69,7 +69,8 @@ h1 {
     flex-direction: column;
     gap: 20px;
     width: 60%;
-    min-width: 680px;
+    /*min-width: 680px;*/
+    min-width: fit-content;
 }
 
 .user-details-main {
@@ -152,6 +153,9 @@ thead {
     background: #007bff;
     color: white;
     height: 62px;
+}
+.tickets-requests table tbody {
+    font-size: 12px;
 }
 
 th, td {

@@ -8,23 +8,24 @@
     <link rel="icon" type="image/ico" th:href="@{/images/favicon.ico}">
 </head>
 <body>
-<img alt="" width="400" src="/images/logo-animated.gif">
-
-<div class="form-container">
-    <form class="login-form" th:method="POST" th:action="@{/login}">
-        <div class="email-input">
-            <label for="email"></label>
-            <input type="email" name="email" id="email" required placeholder="Email">
-        </div>
-        <div class="password-input">
-            <label for="password"></label>
-            <input type="password" name="password" id="password" required placeholder="Password">
-            <p th:if="${error}" class="login-error">Email or password is incorrect!</p>
-        </div>
-        <div class="submit-input">
-            <input type="submit" value="Login"/>
-        </div>
-    </form>
+<div class="form-main">
+    <img alt="" src="/images/logo-animated.gif">
+    <div class="form-container">
+        <form class="login-form" th:method="POST" th:action="@{/login}">
+            <div class="email-input">
+                <label for="email"></label>
+                <input type="email" name="email" id="email" required placeholder="Email">
+            </div>
+            <div class="password-input">
+                <label for="password"></label>
+                <input type="password" name="password" id="password" required placeholder="Password">
+                <p th:if="${error}" class="login-error">Email or password is incorrect!</p>
+            </div>
+            <div class="submit-input">
+                <input type="submit" value="Login"/>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>
